@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="4.5.1" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
@@ -15,7 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric\NCG.NGS.CQRS.ServiceFabric.csproj" />
     <ProjectReference Include="..\NCG.NGS.CQRS\NCG.NGS.CQRS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ServiceFabric\Commands\" />
   </ItemGroup>
 
 </Project>

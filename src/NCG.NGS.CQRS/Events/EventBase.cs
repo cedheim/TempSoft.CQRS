@@ -7,9 +7,11 @@ namespace NCG.NGS.CQRS.Events
         protected EventBase()
         {
             Id = Guid.NewGuid();
+            Timestamp = DateTime.UtcNow;
         }
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
+        public DateTime Timestamp { get; set; }
         public int Version { get; set; }
         public Guid AggregateRootId { get; set; }
     }

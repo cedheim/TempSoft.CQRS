@@ -2,7 +2,7 @@
 
 namespace NCG.NGS.CQRS.Events
 {
-    public class InitializationEvent : IEvent
+    public class InitializationEvent : EventBase
     {
         private InitializationEvent()
         {
@@ -10,12 +10,7 @@ namespace NCG.NGS.CQRS.Events
 
         public InitializationEvent(Guid aggregateRootId)
         {
-            Id = Guid.NewGuid();
             AggregateRootId = aggregateRootId;
         }
-
-        public Guid Id { get; private set; }
-        public int Version { get; set; }
-        public Guid AggregateRootId { get; set; }
     }
 }

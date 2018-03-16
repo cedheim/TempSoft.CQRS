@@ -7,8 +7,10 @@ namespace NCG.NGS.CQRS.Commands
         protected CommandBase()
         {
             Id = Guid.NewGuid();
+            Timestamp = DateTime.UtcNow;
         }
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
