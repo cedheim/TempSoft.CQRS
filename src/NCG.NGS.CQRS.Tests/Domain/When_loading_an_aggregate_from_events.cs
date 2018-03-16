@@ -10,7 +10,6 @@ namespace NCG.NGS.CQRS.Tests.Domain
     [TestFixture]
     public class When_loading_an_aggregate_from_events
     {
-
         private AThingAggregateRoot _root;
         private IEvent[] _events;
 

@@ -30,58 +30,31 @@ namespace NCG.NGS.CQRS.Tests.Mocks
         }
     }
 
-    public class DoSomething : ICommand
+    public class DoSomething : CommandBase
     {
+        private DoSomething() { }
+
+        public DoSomething(int a, string b) { A = a; B = b; }
+
         public int A { get; private set; }
         public string B { get; private set; }
-
-        private DoSomething()
-        {
-        }
-
-        public DoSomething(int a, string b)
-        {
-            Id = Guid.NewGuid();
-            A = a;
-            B = b;
-        }
-
-        public Guid Id { get; private set; }
     }
 
-    public class ChangedAValue : IEvent
+    public class ChangedAValue : EventBase
     {
-        private ChangedAValue()
-        {
-        }
+        private ChangedAValue() { }
 
-        public ChangedAValue(int a)
-        {
-            A = a;
-            Id = Guid.NewGuid();
-        }
+        public ChangedAValue(int a) { A = a; }
 
         public int A { get; private set; }
-        public Guid Id { get; private set; }
-        public int Version { get; set; }
-        public Guid AggregateRootId { get; set; }
     }
 
-    public class ChangedBValue : IEvent
+    public class ChangedBValue : EventBase
     {
-        private ChangedBValue()
-        {
-        }
+        private ChangedBValue() { }
 
-        public ChangedBValue(string b)
-        {
-            B = b;
-            Id = Guid.NewGuid();
-        }
+        public ChangedBValue(string b) { B = b; }
 
         public string B { get; private set; }
-        public Guid Id { get; private set; }
-        public int Version { get; set; }
-        public Guid AggregateRootId { get; set; }
     }
 }

@@ -16,17 +16,13 @@ namespace NCG.NGS.CQRS.Domain
         private static readonly Dictionary<Type, Action<T, ICommand>> CommandHandlers = new Dictionary<Type, Action<T, ICommand>>();
         private static readonly Dictionary<Type, Action<T, IEvent>> EventHandlers = new Dictionary<Type, Action<T, IEvent>>();
 
-        private readonly HashSet<Guid> _commandIds = new HashSet<Guid>();
-
         static AggregateRoot()
         {
             InitializeEventHandlers();
             InitializeCommandHandlers();
         }
 
-        private List<IEvent> _events = new List<IEvent>();
-
-        public IEnumerable<Guid> ProcessedCommands => _commandIds;
+        private List<IEvent> _uncommitedEvents = new List<IEvent>();
 
         public Guid Id { get; protected set; }
 
@@ -39,16 +35,10 @@ namespace NCG.NGS.CQRS.Domain
 
         public void Handle(ICommand command)
         {
-            if (command.Id != Guid.Empty && _commandIds.Contains(command.Id))
-            {
-                return;
-            }
-
             var type = command.GetType();
             if (CommandHandlers.TryGetValue(type, out var caller))
             {
                 caller((T) this, command);
-                _commandIds.Add(command.Id);
             }
             else
             {
@@ -56,7 +46,7 @@ namespace NCG.NGS.CQRS.Domain
             }
         }
 
-        public void LoadFrom(IEnumerable<IEvent> events, IEnumerable<Guid> commandIds = default(IEnumerable<Guid>))
+        public void LoadFrom(IEnumerable<IEvent> events)
         {
             foreach (var @event in events)
             {
@@ -69,18 +59,13 @@ namespace NCG.NGS.CQRS.Domain
 
                 ApplyEvent(@event);
             }
-
-            foreach (var commandId in commandIds ?? Enumerable.Empty<Guid>())
-            {
-                _commandIds.Add(commandId);
-            }
         }
 
         public IEnumerable<IEvent> Commit()
         {
-            var eventsToCommit = _events;
+            var eventsToCommit = _uncommitedEvents.ToArray();
+            _uncommitedEvents.Clear();
 
-            _events = new List<IEvent>();
             return eventsToCommit;
         }
 
@@ -106,7 +91,7 @@ namespace NCG.NGS.CQRS.Domain
             
             @event.AggregateRootId = Id;
 
-            _events.Add(@event);
+            _uncommitedEvents.Add(@event);
         }
 
         [EventHandler(typeof(InitializationEvent))]
@@ -156,39 +141,6 @@ namespace NCG.NGS.CQRS.Domain
 
         private static Action<T, TObject> GenerateCaller<TObject>(MethodInfo method, Type objectType)
         {
-            var parameters = method.GetParameters();
-
-            if (parameters.Length == 1 && parameters[0].ParameterType == objectType)
-            {
-                return GenerateExplicitCaller<TObject>(method, objectType);
-            }
-
-            return GenerateImplicitCaller<TObject>(method, objectType);
-
-        }
-
-        private static Action<T, TObject> GenerateExplicitCaller<TObject>(MethodInfo method, Type objectType)
-        {
-            var rootParameter = Expression.Parameter(typeof(T), "root");
-            var objectParameter = Expression.Parameter(typeof(TObject), "o");
-
-            var castParameterToObjectType = Expression.TypeAs(objectParameter, objectType);
-            var eventVariable = Expression.Parameter(objectType, "e");
-            var assignment = Expression.Assign(eventVariable, castParameterToObjectType);
-
-            var rootCall = Expression.Call(rootParameter, method, eventVariable);
-
-            var body = Expression.Block(new ParameterExpression[] { eventVariable }, new Expression[] { assignment, rootCall });
-            var lambda = Expression.Lambda<Action<T, TObject>>(body, rootParameter, objectParameter);
-
-            var action = lambda.Compile();
-
-            return action;
-
-        }
-
-        private static Action<T, TObject> GenerateImplicitCaller<TObject>(MethodInfo method, Type objectType)
-        {
             // declaration of action parameters.
             var rootParameter = Expression.Parameter(typeof(T), "root");
             var objectParameter = Expression.Parameter(typeof(TObject), "o");
@@ -197,25 +149,37 @@ namespace NCG.NGS.CQRS.Domain
             var castParameterToObjectType = Expression.TypeAs(objectParameter, objectType);
             var eventVariable = Expression.Parameter(objectType, "e");
             var assignment = Expression.Assign(eventVariable, castParameterToObjectType);
-            // generate call to root method.
 
-            List<Expression> parameterExpressions = new List<Expression>();
-            var publicProperties = objectType.GetProperties();
+            // generate call to root method.
+            MethodCallExpression rootCall;
             var parameters = method.GetParameters();
-            
-            foreach (var parameter in parameters)
+
+            // use explicit call.
+            if (parameters.Length == 1 && parameters[0].ParameterType == objectType)
             {
-                var matchingProperty = publicProperties.FirstOrDefault(property => string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0);
-                if (matchingProperty == default(PropertyInfo))
+                rootCall = Expression.Call(rootParameter, method, eventVariable);
+            }
+            // use implicit call.
+            else
+            {
+                var parameterExpressions = new List<Expression>();
+                var publicProperties = objectType.GetProperties();
+
+                foreach (var parameter in parameters)
                 {
-                    throw new System.Exception($"Unable to find a property on {objectType.Name} which matches the parameter name {parameter.Name}");
+                    var matchingProperty = publicProperties.FirstOrDefault(property => string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && parameter.ParameterType.IsAssignableFrom(property.PropertyType));
+                    if (matchingProperty == default(PropertyInfo))
+                    {
+                        throw new System.Exception($"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
+                    }
+
+                    parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
                 }
 
-                parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
+                rootCall = Expression.Call(rootParameter, method, parameterExpressions);
             }
             
-            var rootCall = Expression.Call(rootParameter, method, parameterExpressions);
-
+            // generate lambda expression.
             var body = Expression.Block(new ParameterExpression[] { eventVariable }, new Expression[] { assignment, rootCall });
             var lambda = Expression.Lambda<Action<T, TObject>>(body, rootParameter, objectParameter);
 
@@ -223,7 +187,7 @@ namespace NCG.NGS.CQRS.Domain
 
             return action;
         }
-
+        
         private static IEnumerable<MethodInfo> GetMethodsForAttribute<TAttribute>() where TAttribute : Attribute
         {
             var type = typeof(T);

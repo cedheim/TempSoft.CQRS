@@ -11,14 +11,12 @@ namespace NCG.NGS.CQRS.Domain
         Guid Id { get; }
 
         int Version { get; }
-
-        IEnumerable<Guid> ProcessedCommands { get; }
-
+        
         void Initialize(Guid id);
 
         void Handle(ICommand command);
 
-        void LoadFrom(IEnumerable<IEvent> events, IEnumerable<Guid> commandIds = default(IEnumerable<Guid>));
+        void LoadFrom(IEnumerable<IEvent> events);
 
         IEnumerable<IEvent> Commit();
 
