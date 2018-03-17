@@ -17,7 +17,6 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
     public class AggregateRootActor : Actor, IAggregateRootActor
     {
         private readonly IRepository _repository;
-        private const string EventStreamStateName = "_ncg_ngs_cqrs_event_stream";
         private const string CommandLogStateName = "_ncg_ngs_cqrs_command_log";
         private const string AggregateRootTypeStateName = "_ncg_ngs_cqrs_root_type";
 
