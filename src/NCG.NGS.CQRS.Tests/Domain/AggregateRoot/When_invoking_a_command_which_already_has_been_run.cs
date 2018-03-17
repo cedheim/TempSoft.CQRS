@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
 using FluentAssertions;
 using NCG.NGS.CQRS.Events;
 using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
 
-namespace NCG.NGS.CQRS.Tests.Domain
+namespace NCG.NGS.CQRS.Tests.Domain.AggregateRoot
 {
     [TestFixture]
     public class When_invoking_a_command_which_already_has_been_run

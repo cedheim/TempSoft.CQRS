@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Linq;
 using FluentAssertions;
 using NCG.NGS.CQRS.Events;
 using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
 
-namespace NCG.NGS.CQRS.Tests.Domain
+namespace NCG.NGS.CQRS.Tests.Domain.AggregateRoot
 {
     [TestFixture]
-    public class When_loading_an_aggregate_from_events
+    public class When_invoking_a_command
     {
         private AThingAggregateRoot _root;
         private IEvent[] _events;
@@ -16,25 +15,12 @@ namespace NCG.NGS.CQRS.Tests.Domain
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var original = new AThingAggregateRoot();
-            original.Initialize(Data.RootId);
-            original.Handle(new DoSomething(Data.AValue, Data.BValue));
-            _events = original.Commit().Events;
-
             _root = new AThingAggregateRoot();
-            _root.LoadFrom(_events, Enumerable.Empty<Guid>());
-        }
+            _root.Initialize(Data.RootId);
+            _root.Commit();
 
-        [Test]
-        public void Should_have_set_the_id()
-        {
-            _root.Id.Should().Be(Data.RootId);
-        }
-
-        [Test]
-        public void Should_have_triggered_an_event()
-        {
-            _events.Should().ContainSingle(e => e is InitializationEvent && e.Version == 1);
+            _root.Handle(new DoSomething(Data.AValue, Data.BValue));
+            _events = _root.Commit().Events;
         }
 
         [Test]
@@ -63,5 +49,7 @@ namespace NCG.NGS.CQRS.Tests.Domain
             public const int AValue = 5;
             public const string BValue = "FLEUF";
         }
+
+
     }
 }

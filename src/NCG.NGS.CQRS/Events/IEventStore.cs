@@ -9,6 +9,6 @@ namespace NCG.NGS.CQRS.Events
     {
         Task<IEnumerable<IEvent>> Get(Guid id, int fromVersion = default(int), CancellationToken cancellationToken = default(CancellationToken));
 
-        Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken));
+        Task Save(Guid id, IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

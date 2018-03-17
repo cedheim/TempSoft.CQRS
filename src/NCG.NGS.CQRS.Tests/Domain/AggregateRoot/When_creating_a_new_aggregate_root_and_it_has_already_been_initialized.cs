@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
 using FluentAssertions;
 using NCG.NGS.CQRS.Events;
 using NCG.NGS.CQRS.Exception;
 using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
 
-namespace NCG.NGS.CQRS.Tests.Domain
+namespace NCG.NGS.CQRS.Tests.Domain.AggregateRoot
 {
     [TestFixture]
     public class When_creating_a_new_aggregate_root_and_it_has_already_been_initialized
