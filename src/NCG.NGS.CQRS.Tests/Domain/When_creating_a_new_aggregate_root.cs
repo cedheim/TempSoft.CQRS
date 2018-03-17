@@ -18,7 +18,7 @@ namespace NCG.NGS.CQRS.Tests.Domain
         {
             _root = new AThingAggregateRoot();
             _root.Initialize(Data.RootId);
-            _events = _root.Commit().ToArray();
+            _events = _root.Commit().Events;
         }
 
         [Test]

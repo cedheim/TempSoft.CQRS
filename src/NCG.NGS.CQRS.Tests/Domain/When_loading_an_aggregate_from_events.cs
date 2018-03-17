@@ -19,10 +19,10 @@ namespace NCG.NGS.CQRS.Tests.Domain
             var original = new AThingAggregateRoot();
             original.Initialize(Data.RootId);
             original.Handle(new DoSomething(Data.AValue, Data.BValue));
-            _events = original.Commit().ToArray();
+            _events = original.Commit().Events;
 
             _root = new AThingAggregateRoot();
-            _root.LoadFrom(_events);
+            _root.LoadFrom(_events, Enumerable.Empty<Guid>());
         }
 
         [Test]

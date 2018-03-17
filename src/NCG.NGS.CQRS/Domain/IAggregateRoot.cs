@@ -13,15 +13,13 @@ namespace NCG.NGS.CQRS.Domain
         int Version { get; }
         
         void Initialize(Guid id);
-
+        
         void Handle(ICommand command);
 
-        void LoadFrom(IEnumerable<IEvent> events);
+        void LoadFrom(IEnumerable<IEvent> events, IEnumerable<Guid> commandIds);
 
-        IEnumerable<IEvent> Commit();
-
-
-
+        Commit Commit();
+        
         void ApplyChange(IEvent @event);
     }
 }

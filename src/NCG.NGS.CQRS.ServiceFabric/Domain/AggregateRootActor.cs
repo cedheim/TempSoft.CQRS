@@ -9,18 +9,28 @@ using Microsoft.ServiceFabric.Services.Remoting.Client;
 using NCG.NGS.CQRS.Domain;
 using NCG.NGS.CQRS.ServiceFabric.Events;
 using NCG.NGS.CQRS.ServiceFabric.Exceptions;
+using NCG.NGS.CQRS.ServiceFabric.Extensions;
 using NCG.NGS.CQRS.ServiceFabric.Messaging;
 
 namespace NCG.NGS.CQRS.ServiceFabric.Domain
 {
     public class AggregateRootActor : Actor, IAggregateRootActor
     {
+        private readonly IRepository _repository;
         private const string EventStreamStateName = "_ncg_ngs_cqrs_event_stream";
+        private const string CommandLogStateName = "_ncg_ngs_cqrs_command_log";
+        private const string AggregateRootTypeStateName = "_ncg_ngs_cqrs_root_type";
 
-        public AggregateRootActor(ActorService actorService, ActorId actorId, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
+        public AggregateRootActor(ActorService actorService, ActorId actorId, IRepository repository, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
         {
+            _repository = repository;
             ActorProxyFactory = actorProxyFactory;
             ServiceProxyFactory = serviceProxyFactory;
+        }
+
+        protected override async Task OnActivateAsync()
+        {
+            await base.OnActivateAsync();
         }
 
         private IAggregateRoot _root;
@@ -28,42 +38,32 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
         public IActorProxyFactory ActorProxyFactory { get; }
 
         public IServiceProxyFactory ServiceProxyFactory { get; }
-
+        
         public async Task Initialize(InitializeMessage message, CancellationToken cancellationToken)
         {
             var id = this.GetActorId().GetGuidId();
 
-            if (_root != null)
-            {
-                throw new DoubleInitializationException(id);
-            }
-
-            _root = Activate(message.AggregateRootType);
+            _root = await _repository.Get(message.AggregateRootType, id, cancellationToken);
             _root.Initialize(id);
 
-            await SaveAndDispatchEvents(cancellationToken);
+            await _repository.Save(_root, cancellationToken);
         }
 
         public async Task Handle(CommandMessage message, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
-        }
+            var id = this.GetActorId().GetGuidId();
 
-        private IAggregateRoot Activate(Type type)
-        {
-            return Activator.CreateInstance(type) as IAggregateRoot;
-        }
-
-        private async Task SaveAndDispatchEvents(CancellationToken cancellationToken)
-        {
-            var events = _root.Commit().ToArray();
-
-            await StateManager.AddOrUpdateStateAsync(EventStreamStateName, new EventStream(events), (s, stream) =>
+            // should we initialize if we receive a command before it has been initialized?
+            if (_root == null)
             {
-                stream.AddRange(events);
-                return stream;
-            }, cancellationToken);
-        }
+                _root = await _repository.Get(message.AggregateRootType, id, cancellationToken);
+            }
 
+            var command = message.Body;
+            
+            _root.Handle(command);
+
+            await _repository.Save(_root, cancellationToken);
+        }
     }
 }

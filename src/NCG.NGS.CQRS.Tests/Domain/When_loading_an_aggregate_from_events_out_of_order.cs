@@ -26,7 +26,7 @@ namespace NCG.NGS.CQRS.Tests.Domain
         [Test]
         public void Should_throw_an_out_of_order_exception()
         {
-            _root.Invoking(r => r.LoadFrom(_events))
+            _root.Invoking(r => r.LoadFrom(_events, Enumerable.Empty<Guid>()))
                 .Should().Throw<EventsOutOfOrderException>();
         }
 

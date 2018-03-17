@@ -16,13 +16,18 @@ namespace NCG.NGS.CQRS.Domain
         private static readonly Dictionary<Type, Action<T, ICommand>> CommandHandlers = new Dictionary<Type, Action<T, ICommand>>();
         private static readonly Dictionary<Type, Action<T, IEvent>> EventHandlers = new Dictionary<Type, Action<T, IEvent>>();
 
+        // command registry
+        private readonly HashSet<Guid> _commandIds = new HashSet<Guid>();
+
+        // session cache
+        private readonly List<ICommand> _processedCommands = new List<ICommand>();
+        private readonly List<IEvent> _uncommitedEvents = new List<IEvent>();
+        
         static AggregateRoot()
         {
             InitializeEventHandlers();
             InitializeCommandHandlers();
         }
-
-        private List<IEvent> _uncommitedEvents = new List<IEvent>();
 
         public Guid Id { get; protected set; }
 
@@ -32,13 +37,19 @@ namespace NCG.NGS.CQRS.Domain
         {
             this.ApplyChange(new InitializationEvent(id));
         }
-
+        
         public void Handle(ICommand command)
         {
+            if (IsDuplicateCommand(command))
+            {
+                return;
+            }
+
             var type = command.GetType();
             if (CommandHandlers.TryGetValue(type, out var caller))
             {
                 caller((T) this, command);
+                _processedCommands.Add(command);
             }
             else
             {
@@ -46,7 +57,7 @@ namespace NCG.NGS.CQRS.Domain
             }
         }
 
-        public void LoadFrom(IEnumerable<IEvent> events)
+        public void LoadFrom(IEnumerable<IEvent> events, IEnumerable<Guid> commandIds)
         {
             foreach (var @event in events)
             {
@@ -59,14 +70,26 @@ namespace NCG.NGS.CQRS.Domain
 
                 ApplyEvent(@event);
             }
+
+            foreach (var commandId in commandIds)
+            {
+                _commandIds.Add(commandId);
+            }
         }
 
-        public IEnumerable<IEvent> Commit()
+        public Commit Commit()
         {
             var eventsToCommit = _uncommitedEvents.ToArray();
             _uncommitedEvents.Clear();
 
-            return eventsToCommit;
+            var commandIdsToRegister = _processedCommands.Select(cmd => cmd.Id).ToArray();
+            foreach (var commandId in commandIdsToRegister)
+            {
+                _commandIds.Add(commandId);
+            }
+            _processedCommands.Clear();
+
+            return new Commit(Id, eventsToCommit, commandIdsToRegister);
         }
 
         public void ApplyChange(IEvent @event)
@@ -203,6 +226,11 @@ namespace NCG.NGS.CQRS.Domain
             }
             
 
+        }
+
+        private bool IsDuplicateCommand(ICommand command)
+        {
+            return _commandIds.Contains(command.Id) || _processedCommands.Any(cmd => cmd.Id == command.Id);
         }
     }
 }

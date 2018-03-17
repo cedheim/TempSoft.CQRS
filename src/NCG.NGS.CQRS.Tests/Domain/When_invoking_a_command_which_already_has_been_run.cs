@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace NCG.NGS.CQRS.Tests.Domain
 {
     [TestFixture]
-    public class When_invoking_a_command
+    public class When_invoking_a_command_which_already_has_been_run
     {
         private AThingAggregateRoot _root;
         private IEvent[] _events;
@@ -20,7 +20,11 @@ namespace NCG.NGS.CQRS.Tests.Domain
             _root.Initialize(Data.RootId);
             _root.Commit();
 
-            _root.Handle(new DoSomething(Data.AValue, Data.BValue));
+            var command = new DoSomething(Data.AValue, Data.BValue);
+
+            _root.Handle(command);
+            _root.Handle(command);
+
             _events = _root.Commit().Events;
         }
 
@@ -37,6 +41,7 @@ namespace NCG.NGS.CQRS.Tests.Domain
             _events.Should().ContainSingle(e => e is ChangedAValue);
             _events.Should().ContainSingle(e => e is ChangedBValue);
         }
+
 
         [Test]
         public void Should_have_updated_version()
