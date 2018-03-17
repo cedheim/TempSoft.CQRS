@@ -30,9 +30,11 @@ namespace NCG.NGS.CQRS.ServiceFabric.Events
                 : Enumerable.Empty<IEvent>();
         }
 
-        public Task Save(Guid id, IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Save(Guid id, IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            var eventStream = new EventStream(events);
+
+            await _stateManager.AddOrUpdateStateAsync(EventStreamStateName, eventStream, (s, stream) => stream.AddToEnd(eventStream), cancellationToken);
         }
     }
 }

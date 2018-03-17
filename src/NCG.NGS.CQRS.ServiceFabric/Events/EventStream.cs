@@ -42,6 +42,12 @@ namespace NCG.NGS.CQRS.ServiceFabric.Events
             _states.AddRange(events.Select(e => new EventState(e)));
         }
 
+        public EventStream AddToEnd(EventStream eventStream)
+        {
+            _states.AddRange(eventStream._states);
+            return this;
+        }
+
         public void Clear()
         {
             _states.Clear();
