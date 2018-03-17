@@ -17,7 +17,6 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
     public class AggregateRootActor : Actor, IAggregateRootActor
     {
         private readonly IRepository _repository;
-        private const string CommandLogStateName = "_ncg_ngs_cqrs_command_log";
         private const string AggregateRootTypeStateName = "_ncg_ngs_cqrs_root_type";
 
         public AggregateRootActor(ActorService actorService, ActorId actorId, IRepository repository, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)

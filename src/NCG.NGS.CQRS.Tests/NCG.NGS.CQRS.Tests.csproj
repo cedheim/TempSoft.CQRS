@@ -21,8 +21,4 @@
     <ProjectReference Include="..\NCG.NGS.CQRS\NCG.NGS.CQRS.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ServiceFabric\Commands\" />
-  </ItemGroup>
-
 </Project>
