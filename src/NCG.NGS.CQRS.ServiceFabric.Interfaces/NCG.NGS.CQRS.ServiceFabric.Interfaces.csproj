@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <Platforms>x64</Platforms>
@@ -12,9 +13,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NCG.NGS.CQRS.Common\NCG.NGS.CQRS.Common.csproj" />
-    <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric.Interfaces\NCG.NGS.CQRS.ServiceFabric.Interfaces.csproj" />
     <ProjectReference Include="..\NCG.NGS.CQRS\NCG.NGS.CQRS.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
 
 </Project>

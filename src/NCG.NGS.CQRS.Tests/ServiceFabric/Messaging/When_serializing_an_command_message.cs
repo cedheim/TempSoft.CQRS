@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using System.Text;
 using FluentAssertions;
-using NCG.NGS.CQRS.ServiceFabric.Messaging;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
 

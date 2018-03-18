@@ -7,7 +7,7 @@ using Microsoft.ServiceFabric.Actors;
 using NCG.NGS.CQRS.Events;
 using NCG.NGS.CQRS.ServiceFabric.Domain;
 using NCG.NGS.CQRS.ServiceFabric.Events;
-using NCG.NGS.CQRS.ServiceFabric.Messaging;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
 using ServiceFabric.Mocks;

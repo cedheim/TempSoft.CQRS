@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Messaging
+namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
     public class MessageHeader : GenericObjectBase

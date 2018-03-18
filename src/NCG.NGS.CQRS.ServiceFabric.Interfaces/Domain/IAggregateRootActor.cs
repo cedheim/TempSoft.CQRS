@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
-using NCG.NGS.CQRS.ServiceFabric.Messaging;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Domain
+namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain
 {
     public interface IAggregateRootActor : IActor
     {

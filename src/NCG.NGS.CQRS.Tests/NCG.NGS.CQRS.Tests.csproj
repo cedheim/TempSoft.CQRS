@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric.Interfaces\NCG.NGS.CQRS.ServiceFabric.Interfaces.csproj" />
     <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric\NCG.NGS.CQRS.ServiceFabric.csproj" />
     <ProjectReference Include="..\NCG.NGS.CQRS\NCG.NGS.CQRS.csproj" />
   </ItemGroup>

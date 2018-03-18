@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Messaging
+namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
     public abstract class GenericObjectBase

@@ -36,7 +36,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
         }
         
         [Test]
-        public async Task Should_initialize_with_events()
+        public void Should_initialize_with_events()
         {
             _root.Id.Should().Be(Data.AggregateRootId);
             _root.A.Should().Be(Data.AValue);

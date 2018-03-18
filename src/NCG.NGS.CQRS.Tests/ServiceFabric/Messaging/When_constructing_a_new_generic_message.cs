@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using NCG.NGS.CQRS.ServiceFabric.Messaging;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 using NUnit.Framework;
 
 namespace NCG.NGS.CQRS.Tests.ServiceFabric.Messaging

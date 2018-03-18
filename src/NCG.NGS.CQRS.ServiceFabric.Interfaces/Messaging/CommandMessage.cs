@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.ServiceFabric.Extensions;
+using NCG.NGS.CQRS.Common.Extensions;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Messaging
+namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
     public class CommandMessage : GenericMessage

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.ServiceFabric.Messaging;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 
 namespace NCG.NGS.CQRS.ServiceFabric.Events
 {

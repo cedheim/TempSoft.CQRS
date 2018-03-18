@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Exceptions
+namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Exceptions
 {
     [Serializable]
     public class NotInitializedException : System.Exception

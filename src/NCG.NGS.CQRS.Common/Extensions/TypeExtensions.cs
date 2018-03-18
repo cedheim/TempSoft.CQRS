@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Extensions
+namespace NCG.NGS.CQRS.Common.Extensions
 {
     public static class TypeExtensions
     {

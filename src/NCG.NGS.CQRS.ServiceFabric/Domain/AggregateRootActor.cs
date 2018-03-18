@@ -8,9 +8,8 @@ using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using NCG.NGS.CQRS.Domain;
 using NCG.NGS.CQRS.ServiceFabric.Events;
-using NCG.NGS.CQRS.ServiceFabric.Exceptions;
-using NCG.NGS.CQRS.ServiceFabric.Extensions;
-using NCG.NGS.CQRS.ServiceFabric.Messaging;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 
 namespace NCG.NGS.CQRS.ServiceFabric.Domain
 {
