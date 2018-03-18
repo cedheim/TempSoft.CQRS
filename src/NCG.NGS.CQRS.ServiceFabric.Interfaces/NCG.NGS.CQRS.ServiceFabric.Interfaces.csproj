@@ -15,8 +15,5 @@
     <ProjectReference Include="..\NCG.NGS.CQRS.Common\NCG.NGS.CQRS.Common.csproj" />
     <ProjectReference Include="..\NCG.NGS.CQRS\NCG.NGS.CQRS.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
 
 </Project>
