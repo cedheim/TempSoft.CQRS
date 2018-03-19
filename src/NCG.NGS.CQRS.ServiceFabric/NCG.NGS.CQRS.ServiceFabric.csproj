@@ -8,7 +8,6 @@
     <PackageReference Include="Microsoft.ServiceFabric.Actors" Version="3.0.472" />
     <PackageReference Include="Microsoft.ServiceFabric.Services" Version="3.0.472" />
     <PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="3.0.472" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NCG.NGS.CQRS.Common\NCG.NGS.CQRS.Common.csproj" />

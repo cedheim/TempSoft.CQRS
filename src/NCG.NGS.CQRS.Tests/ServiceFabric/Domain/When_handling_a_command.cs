@@ -28,7 +28,7 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Domain
             _root.Initialize(Data.ActorId);
             _root.Commit();
 
-            A.CallTo(() => Repository.Get(A<Type>.Ignored, A<Guid>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => AggregateRootRepository.Get(A<Type>.Ignored, A<Guid>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(_root);
 
             _actorId = new ActorId(Data.ActorId);
@@ -49,14 +49,14 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Domain
         [Test]
         public void Should_have_gotten_the_root_from_the_repository()
         {
-            A.CallTo(() => Repository.Get(typeof(AThingAggregateRoot), Data.ActorId, A<CancellationToken>.Ignored))
+            A.CallTo(() => AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId, A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
         public void Should_have_saved_the_aggregate_to_the_repository()
         {
-            A.CallTo(() => Repository.Save(_root, A<CancellationToken>.Ignored))
+            A.CallTo(() => AggregateRootRepository.Save(_root, A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
         

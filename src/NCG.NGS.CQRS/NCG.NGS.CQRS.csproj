@@ -5,4 +5,8 @@
     <Platforms>x64</Platforms>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefineConstants>TINYIOC_INTERNAL</DefineConstants>
+  </PropertyGroup>
+
 </Project>

@@ -8,13 +8,13 @@ using NCG.NGS.CQRS.Events;
 
 namespace NCG.NGS.CQRS.Domain
 {
-    public class Repository : IRepository
+    public class AggregateRootRepository : IAggregateRootRepository
     {
         private readonly IEventStore _eventStore;
         private readonly IEventBus _eventBus;
         private readonly ICommandRegistry _commandRegistry;
 
-        public Repository(IEventStore eventStore, IEventBus eventBus, ICommandRegistry commandRegistry)
+        public AggregateRootRepository(IEventStore eventStore, IEventBus eventBus, ICommandRegistry commandRegistry)
         {
             _eventStore = eventStore;
             _eventBus = eventBus;

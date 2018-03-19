@@ -15,12 +15,12 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
 {
     public class AggregateRootActor : Actor, IAggregateRootActor
     {
-        private readonly IRepository _repository;
+        private readonly IAggregateRootRepository _aggregateRootRepository;
         private const string AggregateRootTypeStateName = "_ncg_ngs_cqrs_root_type";
 
-        public AggregateRootActor(ActorService actorService, ActorId actorId, IRepository repository, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
+        public AggregateRootActor(ActorService actorService, ActorId actorId, IAggregateRootRepository aggregateRootRepository, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
         {
-            _repository = repository;
+            _aggregateRootRepository = aggregateRootRepository;
             ActorProxyFactory = actorProxyFactory;
             ServiceProxyFactory = serviceProxyFactory;
         }
@@ -40,10 +40,10 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
         {
             var id = this.GetActorId().GetGuidId();
 
-            _root = await _repository.Get(message.AggregateRootType, id, cancellationToken);
+            _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
             _root.Initialize(id);
 
-            await _repository.Save(_root, cancellationToken);
+            await _aggregateRootRepository.Save(_root, cancellationToken);
         }
 
         public async Task Handle(CommandMessage message, CancellationToken cancellationToken)
@@ -53,14 +53,14 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
             // should we initialize if we receive a command before it has been initialized?
             if (_root == null)
             {
-                _root = await _repository.Get(message.AggregateRootType, id, cancellationToken);
+                _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
             }
 
             var command = message.Body;
             
             _root.Handle(command);
 
-            await _repository.Save(_root, cancellationToken);
+            await _aggregateRootRepository.Save(_root, cancellationToken);
         }
     }
 }

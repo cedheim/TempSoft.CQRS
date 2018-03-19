@@ -18,7 +18,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
         private IEventStore _eventStore;
         private IEventBus _eventBus;
         private ICommandRegistry _commandRegistry;
-        private CQRS.Domain.Repository _repository;
+        private CQRS.Domain.AggregateRootRepository _aggregateRootRepository;
         private AThingAggregateRoot _root;
 
         [OneTimeSetUp]
@@ -28,13 +28,13 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
             _eventBus = A.Fake<IEventBus>();
             _commandRegistry = A.Fake<ICommandRegistry>();
 
-            _repository = new CQRS.Domain.Repository(_eventStore, _eventBus, _commandRegistry);
+            _aggregateRootRepository = new CQRS.Domain.AggregateRootRepository(_eventStore, _eventBus, _commandRegistry);
 
             _root = new AThingAggregateRoot();
             _root.Initialize(Data.AggregateRootId);
             _root.Handle(new DoSomething(Data.AValue, Data.BValue));
 
-            await _repository.Save(_root, CancellationToken.None);
+            await _aggregateRootRepository.Save(_root, CancellationToken.None);
         }
 
         [Test]

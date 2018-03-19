@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using NCG.NGS.CQRS.Common.Serialization;
 
 namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
 {
@@ -30,7 +31,7 @@ namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
         }
 
         [IgnoreDataMember]
-        public object Body => _deserializedBody ?? (_deserializedBody = Newtonsoft.Json.JsonConvert.DeserializeObject(_body, Type));
+        public object Body => _deserializedBody ?? (_deserializedBody = Serializer.Deserialize(_body, Type));
 
         [IgnoreDataMember]
         public Type Type => _deserializedType ?? (_deserializedType = Type.GetType(_type));
@@ -39,7 +40,7 @@ namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
         {
             // Type name without version qualifier. Not sure how to handle this properly.
             _type = $"{_deserializedType.FullName}, {_deserializedType.Assembly.GetName().Name}";
-            _body = Newtonsoft.Json.JsonConvert.SerializeObject(_deserializedBody);
+            _body = Serializer.Serialize(_deserializedBody);
         }
     }
 }

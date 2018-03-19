@@ -16,7 +16,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
         private IEventStore _eventStore;
         private IEventBus _eventBus;
         private ICommandRegistry _commandRegistry;
-        private CQRS.Domain.Repository _repository;
+        private CQRS.Domain.AggregateRootRepository _aggregateRootRepository;
         private AThingAggregateRoot _root;
 
         [SetUp]
@@ -29,9 +29,9 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
             A.CallTo(() => _eventStore.Get(A<Guid>.Ignored, A<int>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(new IEvent[] { new InitializationEvent(Data.AggregateRootId) { Version = 1 }, new ChangedAValue(Data.AValue) { Version = 2 }, new ChangedBValue(Data.BValue) { Version = 3 }, });
 
-            _repository = new CQRS.Domain.Repository(_eventStore, _eventBus, _commandRegistry);
+            _aggregateRootRepository = new CQRS.Domain.AggregateRootRepository(_eventStore, _eventBus, _commandRegistry);
             
-            _root = await _repository.Get<AThingAggregateRoot>(Data.AggregateRootId, CancellationToken.None);
+            _root = await _aggregateRootRepository.Get<AThingAggregateRoot>(Data.AggregateRootId, CancellationToken.None);
 
         }
         

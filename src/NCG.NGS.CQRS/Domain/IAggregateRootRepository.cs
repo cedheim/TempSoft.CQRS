@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace NCG.NGS.CQRS.Domain
 {
-    public interface IRepository
+    public interface IAggregateRootRepository
     {
         Task<IAggregateRoot> Get(Type type, Guid id, CancellationToken cancellationToken = default(CancellationToken));
 

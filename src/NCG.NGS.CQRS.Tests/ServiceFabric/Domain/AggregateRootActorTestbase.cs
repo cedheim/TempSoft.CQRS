@@ -18,13 +18,13 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Domain
 
         protected readonly IActorProxyFactory ActorProxyFactory = A.Fake<IActorProxyFactory>();
         protected readonly IServiceProxyFactory ServiceProxyFactory = A.Fake<IServiceProxyFactory>();
-        protected readonly IRepository Repository = A.Fake<IRepository>();
+        protected readonly IAggregateRootRepository AggregateRootRepository = A.Fake<IAggregateRootRepository>();
         protected readonly MockActorService<AggregateRootActor> ActorService;
 
         protected AggregateRootActorTestBase()
         {
             ActorService = ServiceFabricFactories.CreateActorServiceForActorWithCustomStateManager<AggregateRootActor>(
-                (service, id) => new AggregateRootActor(service, id, Repository, ActorProxyFactory, ServiceProxyFactory));
+                (service, id) => new AggregateRootActor(service, id, AggregateRootRepository, ActorProxyFactory, ServiceProxyFactory));
         }
     }
 }
