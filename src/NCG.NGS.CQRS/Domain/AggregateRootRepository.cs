@@ -51,7 +51,7 @@ namespace NCG.NGS.CQRS.Domain
             var saveCommandIdsTask = _commandRegistry.Save(commit.AggregateRootId, commit.CommandIds, cancellationToken);
 
             await Task.WhenAll(saveCommandIdsTask, saveEventsTask);
-            await _eventBus.Publish(commit.Events);
+            await _eventBus.Publish(commit.Events, cancellationToken);
         }
 
         private IAggregateRoot Activate(Type type)

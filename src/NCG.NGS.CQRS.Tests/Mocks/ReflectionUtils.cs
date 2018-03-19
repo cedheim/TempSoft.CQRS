@@ -59,12 +59,12 @@ namespace NCG.NGS.CQRS.Tests.Mocks
             return default(TProperty);
         }
         
-        public static void CallPrivateMethod(this object that, string methodName, params object[] args)
+        public static object CallPrivateMethod(this object that, string methodName, params object[] args)
         {
             var methodInfo = that.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (methodInfo == null) throw new ArgumentException($"Method {methodName} does not exist on {that.GetType().Name}");
 
-            methodInfo.Invoke(that, args);
+            return methodInfo.Invoke(that, args);
         }
 
         public static T Clone<T>(this T that)

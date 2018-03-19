@@ -13,7 +13,7 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Messaging
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _message = new GenericMessage("HelloWorld", headers: new[] { new KeyValuePair<string, object>("Header1", "AnotherWorld") });
+            _message = new GenericMessage("HelloWorld", headers: new[] { new KeyValuePair<string, object>("Header1", "AnotherWorld"), new KeyValuePair<string, object>("Header2", "Over Writeable") });
 
         }
 
@@ -33,6 +33,7 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Messaging
         public void Should_contain_the_header()
         {
             _message.HeaderNames.Should().ContainSingle(name => name == "Header1");
+            _message.HeaderNames.Should().ContainSingle(name => name == "Header2");
         }
 
         [Test]
@@ -44,18 +45,20 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Messaging
         }
 
         [Test]
-        public void Should_not_be_able_to_add_an_existing_header()
+        public void Should_be_able_to_overwrite_an_existing_header()
         {
-            _message.Invoking(message => message.AddHeader("Header1", "SHOULD NOT WORK"))
-                .Should().Throw<System.ArgumentException>();
+            _message.SetHeader("Header2", "OVERWRITTEN");
+
+            _message.TryGetHeader("Header2", out object value);
+            value.ToString().Should().Be("OVERWRITTEN");
         }
 
         [Test]
         public void Should_be_able_to_add_a_new_header()
         {
-            _message.AddHeader("Header2", "AThirdWorld");
+            _message.SetHeader("Header3", "AThirdWorld");
 
-            _message.TryGetHeader("Header2", out object header).Should().BeTrue();
+            _message.TryGetHeader("Header3", out object header).Should().BeTrue();
 
             (header as string).Should().BeEquivalentTo("AThirdWorld");
         }

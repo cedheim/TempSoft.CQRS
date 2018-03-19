@@ -22,31 +22,25 @@ namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
         {
             _body = new MessageBody(value);
             _headers = new List<MessageHeader>();
+
+            Id = Guid.NewGuid();
             
             if (!object.ReferenceEquals(headers, default(IEnumerable<KeyValuePair<string, object>>)))
             {
                 foreach (var kvp in headers)
                 {
-                    AddHeader(kvp.Key, kvp.Value);
+                    SetHeader(kvp.Key, kvp.Value);
                 }
             }
         }
+
+        [DataMember] public Guid Id { get; private set; }
         
         [IgnoreDataMember] public object Body => _body.Body;
 
         [IgnoreDataMember] public Type Type => _body.Type;
-
-        public void AddHeader(string name, object value)
-        {
-            if (_headers.Any(header => header.Name == name))
-            {
-                throw new ArgumentException($"Header with name \"{name}\" already exists", nameof(name));
-            }
-
-            _headers.Add(new MessageHeader(name, value));
-        }
-
-        public void UpdateOrAddHeader(string name, object value)
+        
+        public void SetHeader(string name, object value)
         {
             var existingHeader = _headers.FirstOrDefault(h => h.Name == name);
             if (!object.ReferenceEquals(existingHeader, default(MessageHeader)))

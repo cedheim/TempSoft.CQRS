@@ -63,7 +63,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
             A.CallTo(() => _eventBus.Publish(A<IEnumerable<IEvent>>.That.Matches(es =>
                     es.Any(e => e is InitializationEvent) &&
                     es.Any(e => e is ChangedAValue) &&
-                    es.Any(e => e is ChangedBValue))))
+                    es.Any(e => e is ChangedBValue)), A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
