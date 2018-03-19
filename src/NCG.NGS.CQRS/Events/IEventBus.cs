@@ -7,7 +7,5 @@ namespace NCG.NGS.CQRS.Events
     public interface IEventBus
     {
         Task Publish(IEnumerable<IEvent> events);
-
-        Task RegisterQueryBuilder(IQueryBuilder builder);
     }
 }
