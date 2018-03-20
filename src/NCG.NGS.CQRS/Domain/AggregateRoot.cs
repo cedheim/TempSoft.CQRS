@@ -8,6 +8,7 @@ using System.Reflection;
 using NCG.NGS.CQRS.Commands;
 using NCG.NGS.CQRS.Events;
 using NCG.NGS.CQRS.Exception;
+using NCG.NGS.CQRS.Extensions;
 
 namespace NCG.NGS.CQRS.Domain
 {
@@ -33,10 +34,7 @@ namespace NCG.NGS.CQRS.Domain
 
         public int Version { get; private set; }
 
-        public virtual void Initialize(Guid id)
-        {
-            this.ApplyChange(new InitializationEvent(id));
-        }
+        public abstract void Initialize(Guid id);
         
         public void Handle(ICommand command)
         {
@@ -97,14 +95,25 @@ namespace NCG.NGS.CQRS.Domain
             var type = @event.GetType();
 
             // validate event.
-            if (Version == 0 && !(@event is InitializationEvent))
+            if (Version == 0 && !(@event is IInitializationEvent))
             {
                 throw new DomainEventOnUninitializedAggregateException($"Domain event of type {type.Name} on uninitialized root.");
 
             }
-            if(Version != 0 && @event is InitializationEvent)
+
+
+            if (@event is IInitializationEvent)
             {
-                throw new InitializationOfAlreadyInitializedAggregateException($"Tried to initialize root that already is initialized.");
+                if (Version != 0)
+                {
+                    throw new InitializationOfAlreadyInitializedAggregateException($"Tried to initialize root that already is initialized.");
+                }
+
+                Id = @event.AggregateRootId;
+            }
+            else
+            {
+                @event.AggregateRootId = Id;
             }
 
             ++Version;
@@ -112,13 +121,11 @@ namespace NCG.NGS.CQRS.Domain
 
             ApplyEvent(@event);
             
-            @event.AggregateRootId = Id;
-
             _uncommitedEvents.Add(@event);
         }
 
-        [EventHandler(typeof(InitializationEvent))]
-        private void Apply(InitializationEvent e)
+        [EventHandler(typeof(IInitializationEvent))]
+        private void Apply(IInitializationEvent e)
         {
             Id = e.AggregateRootId;
         }
@@ -139,11 +146,11 @@ namespace NCG.NGS.CQRS.Domain
         private static void InitializeEventHandlers()
         {
             // get all methods with event handler attribute decoration.
-            foreach (var eventHandler in GetMethodsForAttribute<EventHandlerAttribute>())
+            foreach (var eventHandler in typeof(T).GetMethodsForAttribute<EventHandlerAttribute>())
             {
                 foreach (var eventHandlerAttribute in eventHandler.GetCustomAttributes(typeof(EventHandlerAttribute), true).Cast<EventHandlerAttribute>())
                 {
-                    var caller = GenerateCaller<IEvent>(eventHandler, eventHandlerAttribute.For);
+                    var caller = eventHandler.GenerateHandler<T, IEvent>(eventHandlerAttribute.For);
                     EventHandlers.Add(eventHandlerAttribute.For, caller);
                 }
             }
@@ -152,82 +159,16 @@ namespace NCG.NGS.CQRS.Domain
 
         private static void InitializeCommandHandlers()
         {
-            foreach (var commandHandler in GetMethodsForAttribute<CommandHandlerAttribute>())
+            foreach (var commandHandler in typeof(T).GetMethodsForAttribute<CommandHandlerAttribute>())
             {
                 foreach (var commandHandlerAttribute in commandHandler.GetCustomAttributes(typeof(CommandHandlerAttribute), true).Cast<CommandHandlerAttribute>())
                 {
-                    var caller = GenerateCaller<ICommand>(commandHandler, commandHandlerAttribute.For);
+                    var caller = commandHandler.GenerateHandler<T, ICommand>(commandHandlerAttribute.For);
                     CommandHandlers.Add(commandHandlerAttribute.For, caller);
                 }
             }
         }
-
-        private static Action<T, TObject> GenerateCaller<TObject>(MethodInfo method, Type objectType)
-        {
-            // declaration of action parameters.
-            var rootParameter = Expression.Parameter(typeof(T), "root");
-            var objectParameter = Expression.Parameter(typeof(TObject), "o");
-
-            // cast the input event to the actual object type.
-            var castParameterToObjectType = Expression.TypeAs(objectParameter, objectType);
-            var eventVariable = Expression.Parameter(objectType, "e");
-            var assignment = Expression.Assign(eventVariable, castParameterToObjectType);
-
-            // generate call to root method.
-            MethodCallExpression rootCall;
-            var parameters = method.GetParameters();
-
-            // use explicit call.
-            if (parameters.Length == 1 && parameters[0].ParameterType == objectType)
-            {
-                rootCall = Expression.Call(rootParameter, method, eventVariable);
-            }
-            // use implicit call.
-            else
-            {
-                var parameterExpressions = new List<Expression>();
-                var publicProperties = objectType.GetProperties();
-
-                foreach (var parameter in parameters)
-                {
-                    var matchingProperty = publicProperties.FirstOrDefault(property => string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && parameter.ParameterType.IsAssignableFrom(property.PropertyType));
-                    if (matchingProperty == default(PropertyInfo))
-                    {
-                        throw new System.Exception($"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
-                    }
-
-                    parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
-                }
-
-                rootCall = Expression.Call(rootParameter, method, parameterExpressions);
-            }
-            
-            // generate lambda expression.
-            var body = Expression.Block(new ParameterExpression[] { eventVariable }, new Expression[] { assignment, rootCall });
-            var lambda = Expression.Lambda<Action<T, TObject>>(body, rootParameter, objectParameter);
-
-            var action = lambda.Compile();
-
-            return action;
-        }
         
-        private static IEnumerable<MethodInfo> GetMethodsForAttribute<TAttribute>() where TAttribute : Attribute
-        {
-            var type = typeof(T);
-
-            while (type != default(Type))
-            {
-                foreach (var methodInfo in type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Where(m => m.CustomAttributes.Any(a => a.AttributeType == typeof(TAttribute))))
-                {
-                    yield return methodInfo;
-                }
-
-                type = type.BaseType;
-            }
-            
-
-        }
-
         private bool IsDuplicateCommand(ICommand command)
         {
             return _commandIds.Contains(command.Id) || _processedCommands.Any(cmd => cmd.Id == command.Id);

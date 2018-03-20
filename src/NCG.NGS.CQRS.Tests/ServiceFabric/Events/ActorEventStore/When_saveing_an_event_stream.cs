@@ -23,7 +23,7 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.ActorEventStore
             _stateManager = A.Fake<IActorStateManager>();
             _store = new CQRS.ServiceFabric.Events.ActorEventStore(_stateManager);
 
-            _events = new IEvent[] {new ChangedAValue(5) {Version = 2}, new InitializationEvent(Data.ActorId) {Version = 1}};
+            _events = new IEvent[] {new ChangedAValue(5) {Version = 2}, new CreatedAThing(Data.ActorId) {Version = 1}};
 
             await _store.Save(Data.ActorId, _events, CancellationToken.None);
 

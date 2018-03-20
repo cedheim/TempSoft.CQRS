@@ -27,7 +27,7 @@ namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.ActorEventStore
             _store = new CQRS.ServiceFabric.Events.ActorEventStore(_stateManager);
 
             A.CallTo(() => _stateManager.TryGetStateAsync<EventStream>(A<string>.That.IsNotNull(), A<CancellationToken>.Ignored))
-                .Returns(new ConditionalValue<EventStream>(true, new EventStream(new IEvent[] { new ChangedAValue(5) { Version = 2 }, new InitializationEvent(Data.ActorId) { Version = 1 } })));
+                .Returns(new ConditionalValue<EventStream>(true, new EventStream(new IEvent[] { new ChangedAValue(5) { Version = 2 }, new CreatedAThing(Data.ActorId) { Version = 1 } })));
             
             _events = (await _store.Get(Data.ActorId, 1, CancellationToken.None)).ToArray();
         }

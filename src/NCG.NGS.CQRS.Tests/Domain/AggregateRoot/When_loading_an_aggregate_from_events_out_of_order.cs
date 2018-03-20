@@ -18,7 +18,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.AggregateRoot
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _events = new IEvent[] { new InitializationEvent(Data.RootId) { Version = 1 }, new ChangedAValue(Data.AValue) { Version = 3 }, new ChangedBValue(Data.BValue) { Version = 2 } };
+            _events = new IEvent[] { new CreatedAThing(Data.RootId) { Version = 1 }, new ChangedAValue(Data.AValue) { Version = 3 }, new ChangedBValue(Data.BValue) { Version = 2 } };
 
             _root = new AThingAggregateRoot();
         }

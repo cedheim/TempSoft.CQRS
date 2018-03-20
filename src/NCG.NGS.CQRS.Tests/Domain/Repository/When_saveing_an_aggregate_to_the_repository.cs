@@ -43,7 +43,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
             A.CallTo(() =>
                     _eventStore.Save(Data.AggregateRootId,
                         A<IEnumerable<IEvent>>.That.Matches(es =>
-                            es.Any(e => e is InitializationEvent) && 
+                            es.Any(e => e is IInitializationEvent) && 
                             es.Any(e => e is ChangedAValue) &&
                             es.Any(e => e is ChangedBValue)
                         ), A<CancellationToken>.Ignored))
@@ -61,7 +61,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
         public void Should_have_published_the_events()
         {
             A.CallTo(() => _eventBus.Publish(A<IEnumerable<IEvent>>.That.Matches(es =>
-                    es.Any(e => e is InitializationEvent) &&
+                    es.Any(e => e is IInitializationEvent) &&
                     es.Any(e => e is ChangedAValue) &&
                     es.Any(e => e is ChangedBValue)), A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);

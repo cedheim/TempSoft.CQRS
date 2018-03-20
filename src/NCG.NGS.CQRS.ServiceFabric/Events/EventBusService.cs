@@ -4,32 +4,42 @@ using System.Diagnostics;
 using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
+using NCG.NGS.CQRS.Common.Extensions;
 using NCG.NGS.CQRS.Common.Random;
 using NCG.NGS.CQRS.Queries;
 using NCG.NGS.CQRS.ServiceFabric.Interfaces.Events;
 using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
+using NCG.NGS.CQRS.ServiceFabric.Interfaces.Queries;
 
 namespace NCG.NGS.CQRS.ServiceFabric.Events
 {
     public class EventBusService : StatefulService, IEventBusService
     {
         private readonly IQueryBuilderRegistry _queryBuilderRegistry;
+        private readonly IServiceProxyFactory _serviceProxyFactory;
+        private readonly IActorProxyFactory _actorProxyFactory;
         private const string EventQueueName = "_ncg_ngs_event_queue";
 
-        public EventBusService(StatefulServiceContext serviceContext, IQueryBuilderRegistry queryBuilderRegistry) : base(serviceContext)
+        public EventBusService(StatefulServiceContext serviceContext, IQueryBuilderRegistry queryBuilderRegistry, IServiceProxyFactory serviceProxyFactory, IActorProxyFactory actorProxyFactory) : base(serviceContext)
         {
             _queryBuilderRegistry = queryBuilderRegistry;
+            _serviceProxyFactory = serviceProxyFactory;
+            _actorProxyFactory = actorProxyFactory;
         }
 
-        public EventBusService(StatefulServiceContext serviceContext, IReliableStateManagerReplica reliableStateManagerReplica, IQueryBuilderRegistry queryBuilderRegistry) : base(serviceContext, reliableStateManagerReplica)
+        public EventBusService(StatefulServiceContext serviceContext, IReliableStateManagerReplica reliableStateManagerReplica, IQueryBuilderRegistry queryBuilderRegistry, IServiceProxyFactory serviceProxyFactory, IActorProxyFactory actorProxyFactory) : base(serviceContext, reliableStateManagerReplica)
         {
             _queryBuilderRegistry = queryBuilderRegistry;
+            _serviceProxyFactory = serviceProxyFactory;
+            _actorProxyFactory = actorProxyFactory;
         }
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -51,8 +61,11 @@ namespace NCG.NGS.CQRS.ServiceFabric.Events
                         }
 
                         var message = conditionalDequeue.Value;
-
-                        await _queryBuilderRegistry.Apply(message.Body);
+                        foreach (var queryBuilder in _queryBuilderRegistry.ListQueryBuildersFor(message.Type))
+                        {
+                            var actor = _actorProxyFactory.CreateActorProxy<IQueryBuilderActor>(new ActorId(queryBuilder.GetType().ToFriendlyName()));
+                            await actor.Apply(message, cancellationToken);
+                        }
 
                         await tx.CommitAsync();
                     }

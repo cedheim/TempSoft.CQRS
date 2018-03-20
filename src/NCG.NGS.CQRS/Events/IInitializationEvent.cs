@@ -2,15 +2,7 @@
 
 namespace NCG.NGS.CQRS.Events
 {
-    public class InitializationEvent : EventBase
+    public interface IInitializationEvent : IEvent
     {
-        private InitializationEvent()
-        {
-        }
-
-        public InitializationEvent(Guid aggregateRootId)
-        {
-            AggregateRootId = aggregateRootId;
-        }
     }
 }

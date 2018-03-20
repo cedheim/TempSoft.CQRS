@@ -27,7 +27,7 @@ namespace NCG.NGS.CQRS.Tests.Domain.Repository
             _commandRegistry = A.Fake<ICommandRegistry>();
 
             A.CallTo(() => _eventStore.Get(A<Guid>.Ignored, A<int>.Ignored, A<CancellationToken>.Ignored))
-                .Returns(new IEvent[] { new InitializationEvent(Data.AggregateRootId) { Version = 1 }, new ChangedAValue(Data.AValue) { Version = 2 }, new ChangedBValue(Data.BValue) { Version = 3 }, });
+                .Returns(new IEvent[] { new CreatedAThing(Data.AggregateRootId) { Version = 1 }, new ChangedAValue(Data.AValue) { Version = 2 }, new ChangedBValue(Data.BValue) { Version = 3 }, });
 
             _aggregateRootRepository = new CQRS.Domain.AggregateRootRepository(_eventStore, _eventBus, _commandRegistry);
             

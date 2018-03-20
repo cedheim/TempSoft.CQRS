@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NCG.NGS.CQRS.Commands;
 using NCG.NGS.CQRS.Domain;
 using NCG.NGS.CQRS.Events;
+using NCG.NGS.CQRS.Queries;
 
 namespace NCG.NGS.CQRS.Tests.Mocks
 {
@@ -27,6 +31,17 @@ namespace NCG.NGS.CQRS.Tests.Mocks
         private void Apply(ChangedBValue @event)
         {
             B = @event.B;
+        }
+
+        [EventHandler(typeof(CreatedAThing))]
+        private void Apply(CreatedAThing @event)
+        {
+            Id = @event.AggregateRootId;
+        }
+
+        public override void Initialize(Guid id)
+        {
+            ApplyChange(new CreatedAThing(id));
         }
     }
 
@@ -57,4 +72,57 @@ namespace NCG.NGS.CQRS.Tests.Mocks
 
         public string B { get; private set; }
     }
+
+    public class CreatedAThing : InitializationEventBase
+    {
+        private CreatedAThing()
+        {
+        }
+
+        public CreatedAThing(Guid aggregateRootId) 
+            : base(aggregateRootId)
+        {
+        }
+    }
+
+    public class AThingQueryBuilder : QueryBuilderBase<AThingQueryBuilder>
+    {
+        private static readonly Type[] AThingEvents = {
+            typeof(CreatedAThing),
+            typeof(ChangedAValue),
+            typeof(ChangedBValue)
+        };
+
+        public override IEnumerable<Type> Events => AThingEvents;
+
+        public AThingQueryBuilder(IQueryModelRepository repository) : base(repository)
+        {
+        }
+
+        [QueryBuilderHandler(typeof(CreatedAThing))]
+        public async Task Apply(CreatedAThing @event, CancellationToken cancellationToken)
+        {
+            await base.Repository.Save(@event.AggregateRootId.ToString(), new AThingQueryModel());
+        }
+
+        [QueryBuilderHandler(typeof(ChangedAValue))]
+        public Task Apply(ChangedAValue @event, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        [QueryBuilderHandler(typeof(ChangedBValue))]
+        public Task Apply(ChangedBValue @event, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class AThingQueryModel
+    {
+        public int A { get; set; }
+
+        public string B { get; set; }
+    }
+
 }
