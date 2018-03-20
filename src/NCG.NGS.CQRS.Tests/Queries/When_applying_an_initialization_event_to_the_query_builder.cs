@@ -29,7 +29,7 @@ namespace NCG.NGS.CQRS.Tests.Queries
         public void Should_have_saved_the_query_model_in_the_repository()
         {
             var modelId = Data.RootId.ToString();
-            A.CallTo(() => _repository.Save<AThingQueryModel>(modelId, A<AThingQueryModel>.That.IsNotNull()))
+            A.CallTo(() => _repository.Save(modelId, A<AThingQueryModel>.That.IsNotNull(), A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
         

@@ -102,19 +102,25 @@ namespace NCG.NGS.CQRS.Tests.Mocks
         [QueryBuilderHandler(typeof(CreatedAThing))]
         public async Task Apply(CreatedAThing @event, CancellationToken cancellationToken)
         {
-            await base.Repository.Save(@event.AggregateRootId.ToString(), new AThingQueryModel());
+            await Repository.Save(@event.AggregateRootId.ToString(), new AThingQueryModel(), cancellationToken);
         }
 
         [QueryBuilderHandler(typeof(ChangedAValue))]
-        public Task Apply(ChangedAValue @event, CancellationToken cancellationToken)
+        public async Task Apply(ChangedAValue @event, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var id = @event.AggregateRootId.ToString();
+            var model = await Repository.Get<AThingQueryModel>(id, cancellationToken);
+            model.A = @event.A;
+            await Repository.Save(id, model, cancellationToken);
         }
 
         [QueryBuilderHandler(typeof(ChangedBValue))]
-        public Task Apply(ChangedBValue @event, CancellationToken cancellationToken)
+        public async Task Apply(ChangedBValue @event, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var id = @event.AggregateRootId.ToString();
+            var model = await Repository.Get<AThingQueryModel>(id, cancellationToken);
+            model.B = @event.B;
+            await Repository.Save(id, model, cancellationToken);
         }
     }
 
