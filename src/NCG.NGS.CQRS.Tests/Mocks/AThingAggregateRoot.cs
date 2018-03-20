@@ -106,11 +106,11 @@ namespace NCG.NGS.CQRS.Tests.Mocks
         }
 
         [QueryBuilderHandler(typeof(ChangedAValue))]
-        public async Task Apply(ChangedAValue @event, CancellationToken cancellationToken)
+        public async Task Apply(Guid aggregateRootId, int a, CancellationToken cancellationToken)
         {
-            var id = @event.AggregateRootId.ToString();
+            var id = aggregateRootId.ToString();
             var model = await Repository.Get<AThingQueryModel>(id, cancellationToken);
-            model.A = @event.A;
+            model.A = a;
             await Repository.Save(id, model, cancellationToken);
         }
 

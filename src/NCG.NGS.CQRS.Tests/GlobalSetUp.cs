@@ -9,7 +9,6 @@ namespace NCG.NGS.CQRS.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            Console.WriteLine("OneTimeSetUp");
         }
         
     }
