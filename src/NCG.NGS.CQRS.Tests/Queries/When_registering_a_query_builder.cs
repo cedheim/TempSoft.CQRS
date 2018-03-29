@@ -30,5 +30,13 @@ namespace NCG.NGS.CQRS.Tests.Queries
             var listingB = _registry.ListQueryBuildersFor(typeof(ChangedBValue)).ToArray();
             listingB.Should().Contain(b => object.ReferenceEquals(_builder, b));
         }
+
+        [Test]
+        public void Should_be_able_to_get_the_query_builder_by_name()
+        {
+            var registeredBuilder = _registry.GetQueryBuilderByType(typeof(AThingQueryBuilder));
+
+            registeredBuilder.Should().BeSameAs(_builder);
+        }
     }
 }

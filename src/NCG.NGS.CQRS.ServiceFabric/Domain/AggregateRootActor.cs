@@ -62,5 +62,10 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
 
             await _aggregateRootRepository.Save(_root, cancellationToken);
         }
+
+        public Task<ReadModelMessage> GetReadModel()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

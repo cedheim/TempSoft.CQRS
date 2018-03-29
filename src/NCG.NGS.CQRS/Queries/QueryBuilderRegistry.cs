@@ -8,7 +8,8 @@ namespace NCG.NGS.CQRS.Queries
 {
     public class QueryBuilderRegistry : IQueryBuilderRegistry
     {
-        private readonly Dictionary<Type, List<IQueryBuilder>> _builders = new Dictionary<Type, List<IQueryBuilder>>();
+        private readonly Dictionary<Type, IQueryBuilder> _buildersByBuilderType = new Dictionary<Type, IQueryBuilder>();
+        private readonly Dictionary<Type, List<IQueryBuilder>> _buildersByEventType = new Dictionary<Type, List<IQueryBuilder>>();
         
         public void Register(IQueryBuilder builder)
         {
@@ -16,21 +17,31 @@ namespace NCG.NGS.CQRS.Queries
 
             foreach (var eventType in eventTypes)
             {
-                if (!_builders.ContainsKey(eventType))
+                if (!_buildersByEventType.ContainsKey(eventType))
                 {
-                    _builders.Add(eventType, new List<IQueryBuilder>());
+                    _buildersByEventType.Add(eventType, new List<IQueryBuilder>());
                 }
 
-                _builders[eventType].Add(builder);
+                _buildersByEventType[eventType].Add(builder);
             }
 
+            var builderType = builder.GetType();
+            if (!_buildersByBuilderType.ContainsKey(builderType))
+            {
+                _buildersByBuilderType.Add(builderType, builder);
+            }
         }
         
         public IEnumerable<IQueryBuilder> ListQueryBuildersFor(Type eventType)
         {
-            return _builders.ContainsKey(eventType) 
-                ? _builders[eventType].AsEnumerable() 
+            return _buildersByEventType.ContainsKey(eventType) 
+                ? _buildersByEventType[eventType].AsEnumerable() 
                 : Enumerable.Empty<IQueryBuilder>();
+        }
+
+        public IQueryBuilder GetQueryBuilderByType(Type builderType)
+        {
+            return _buildersByBuilderType[builderType];
         }
     }
 }

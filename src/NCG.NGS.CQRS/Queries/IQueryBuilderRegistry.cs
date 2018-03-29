@@ -10,5 +10,7 @@ namespace NCG.NGS.CQRS.Queries
         void Register(IQueryBuilder builder);
 
         IEnumerable<IQueryBuilder> ListQueryBuildersFor(Type eventType);
+
+        IQueryBuilder GetQueryBuilderByType(Type queryBuilder);
     }
 }

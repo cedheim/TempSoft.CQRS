@@ -10,5 +10,7 @@ namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain
         Task Initialize(InitializeMessage message, CancellationToken cancellationToken);
 
         Task Handle(CommandMessage message, CancellationToken cancellationToken);
+
+        Task<ReadModelMessage> GetReadModel();
     }
 }

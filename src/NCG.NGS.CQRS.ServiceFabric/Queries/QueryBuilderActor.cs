@@ -1,7 +1,11 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
+using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
+using Microsoft.ServiceFabric.Services.Remoting.Client;
+using NCG.NGS.CQRS.Queries;
 using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 using NCG.NGS.CQRS.ServiceFabric.Interfaces.Queries;
 
@@ -9,13 +13,36 @@ namespace NCG.NGS.CQRS.ServiceFabric.Queries
 {
     public class QueryBuilderActor : Actor, IQueryBuilderActor
     {
-        public QueryBuilderActor(ActorService actorService, ActorId actorId) : base(actorService, actorId)
+        private readonly IQueryBuilderRegistry _registry;
+        private IQueryBuilder _builder;
+
+        public QueryBuilderActor(ActorService actorService, ActorId actorId, IQueryBuilderRegistry registry, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
         {
+            ActorProxyFactory = actorProxyFactory;
+            ServiceProxyFactory = serviceProxyFactory;
+
+            _registry = registry;
         }
 
-        public Task Apply(EventMessage message, CancellationToken cancellationToken)
+        public IActorProxyFactory ActorProxyFactory { get; }
+        public IServiceProxyFactory ServiceProxyFactory { get; }
+        
+        public async Task Apply(EventMessage message, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            var builder = GetQueryBuilder();
+
+            await builder.Apply(message.Body, cancellationToken);
+        }
+
+        private IQueryBuilder GetQueryBuilder()
+        {
+            if (_builder == null)
+            {
+                var builderType = Type.GetType(this.GetActorId().GetStringId());
+                _builder = _registry.GetQueryBuilderByType(builderType);
+            }
+
+            return _builder;
         }
     }
 }

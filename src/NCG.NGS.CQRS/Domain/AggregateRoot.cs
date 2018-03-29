@@ -101,7 +101,6 @@ namespace NCG.NGS.CQRS.Domain
 
             }
 
-
             if (@event is IInitializationEvent)
             {
                 if (Version != 0)
@@ -130,7 +129,7 @@ namespace NCG.NGS.CQRS.Domain
             Id = e.AggregateRootId;
         }
 
-        private void ApplyEvent(IEvent @event)
+        protected virtual void ApplyEvent(IEvent @event)
         {
             var type = @event.GetType();
             if (EventHandlers.TryGetValue(type, out var handler))

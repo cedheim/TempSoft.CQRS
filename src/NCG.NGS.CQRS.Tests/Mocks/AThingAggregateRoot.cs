@@ -9,7 +9,7 @@ using NCG.NGS.CQRS.Queries;
 
 namespace NCG.NGS.CQRS.Tests.Mocks
 {
-    public class AThingAggregateRoot : AggregateRoot<AThingAggregateRoot>
+    public class AThingAggregateRoot : AggregateRoot<AThingAggregateRoot>, IAggregateRootWithReadModel
     {
         public int A { get; private set; }
         public string B { get; private set; }
@@ -42,6 +42,17 @@ namespace NCG.NGS.CQRS.Tests.Mocks
         public override void Initialize(Guid id)
         {
             ApplyChange(new CreatedAThing(id));
+        }
+
+        public IAggregateRootReadModel GetReadModel()
+        {
+            return new AThingReadModel
+            {
+                A = A,
+                B = B,
+                Version = Version,
+                Id = Id
+            };
         }
     }
 
@@ -84,7 +95,7 @@ namespace NCG.NGS.CQRS.Tests.Mocks
         {
         }
     }
-
+    
     public class AThingQueryBuilder : QueryBuilderBase<AThingQueryBuilder>
     {
         private static readonly Type[] AThingEvents = {
@@ -126,6 +137,15 @@ namespace NCG.NGS.CQRS.Tests.Mocks
 
     public class AThingQueryModel
     {
+        public int A { get; set; }
+
+        public string B { get; set; }
+    }
+
+    public class AThingReadModel : IAggregateRootReadModel
+    {
+        public Guid Id { get; set; }
+        public int Version { get; set; }
         public int A { get; set; }
 
         public string B { get; set; }
