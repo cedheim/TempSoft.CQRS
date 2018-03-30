@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using NCG.NGS.CQRS.Common.Extensions;
-using NCG.NGS.CQRS.Common.Uri;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Common.Extensions;
+using TempSoft.CQRS.Common.Uri;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Events
+namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class ServiceFabricEventBus : IEventBus
     {

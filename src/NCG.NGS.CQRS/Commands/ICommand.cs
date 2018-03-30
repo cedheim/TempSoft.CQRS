@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NCG.NGS.CQRS.Commands
+namespace TempSoft.CQRS.Commands
 {
     public interface ICommand
     {

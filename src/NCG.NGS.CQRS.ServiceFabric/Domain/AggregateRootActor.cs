@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using NCG.NGS.CQRS.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Domain;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Domain;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Domain
+namespace TempSoft.CQRS.ServiceFabric.Domain
 {
     public class AggregateRootActor : Actor, IAggregateRootActor
     {
@@ -63,8 +61,22 @@ namespace NCG.NGS.CQRS.ServiceFabric.Domain
             await _aggregateRootRepository.Save(_root, cancellationToken);
         }
 
-        public Task<ReadModelMessage> GetReadModel()
+        public async Task<ReadModelMessage> GetReadModel(GetReadModelMessage message, CancellationToken cancellationToken)
         {
+            var id = this.GetActorId().GetGuidId();
+
+            // should we initialize if we receive a command before it has been initialized?
+            if (_root == null)
+            {
+                _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
+            }
+
+            if (_root is IAggregateRootWithReadModel rootWithReadModel)
+            {
+                var readModel = rootWithReadModel.GetReadModel();
+                return new ReadModelMessage(readModel);
+            }
+
             throw new NotImplementedException();
         }
     }

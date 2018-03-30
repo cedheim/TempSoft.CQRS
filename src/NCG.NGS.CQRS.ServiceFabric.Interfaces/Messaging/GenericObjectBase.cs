@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using NCG.NGS.CQRS.Common.Serialization;
+using TempSoft.CQRS.Common.Serialization;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
+namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
     public abstract class GenericObjectBase

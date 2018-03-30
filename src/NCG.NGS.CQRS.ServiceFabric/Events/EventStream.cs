@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using NCG.NGS.CQRS.Events;
+using TempSoft.CQRS.Events;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Events
+namespace TempSoft.CQRS.ServiceFabric.Events
 {
     [DataContract]
     public class EventStream : ICollection<IEvent>

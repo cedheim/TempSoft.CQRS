@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Data;
 
-namespace NCG.NGS.CQRS.Tests.Mocks
+namespace TempSoft.CQRS.Tests.Mocks
 {
     public class InMemoryActorStateManager : IActorStateManager
     {

@@ -1,7 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace NCG.NGS.CQRS.Tests
+namespace TempSoft.CQRS.Tests
 {
     [SetUpFixture]
     public class GlobalSetUp

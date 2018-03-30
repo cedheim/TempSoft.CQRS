@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,7 @@ using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Data;
 using NUnit.Framework;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
+namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
 {
     [TestFixture]
     public class When_getting_command_ids

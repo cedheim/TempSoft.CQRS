@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.Exception
+namespace TempSoft.CQRS.Exception
 {
     [Serializable]
     public class MissingQueryBuilderHandlerException : System.Exception

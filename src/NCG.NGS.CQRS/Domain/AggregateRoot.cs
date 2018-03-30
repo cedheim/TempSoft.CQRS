@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.Exception;
-using NCG.NGS.CQRS.Extensions;
+using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Exception;
+using TempSoft.CQRS.Extensions;
 
-namespace NCG.NGS.CQRS.Domain
+namespace TempSoft.CQRS.Domain
 {
     public abstract class AggregateRoot<T> : IAggregateRoot where T : AggregateRoot<T>
     {

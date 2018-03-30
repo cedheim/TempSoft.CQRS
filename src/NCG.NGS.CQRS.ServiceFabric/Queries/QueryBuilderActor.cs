@@ -5,11 +5,11 @@ using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Queries;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Queries;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Queries
+namespace TempSoft.CQRS.ServiceFabric.Queries
 {
     public class QueryBuilderActor : Actor, IQueryBuilderActor
     {

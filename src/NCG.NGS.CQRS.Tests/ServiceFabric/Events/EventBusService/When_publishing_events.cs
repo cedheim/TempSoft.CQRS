@@ -4,15 +4,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.ServiceFabric.Actors;
-using NCG.NGS.CQRS.Common.Extensions;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Queries;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Common.Extensions;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Queries;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.EventBusService
+namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
 {
     [TestFixture]
     public class When_publishing_events : EventBusServiceTestBase

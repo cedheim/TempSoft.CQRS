@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NCG.NGS.CQRS.Domain;
+using TempSoft.CQRS.Domain;
 
-namespace NCG.NGS.CQRS.Commands
+namespace TempSoft.CQRS.Commands
 {
     public interface ICommandRouter
     {

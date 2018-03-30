@@ -2,11 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.Queries
+namespace TempSoft.CQRS.Tests.Queries
 {
     [TestFixture]
     public class When_applying_an_initialization_event_to_the_query_builder

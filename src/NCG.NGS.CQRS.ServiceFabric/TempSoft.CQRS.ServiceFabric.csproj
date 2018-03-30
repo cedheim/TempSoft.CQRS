@@ -10,9 +10,9 @@
     <PackageReference Include="Microsoft.ServiceFabric.Services.Remoting" Version="3.0.472" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NCG.NGS.CQRS.Common\NCG.NGS.CQRS.Common.csproj" />
-    <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric.Interfaces\NCG.NGS.CQRS.ServiceFabric.Interfaces.csproj" />
-    <ProjectReference Include="..\NCG.NGS.CQRS\NCG.NGS.CQRS.csproj" />
+    <ProjectReference Include="..\NCG.NGS.CQRS.Common\TempSoft.CQRS.Common.csproj" />
+    <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj" />
+    <ProjectReference Include="..\NCG.NGS.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>
 
 

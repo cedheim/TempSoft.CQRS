@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
-namespace NCG.NGS.CQRS.Common.Extensions
+namespace TempSoft.CQRS.Common.Extensions
 {
     public static class TypeExtensions
     {

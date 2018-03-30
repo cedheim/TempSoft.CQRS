@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using NCG.NGS.CQRS.Events;
+using TempSoft.CQRS.Events;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Events
+namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class ActorEventStore : IEventStore
     {

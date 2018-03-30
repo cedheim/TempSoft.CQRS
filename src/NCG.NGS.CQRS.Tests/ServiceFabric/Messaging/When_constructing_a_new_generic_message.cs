@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 using NUnit.Framework;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Messaging
+namespace TempSoft.CQRS.Tests.ServiceFabric.Messaging
 {
     [TestFixture]
     public class When_constructing_a_new_generic_message

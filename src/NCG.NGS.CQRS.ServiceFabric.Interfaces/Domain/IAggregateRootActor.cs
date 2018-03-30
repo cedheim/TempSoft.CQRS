@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain
+namespace TempSoft.CQRS.ServiceFabric.Interfaces.Domain
 {
     public interface IAggregateRootActor : IActor
     {
@@ -11,6 +11,6 @@ namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain
 
         Task Handle(CommandMessage message, CancellationToken cancellationToken);
 
-        Task<ReadModelMessage> GetReadModel();
+        Task<ReadModelMessage> GetReadModel(GetReadModelMessage query, CancellationToken cancellationToken);
     }
 }

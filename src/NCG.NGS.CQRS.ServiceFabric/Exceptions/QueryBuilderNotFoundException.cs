@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Exceptions
+namespace TempSoft.CQRS.ServiceFabric.Exceptions
 {
     [Serializable]
     public class QueryBuilderNotFoundException : System.Exception

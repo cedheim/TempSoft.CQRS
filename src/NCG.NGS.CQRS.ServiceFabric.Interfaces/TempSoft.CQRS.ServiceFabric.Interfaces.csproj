@@ -12,8 +12,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NCG.NGS.CQRS.Common\NCG.NGS.CQRS.Common.csproj" />
-    <ProjectReference Include="..\NCG.NGS.CQRS\NCG.NGS.CQRS.csproj" />
+    <ProjectReference Include="..\NCG.NGS.CQRS.Common\TempSoft.CQRS.Common.csproj" />
+    <ProjectReference Include="..\NCG.NGS.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿using System.Runtime.Serialization;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Events
+namespace TempSoft.CQRS.ServiceFabric.Events
 {
     [DataContract]
     public class EventState : GenericObjectBase

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.Exception;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Exception;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.Domain.AggregateRoot
+namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
 {
     [TestFixture]
     public class When_loading_an_aggregate_from_events_out_of_order

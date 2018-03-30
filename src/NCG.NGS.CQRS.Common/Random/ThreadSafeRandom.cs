@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace NCG.NGS.CQRS.Common.Random
+namespace TempSoft.CQRS.Common.Random
 {
     public class ThreadSafeRandom
     {

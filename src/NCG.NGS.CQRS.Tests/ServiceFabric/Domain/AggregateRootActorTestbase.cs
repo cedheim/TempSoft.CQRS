@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using FakeItEasy;
-using Microsoft.ServiceFabric.Actors;
+﻿using FakeItEasy;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using NCG.NGS.CQRS.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Domain;
-using NCG.NGS.CQRS.Tests.Mocks;
 using ServiceFabric.Mocks;
+using TempSoft.CQRS.Domain;
+using TempSoft.CQRS.ServiceFabric.Domain;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Domain
+namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
 {
     public abstract class AggregateRootActorTestBase
     {

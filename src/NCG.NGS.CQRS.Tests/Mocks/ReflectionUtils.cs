@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.Tests.Mocks
+namespace TempSoft.CQRS.Tests.Mocks
 {
     public static class ReflectionUtils
     {

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCG.NGS.CQRS", "NCG.NGS.CQRS\NCG.NGS.CQRS.csproj", "{C6F93876-6AE5-4993-8472-F31652E8E5B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS", "NCG.NGS.CQRS\TempSoft.CQRS.csproj", "{C6F93876-6AE5-4993-8472-F31652E8E5B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCG.NGS.CQRS.Tests", "NCG.NGS.CQRS.Tests\NCG.NGS.CQRS.Tests.csproj", "{8B6DE633-07A9-4CC4-B11B-118894B07A1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Tests", "NCG.NGS.CQRS.Tests\TempSoft.CQRS.Tests.csproj", "{8B6DE633-07A9-4CC4-B11B-118894B07A1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NCG.NGS.CQRS.ServiceFabric", "NCG.NGS.CQRS.ServiceFabric\NCG.NGS.CQRS.ServiceFabric.csproj", "{9AA47D1C-7ECA-47D6-8290-998C552C99F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.ServiceFabric", "NCG.NGS.CQRS.ServiceFabric\TempSoft.CQRS.ServiceFabric.csproj", "{9AA47D1C-7ECA-47D6-8290-998C552C99F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCG.NGS.CQRS.ServiceFabric.Interfaces", "NCG.NGS.CQRS.ServiceFabric.Interfaces\NCG.NGS.CQRS.ServiceFabric.Interfaces.csproj", "{23D62B90-C921-46D5-919A-7366D1FED72D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.ServiceFabric.Interfaces", "NCG.NGS.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj", "{23D62B90-C921-46D5-919A-7366D1FED72D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NCG.NGS.CQRS.Common", "NCG.NGS.CQRS.Common\NCG.NGS.CQRS.Common.csproj", "{537940DC-50CE-4741-A581-50305DF7428B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Common", "NCG.NGS.CQRS.Common\TempSoft.CQRS.Common.csproj", "{537940DC-50CE-4741-A581-50305DF7428B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

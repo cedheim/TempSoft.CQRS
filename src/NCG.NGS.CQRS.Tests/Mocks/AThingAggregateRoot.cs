@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.Domain;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.Queries;
+using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Domain;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Queries;
 
-namespace NCG.NGS.CQRS.Tests.Mocks
+namespace TempSoft.CQRS.Tests.Mocks
 {
     public class AThingAggregateRoot : AggregateRoot<AThingAggregateRoot>, IAggregateRootWithReadModel
     {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using NCG.NGS.CQRS.Events;
+using TempSoft.CQRS.Events;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
+namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
     public class EventMessage : GenericMessage

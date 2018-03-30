@@ -3,12 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.ServiceFabric.Events;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.ServiceFabric.Events;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.ActorEventStore
+namespace TempSoft.CQRS.Tests.ServiceFabric.Events.ActorEventStore
 {
     [TestFixture]
     public class When_saveing_an_event_stream

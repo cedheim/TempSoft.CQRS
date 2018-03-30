@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Common.Extensions;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
-    public class CommandMessage : GenericMessage
+    public class GetReadModelMessage : MessageBase
     {
         [DataMember(Name = "AggregateRootType")]
         private string _aggregateRootType;
@@ -15,20 +14,19 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         [IgnoreDataMember]
         private Type _deserializedAggregateRootType;
 
-        public CommandMessage(Type aggregateRootType, ICommand command, IEnumerable<KeyValuePair<string, object>> headers = null) : base(command, headers)
+        private GetReadModelMessage()
+        {
+        }
+
+        public GetReadModelMessage(Type aggregateRootType, IEnumerable<KeyValuePair<string, object>> headers = null)
+            : base(headers)
         {
             _aggregateRootType = aggregateRootType.ToFriendlyName();
         }
 
-        private CommandMessage()
-        {
-        }
-        
+
         [IgnoreDataMember]
         public Type AggregateRootType => _deserializedAggregateRootType ?? (_deserializedAggregateRootType = Type.GetType(_aggregateRootType));
 
-        public new ICommand Body => (ICommand)base.Body;
-
-        public TCommand GetCommand<TCommand>() => (TCommand) Body;
     }
 }

@@ -3,16 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.ServiceFabric.Actors;
-using Microsoft.ServiceFabric.Actors.Runtime;
-using NCG.NGS.CQRS.Common.Extensions;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.ServiceFabric.Queries;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
 using ServiceFabric.Mocks;
+using TempSoft.CQRS.Common.Extensions;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Queries;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Queries
+namespace TempSoft.CQRS.Tests.ServiceFabric.Queries
 {
     [TestFixture]
     public class When_applying_a_new_event_to_a_query_builder : QueryBuilderActorTestBase

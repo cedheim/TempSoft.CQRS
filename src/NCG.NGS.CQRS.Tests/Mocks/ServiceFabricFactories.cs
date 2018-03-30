@@ -5,7 +5,7 @@ using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using ServiceFabric.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.Mocks
+namespace TempSoft.CQRS.Tests.Mocks
 {
     public static class ServiceFabricFactories
     {

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NCG.NGS.CQRS.Extensions
+namespace TempSoft.CQRS.Extensions
 {
     public static class TypeExtensions
     {

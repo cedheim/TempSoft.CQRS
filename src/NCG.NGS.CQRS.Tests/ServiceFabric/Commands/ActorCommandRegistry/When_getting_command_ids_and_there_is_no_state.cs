@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +7,7 @@ using FluentAssertions;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using NUnit.Framework;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
+namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
 {
     [TestFixture]
     public class When_getting_command_ids_and_there_is_no_state

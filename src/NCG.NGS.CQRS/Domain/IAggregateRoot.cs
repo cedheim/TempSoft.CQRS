@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.Events;
+using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Events;
 
-namespace NCG.NGS.CQRS.Domain
+namespace TempSoft.CQRS.Domain
 {
     public interface IAggregateRoot
     {

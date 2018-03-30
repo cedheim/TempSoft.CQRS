@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using NCG.NGS.CQRS.Commands;
+using TempSoft.CQRS.Commands;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Commands
+namespace TempSoft.CQRS.ServiceFabric.Commands
 {
     public class ActorCommandRegistry : ICommandRegistry
     {

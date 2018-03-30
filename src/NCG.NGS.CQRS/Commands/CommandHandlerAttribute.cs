@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NCG.NGS.CQRS.Commands
+namespace TempSoft.CQRS.Commands
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class CommandHandlerAttribute : Attribute

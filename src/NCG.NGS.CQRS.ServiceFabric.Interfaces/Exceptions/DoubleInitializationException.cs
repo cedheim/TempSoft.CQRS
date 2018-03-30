@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Exceptions
+namespace TempSoft.CQRS.ServiceFabric.Interfaces.Exceptions
 {
     public class DoubleInitializationException : System.Exception
     {

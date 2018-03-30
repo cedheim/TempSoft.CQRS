@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NCG.NGS.CQRS.Events
+namespace TempSoft.CQRS.Events
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class EventHandlerAttribute : Attribute

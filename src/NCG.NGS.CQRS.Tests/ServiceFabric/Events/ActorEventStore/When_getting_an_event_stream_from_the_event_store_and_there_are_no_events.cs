@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.ServiceFabric.Events;
 using NUnit.Framework;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.ServiceFabric.Events;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.ActorEventStore
+namespace TempSoft.CQRS.Tests.ServiceFabric.Events.ActorEventStore
 {
     [TestFixture]
     public class When_getting_an_event_stream_from_the_event_store_and_there_are_no_events

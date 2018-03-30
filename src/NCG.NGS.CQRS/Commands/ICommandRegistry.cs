@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NCG.NGS.CQRS.Commands
+namespace TempSoft.CQRS.Commands
 {
     public interface ICommandRegistry
     {

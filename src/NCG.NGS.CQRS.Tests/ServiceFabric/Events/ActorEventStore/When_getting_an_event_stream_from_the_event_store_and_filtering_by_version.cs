@@ -6,12 +6,12 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Data;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.ServiceFabric.Events;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.ServiceFabric.Events;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.ActorEventStore
+namespace TempSoft.CQRS.Tests.ServiceFabric.Events.ActorEventStore
 {
     [TestFixture]
     public class When_getting_an_event_stream_from_the_event_store_and_filtering_by_version

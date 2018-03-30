@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NCG.NGS.CQRS.Queries
+namespace TempSoft.CQRS.Queries
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class QueryBuilderHandlerAttribute : Attribute

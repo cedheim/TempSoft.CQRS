@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using FakeItEasy;
 using FluentAssertions;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.Queries
+namespace TempSoft.CQRS.Tests.Queries
 {
     [TestFixture]
     public class When_registering_a_query_builder

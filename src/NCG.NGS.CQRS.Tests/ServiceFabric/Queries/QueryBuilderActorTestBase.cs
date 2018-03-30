@@ -1,15 +1,12 @@
 ﻿using FakeItEasy;
 using Microsoft.ServiceFabric.Actors.Client;
-using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using NCG.NGS.CQRS.Domain;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.ServiceFabric.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Queries;
-using NCG.NGS.CQRS.Tests.Mocks;
 using ServiceFabric.Mocks;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.ServiceFabric.Queries;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Queries
+namespace TempSoft.CQRS.Tests.ServiceFabric.Queries
 {
     public abstract class QueryBuilderActorTestBase
     {

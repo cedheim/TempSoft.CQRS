@@ -1,7 +1,7 @@
-﻿using NCG.NGS.CQRS.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Domain;
+﻿using TempSoft.CQRS.Domain;
+using TempSoft.CQRS.ServiceFabric.Domain;
 
-namespace NCG.NGS.CQRS.Tests.Mocks
+namespace TempSoft.CQRS.Tests.Mocks
 {
     public static class AggregateRootActorExtensions
     {

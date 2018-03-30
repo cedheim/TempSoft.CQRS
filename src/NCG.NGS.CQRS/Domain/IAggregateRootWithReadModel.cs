@@ -1,4 +1,4 @@
-﻿namespace NCG.NGS.CQRS.Domain
+﻿namespace TempSoft.CQRS.Domain
 {
     public interface IAggregateRootWithReadModel : IAggregateRoot
     {

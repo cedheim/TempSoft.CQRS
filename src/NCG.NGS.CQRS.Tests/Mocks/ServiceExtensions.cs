@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Remoting;
 
-namespace NCG.NGS.CQRS.Tests.Mocks
+namespace TempSoft.CQRS.Tests.Mocks
 {
     public static class ServiceExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NCG.NGS.CQRS.Events
+namespace TempSoft.CQRS.Events
 {
     public abstract class EventBase : IEvent
     {

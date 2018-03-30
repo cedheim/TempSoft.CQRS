@@ -2,11 +2,11 @@
 using System.Runtime.Serialization;
 using System.Text;
 using FluentAssertions;
-using NCG.NGS.CQRS.ServiceFabric.Events;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.ServiceFabric.Events;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events
+namespace TempSoft.CQRS.Tests.ServiceFabric.Events
 {
     [TestFixture]
     public class When_serializing_an_event_state

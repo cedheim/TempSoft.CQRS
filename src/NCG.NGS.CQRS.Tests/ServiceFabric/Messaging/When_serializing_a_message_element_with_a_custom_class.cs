@@ -2,11 +2,11 @@
 using System.Runtime.Serialization;
 using System.Text;
 using FluentAssertions;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Messaging
+namespace TempSoft.CQRS.Tests.ServiceFabric.Messaging
 {
     [TestFixture]
     public class When_serializing_a_message_element_with_a_custom_class

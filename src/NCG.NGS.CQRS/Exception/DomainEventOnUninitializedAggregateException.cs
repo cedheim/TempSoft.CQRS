@@ -1,7 +1,6 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace NCG.NGS.CQRS.Exception
+namespace TempSoft.CQRS.Exception
 {
     public class DomainEventOnUninitializedAggregateException : DomainException
     {

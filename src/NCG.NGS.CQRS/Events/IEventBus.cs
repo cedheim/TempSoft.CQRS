@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NCG.NGS.CQRS.Queries;
 
-namespace NCG.NGS.CQRS.Events
+namespace TempSoft.CQRS.Events
 {
     public interface IEventBus
     {

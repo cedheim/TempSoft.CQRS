@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.ServiceFabric.Actors;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.ServiceFabric.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
-using ServiceFabric.Mocks;
+using TempSoft.CQRS.ServiceFabric.Domain;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Domain
+namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
 {
     [TestFixture]
     public class When_initializing_an_aggregate_root_actor : AggregateRootActorTestBase

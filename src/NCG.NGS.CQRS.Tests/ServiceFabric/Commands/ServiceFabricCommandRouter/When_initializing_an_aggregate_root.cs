@@ -5,12 +5,12 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Domain;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Commands.ServiceFabricCommandRouter
+namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ServiceFabricCommandRouter
 {
     [TestFixture]
     public class When_initializing_an_aggregate_root

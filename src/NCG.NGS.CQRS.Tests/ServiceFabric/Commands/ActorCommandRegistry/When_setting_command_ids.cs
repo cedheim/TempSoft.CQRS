@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using Microsoft.ServiceFabric.Data;
 using NUnit.Framework;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
+namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
 {
     [TestFixture]
     public class When_setting_command_ids

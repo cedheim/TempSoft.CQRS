@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.Exception;
-using NCG.NGS.CQRS.Extensions;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Exception;
+using TempSoft.CQRS.Extensions;
 
-namespace NCG.NGS.CQRS.Queries
+namespace TempSoft.CQRS.Queries
 {
     public abstract class QueryBuilderBase<T> : IQueryBuilder where T : QueryBuilderBase<T>
     {

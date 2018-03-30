@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using NCG.NGS.CQRS.Events;
 
-namespace NCG.NGS.CQRS.Queries
+namespace TempSoft.CQRS.Queries
 {
     public interface IQueryBuilderRegistry
     {

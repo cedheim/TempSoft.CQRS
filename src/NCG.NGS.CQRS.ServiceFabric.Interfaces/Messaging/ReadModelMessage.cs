@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using NCG.NGS.CQRS.Domain;
-using NCG.NGS.CQRS.Events;
+using TempSoft.CQRS.Domain;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
+namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
     public class ReadModelMessage : GenericMessage

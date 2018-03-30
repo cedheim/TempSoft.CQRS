@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace NCG.NGS.CQRS.Common.Extensions
+namespace TempSoft.CQRS.Common.Extensions
 {
     public static class GuidExtensions
     {

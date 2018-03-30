@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NCG.NGS.CQRS.Common.Serialization
+namespace TempSoft.CQRS.Common.Serialization
 {
     public interface ISerializer
     {

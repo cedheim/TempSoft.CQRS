@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NCG.NGS.CQRS.Common.Uri
+namespace TempSoft.CQRS.Common.Uri
 {
     public class UriHelper : IUriHelper
     {

@@ -3,10 +3,10 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using FluentAssertions;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
 using NUnit.Framework;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Messaging
+namespace TempSoft.CQRS.Tests.ServiceFabric.Messaging
 {
     [TestFixture]
     public class When_serializing_a_generic_message

@@ -4,13 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
-using FluentAssertions;
-using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.Events;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.Domain.Repository
+namespace TempSoft.CQRS.Tests.Domain.Repository
 {
     [TestFixture]
     public class When_saveing_an_aggregate_to_the_repository

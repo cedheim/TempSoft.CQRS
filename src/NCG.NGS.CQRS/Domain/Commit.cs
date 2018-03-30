@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NCG.NGS.CQRS.Events;
+using TempSoft.CQRS.Events;
 
-namespace NCG.NGS.CQRS.Domain
+namespace TempSoft.CQRS.Domain
 {
     public class Commit
     {

@@ -1,12 +1,12 @@
 ﻿using FakeItEasy;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Queries;
 using ServiceFabric.Mocks;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Queries;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.EventBusService
+namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
 {
     public abstract class EventBusServiceTestBase
     {

@@ -3,12 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
-using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Domain;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Domain;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Domain;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Commands
+namespace TempSoft.CQRS.ServiceFabric.Commands
 {
     public class ServiceFabricCommandRouter : ICommandRouter
     {

@@ -12,14 +12,14 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
-using NCG.NGS.CQRS.Common.Extensions;
-using NCG.NGS.CQRS.Common.Random;
-using NCG.NGS.CQRS.Queries;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Queries;
+using TempSoft.CQRS.Common.Extensions;
+using TempSoft.CQRS.Common.Random;
+using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Queries;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Events
+namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class EventBusService : StatefulService, IEventBusService
     {

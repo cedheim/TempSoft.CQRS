@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NCG.NGS.CQRS.Domain
+namespace TempSoft.CQRS.Domain
 {
     public interface IAggregateRootRepository
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NCG.NGS.CQRS.Commands;
-using NCG.NGS.CQRS.Events;
+using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Events;
 
-namespace NCG.NGS.CQRS.Domain
+namespace TempSoft.CQRS.Domain
 {
     public class AggregateRootRepository : IAggregateRootRepository
     {

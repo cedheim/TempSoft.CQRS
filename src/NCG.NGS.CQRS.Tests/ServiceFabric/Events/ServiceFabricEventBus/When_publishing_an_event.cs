@@ -7,14 +7,14 @@ using FakeItEasy;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Communication.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using NCG.NGS.CQRS.Common.Extensions;
-using NCG.NGS.CQRS.Common.Uri;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Events;
-using NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging;
-using NCG.NGS.CQRS.Tests.Mocks;
 using NUnit.Framework;
+using TempSoft.CQRS.Common.Extensions;
+using TempSoft.CQRS.Common.Uri;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.Tests.Mocks;
 
-namespace NCG.NGS.CQRS.Tests.ServiceFabric.Events.ServiceFabricEventBus
+namespace TempSoft.CQRS.Tests.ServiceFabric.Events.ServiceFabricEventBus
 {
     [TestFixture]
     public class When_publishing_an_event

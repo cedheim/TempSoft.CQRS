@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using NCG.NGS.CQRS.Common.Extensions;
+using TempSoft.CQRS.Common.Extensions;
 
-namespace NCG.NGS.CQRS.ServiceFabric.Interfaces.Messaging
+namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
     [DataContract]
     public class InitializeMessage : GenericMessage
