@@ -32,7 +32,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TempSoft.CQRS.Demo.Actors\TempSoft.CQRS.Demo.Actors.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.AggregateRoots\TempSoft.CQRS.Demo.AggregateRoots.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

@@ -9,7 +9,7 @@ using Microsoft.ServiceFabric.Actors.Runtime;
 
 namespace TempSoft.CQRS.Demo.Actors
 {
-    [EventSource(Name = "MyCompany-TempSoft.CQRS.Demo.Application-TempSoft.CQRS.Demo.Actors")]
+    [EventSource(Name = "TempSoft-CQRS-Demo-Actors")]
     internal sealed class ActorEventSource : EventSource
     {
         public static readonly ActorEventSource Current = new ActorEventSource();

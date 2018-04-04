@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="TempSoft.CQRS.Demo.ApplicationType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
+    <Parameter Name="ApiService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="AggregateRootActorService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="AggregateRootActorService_MinReplicaSetSize" DefaultValue="1" />
     <Parameter Name="AggregateRootActorService_PartitionCount" DefaultValue="3" />
@@ -9,10 +10,19 @@
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="TempSoft.CQRS.Demo.ActorsPkg" ServiceManifestVersion="1.0.0" />
+    <ServiceManifestRef ServiceManifestName="TempSoft.CQRS.Demo.ApiPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="TempSoft.CQRS.Demo.AggregateRootsPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
   </ServiceManifestImport>
   <DefaultServices>
+    <Service Name="ApiService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="ApiServiceType" InstanceCount="[ApiService_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
     <Service Name="AggregateRootActorService">
       <StatefulService ServiceTypeName="AggregateRootActorServiceType" TargetReplicaSetSize="[AggregateRootActorService_TargetReplicaSetSize]" MinReplicaSetSize="[AggregateRootActorService_MinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[AggregateRootActorService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
