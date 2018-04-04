@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Exceptions;
 using TempSoft.CQRS.Tests.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.AggregateRoot

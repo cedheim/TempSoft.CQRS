@@ -17,7 +17,6 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
         private AggregateRootActor _actor;
         private AThingAggregateRoot _root;
         private ActorId _actorId;
-        private DoSomething _command;
         private ReadModelMessage _readModelMessage;
 
         [OneTimeSetUp]
