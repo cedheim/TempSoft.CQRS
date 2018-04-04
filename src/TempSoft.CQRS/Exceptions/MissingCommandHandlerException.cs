@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace TempSoft.CQRS.Exception
+namespace TempSoft.CQRS.Exceptions
 {
     [Serializable]
     public class MissingCommandHandlerException : DomainException

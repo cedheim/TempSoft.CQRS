@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Exception;
+using TempSoft.CQRS.Exceptions;
 using TempSoft.CQRS.Extensions;
 
 namespace TempSoft.CQRS.Queries

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Exception;
+using TempSoft.CQRS.Exceptions;
 using TempSoft.CQRS.Extensions;
 
 namespace TempSoft.CQRS.Domain

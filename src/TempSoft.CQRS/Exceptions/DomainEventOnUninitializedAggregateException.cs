@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace TempSoft.CQRS.Exception
+namespace TempSoft.CQRS.Exceptions
 {
     public class DomainEventOnUninitializedAggregateException : DomainException
     {
