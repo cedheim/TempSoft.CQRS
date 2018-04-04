@@ -17,9 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{020AC8C0-6
 EndProject
 Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "TempSoft.CQRS.Demo.Application", "TempSoft.CQRS.Demo.Application\TempSoft.CQRS.Demo.Application.sfproj", "{BE979FB8-16D7-4B6C-90C8-A0B998D888D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Actors", "TempSoft.CQRS.Demo.Actors\TempSoft.CQRS.Demo.Actors.csproj", "{D7FF6627-045C-427A-9974-3F213F5148A8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Actors.Interfaces", "TempSoft.CQRS.Demo.Actors.Interfaces\TempSoft.CQRS.Demo.Actors.Interfaces.csproj", "{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Actors", "TempSoft.CQRS.Demo.Actors\TempSoft.CQRS.Demo.Actors.csproj", "{D7FF6627-045C-427A-9974-3F213F5148A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +64,7 @@ Global
 		{537940DC-50CE-4741-A581-50305DF7428B}.Debug|x64.ActiveCfg = Debug|x64
 		{537940DC-50CE-4741-A581-50305DF7428B}.Debug|x64.Build.0 = Debug|x64
 		{537940DC-50CE-4741-A581-50305DF7428B}.Release|Any CPU.ActiveCfg = Release|x64
+		{537940DC-50CE-4741-A581-50305DF7428B}.Release|Any CPU.Build.0 = Release|x64
 		{537940DC-50CE-4741-A581-50305DF7428B}.Release|x64.ActiveCfg = Release|x64
 		{537940DC-50CE-4741-A581-50305DF7428B}.Release|x64.Build.0 = Release|x64
 		{BE979FB8-16D7-4B6C-90C8-A0B998D888D1}.Debug|Any CPU.ActiveCfg = Debug|x64
@@ -76,22 +75,14 @@ Global
 		{BE979FB8-16D7-4B6C-90C8-A0B998D888D1}.Release|x64.ActiveCfg = Release|x64
 		{BE979FB8-16D7-4B6C-90C8-A0B998D888D1}.Release|x64.Build.0 = Release|x64
 		{BE979FB8-16D7-4B6C-90C8-A0B998D888D1}.Release|x64.Deploy.0 = Release|x64
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|x64.Build.0 = Debug|Any CPU
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|x64.ActiveCfg = Release|Any CPU
-		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|x64.Build.0 = Release|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Debug|x64.Build.0 = Debug|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Release|x64.ActiveCfg = Release|Any CPU
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9}.Release|x64.Build.0 = Release|Any CPU
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|Any CPU.Build.0 = Debug|x64
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|x64.ActiveCfg = Debug|x64
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Debug|x64.Build.0 = Debug|x64
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|Any CPU.ActiveCfg = Release|x64
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|Any CPU.Build.0 = Release|x64
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|x64.ActiveCfg = Release|x64
+		{D7FF6627-045C-427A-9974-3F213F5148A8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,7 +90,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BE979FB8-16D7-4B6C-90C8-A0B998D888D1} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 		{D7FF6627-045C-427A-9974-3F213F5148A8} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
-		{03BF3D54-DE93-4F3A-BDAF-D768455EBBB9} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0CA8D8D1-D426-4E57-9D92-F8FB1006B9A1}

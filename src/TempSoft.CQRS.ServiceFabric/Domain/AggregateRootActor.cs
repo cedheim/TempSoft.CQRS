@@ -16,9 +16,10 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
         private readonly IAggregateRootRepository _aggregateRootRepository;
         private const string AggregateRootTypeStateName = "_tempsoft_cqrs_root_type";
 
-        public AggregateRootActor(ActorService actorService, ActorId actorId, IAggregateRootRepository aggregateRootRepository, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
+        public AggregateRootActor(ActorService actorService, ActorId actorId, Func<AggregateRootActor, IAggregateRootRepository> aggregateRootRepositoryFactory, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
         {
-            _aggregateRootRepository = aggregateRootRepository;
+            _aggregateRootRepository = aggregateRootRepositoryFactory(this);
+
             ActorProxyFactory = actorProxyFactory;
             ServiceProxyFactory = serviceProxyFactory;
         }

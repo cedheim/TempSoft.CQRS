@@ -9,6 +9,7 @@
     <ServicePackagePath>PackageRoot</ServicePackagePath>
     <ServicePackagePrefix>$(MSBuildProjectName)</ServicePackagePrefix>
     <FabActUtilWorkingDir>$(BaseIntermediateOutputPath)\FabActUtilTemp</FabActUtilWorkingDir>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.Common\TempSoft.CQRS.Common.csproj" />
-    <ProjectReference Include="..\TempSoft.CQRS.Demo.Actors.Interfaces\TempSoft.CQRS.Demo.Actors.Interfaces.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric\TempSoft.CQRS.ServiceFabric.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />

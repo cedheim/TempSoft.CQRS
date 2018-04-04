@@ -1,20 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceManifest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="TempSoft.CQRS.Demo.ActorsPkg" Version="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <ServiceTypes>
-    <StatefulServiceType ServiceTypeName="ActorsActorServiceType" HasPersistedState="true">
-      <Extensions>
-        <Extension Name="__GeneratedServiceType__" GeneratedId="00d38723-bee4-4b3a-adc0-fcd7a9ea27df|Persisted">
-          <GeneratedNames xmlns="http://schemas.microsoft.com/2015/03/fabact-no-schema">
-            <DefaultService Name="ActorsActorService" />
-            <ReplicatorEndpoint Name="ActorsActorServiceReplicatorEndpoint" />
-            <ReplicatorConfigSection Name="ActorsActorServiceReplicatorConfig" />
-            <ReplicatorSecurityConfigSection Name="ActorsActorServiceReplicatorSecurityConfig" />
-            <StoreConfigSection Name="ActorsActorServiceLocalStoreConfig" />
-            <ServiceEndpointV2 Name="ActorsActorServiceEndpointV2" />
-          </GeneratedNames>
-        </Extension>
-      </Extensions>
-    </StatefulServiceType>
+    <StatefulServiceType ServiceTypeName="AggregateRootActorServiceType" HasPersistedState="true" />
   </ServiceTypes>
   <CodePackage Name="Code" Version="1.0.0">
     <EntryPoint>
@@ -26,8 +13,8 @@
   <ConfigPackage Name="Config" Version="1.0.0" />
   <Resources>
     <Endpoints>
-      <Endpoint Name="ActorsActorServiceEndpointV2" />
-      <Endpoint Name="ActorsActorServiceReplicatorEndpoint" />
+      <Endpoint Name="AggregateRootActorServiceEndpointV2" />
+      <Endpoint Name="AggregateRootActorServiceReplicatorEndpoint" />
     </Endpoints>
   </Resources>
   <!-- The content will be generated during build -->
