@@ -19,7 +19,9 @@ Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "TempSoft.CQRS.Demo.Applicat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.AggregateRoots", "TempSoft.CQRS.Demo.AggregateRoots\TempSoft.CQRS.Demo.AggregateRoots.csproj", "{D7FF6627-045C-427A-9974-3F213F5148A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Api", "TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj", "{FB8F2CD8-6AEB-44F1-8C9D-BD0A7EE1344D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Api", "TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj", "{FB8F2CD8-6AEB-44F1-8C9D-BD0A7EE1344D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.EventHub", "TempSoft.CQRS.Demo.EventHub\TempSoft.CQRS.Demo.EventHub.csproj", "{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,14 @@ Global
 		{FB8F2CD8-6AEB-44F1-8C9D-BD0A7EE1344D}.Release|Any CPU.Build.0 = Release|x64
 		{FB8F2CD8-6AEB-44F1-8C9D-BD0A7EE1344D}.Release|x64.ActiveCfg = Release|x64
 		{FB8F2CD8-6AEB-44F1-8C9D-BD0A7EE1344D}.Release|x64.Build.0 = Release|x64
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Debug|x64.Build.0 = Debug|Any CPU
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Release|x64.ActiveCfg = Release|Any CPU
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +111,7 @@ Global
 		{BE979FB8-16D7-4B6C-90C8-A0B998D888D1} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 		{D7FF6627-045C-427A-9974-3F213F5148A8} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 		{FB8F2CD8-6AEB-44F1-8C9D-BD0A7EE1344D} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
+		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0CA8D8D1-D426-4E57-9D92-F8FB1006B9A1}

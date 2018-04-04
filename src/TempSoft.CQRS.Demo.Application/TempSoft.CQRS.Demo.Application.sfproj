@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.Demo.AggregateRoots\TempSoft.CQRS.Demo.AggregateRoots.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.EventHub\TempSoft.CQRS.Demo.EventHub.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>
