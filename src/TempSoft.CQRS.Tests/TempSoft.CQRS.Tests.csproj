@@ -17,9 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj" />
-    <ProjectReference Include="..\NCG.NGS.CQRS.ServiceFabric\TempSoft.CQRS.ServiceFabric.csproj" />
-    <ProjectReference Include="..\NCG.NGS.CQRS\TempSoft.CQRS.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric\TempSoft.CQRS.ServiceFabric.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>
 
 </Project>

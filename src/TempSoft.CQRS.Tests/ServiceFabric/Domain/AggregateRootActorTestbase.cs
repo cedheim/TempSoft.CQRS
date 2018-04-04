@@ -10,9 +10,9 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
 {
     public abstract class AggregateRootActorTestBase
     {
-        //protected const string EventStreamStateName = "_ncg_ngs_cqrs_event_stream";
-        //protected const string CommandLogStateName = "_ncg_ngs_cqrs_command_log";
-        //protected const string AggregateRootTypeStateName = "_ncg_ngs_cqrs_root_type";
+        //protected const string EventStreamStateName = "_tempsoft_cqrs_event_stream";
+        //protected const string CommandLogStateName = "_tempsoft_cqrs_command_log";
+        //protected const string AggregateRootTypeStateName = "_tempsoft_cqrs_root_type";
 
         protected readonly IActorProxyFactory ActorProxyFactory = A.Fake<IActorProxyFactory>();
         protected readonly IServiceProxyFactory ServiceProxyFactory = A.Fake<IServiceProxyFactory>();

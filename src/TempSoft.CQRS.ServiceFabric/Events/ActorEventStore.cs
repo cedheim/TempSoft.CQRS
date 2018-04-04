@@ -10,7 +10,7 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class ActorEventStore : IEventStore
     {
-        private const string EventStreamStateName = "_ncg_ngs_cqrs_event_stream";
+        private const string EventStreamStateName = "_tempsoft_cqrs_event_stream";
 
         private readonly IActorStateManager _stateManager;
 

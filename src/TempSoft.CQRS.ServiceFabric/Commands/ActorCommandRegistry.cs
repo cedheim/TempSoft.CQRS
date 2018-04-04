@@ -10,7 +10,7 @@ namespace TempSoft.CQRS.ServiceFabric.Commands
 {
     public class ActorCommandRegistry : ICommandRegistry
     {
-        private const string CommandLogStateName = "_ncg_ngs_cqrs_command_log";
+        private const string CommandLogStateName = "_tempsoft_cqrs_command_log";
         private readonly IActorStateManager _stateManager;
 
         public ActorCommandRegistry(IActorStateManager stateManager)

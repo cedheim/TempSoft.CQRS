@@ -26,7 +26,7 @@ namespace TempSoft.CQRS.ServiceFabric.Events
         private readonly IQueryBuilderRegistry _queryBuilderRegistry;
         private readonly IServiceProxyFactory _serviceProxyFactory;
         private readonly IActorProxyFactory _actorProxyFactory;
-        private const string EventQueueName = "_ncg_ngs_event_queue";
+        private const string EventQueueName = "_tempsoft_event_queue";
 
         public EventBusService(StatefulServiceContext serviceContext, IQueryBuilderRegistry queryBuilderRegistry, IServiceProxyFactory serviceProxyFactory, IActorProxyFactory actorProxyFactory) : base(serviceContext)
         {
