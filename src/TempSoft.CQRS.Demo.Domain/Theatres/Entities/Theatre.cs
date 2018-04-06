@@ -11,11 +11,11 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
 {
     public class Theatre : AggregateRoot<Theatre>
     {
-        private readonly Dictionary<string, Auditorium> _auditoriums;
+        private readonly Dictionary<Guid, Auditorium> _auditoriums;
 
         public Theatre()
         {
-            _auditoriums = new Dictionary<string, Auditorium>();
+            _auditoriums = new Dictionary<Guid, Auditorium>();
         }
 
         public IEnumerable<Auditorium> Auditoriums => _auditoriums.Values;
@@ -36,7 +36,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
         }
 
         [CommandHandler(typeof(AddAuditorium))]
-        public void AddAuditorium(string auditoriumId, string name)
+        public void AddAuditorium(Guid auditoriumId, string name)
         {
             ApplyChange(new AuditoriumAdded(auditoriumId, name));
         }
@@ -49,7 +49,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
                 throw new DuplicateAuditoriumAddedException($"Tried to add an auditorium with id {@event.AuditoriumId} which already exists.");
             }
 
-            _auditoriums.Add(@event.AuditoriumId, new Auditorium(@event.AuditoriumId, @event.Name));
+            _auditoriums.Add(@event.AuditoriumId, new Auditorium(this, @event.AuditoriumId, @event.Name));
         }
 
 

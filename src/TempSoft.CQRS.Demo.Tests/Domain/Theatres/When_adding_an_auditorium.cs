@@ -49,7 +49,7 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Theatres
 
             public const string AuditoriumName = "AUDITORIUM1";
 
-            public static readonly string AuditoriumId = Guid.NewGuid().ToString();
+            public static readonly Guid AuditoriumId = Guid.NewGuid();
         }
     }
 }

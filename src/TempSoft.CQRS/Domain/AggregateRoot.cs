@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Exceptions;
@@ -12,6 +13,8 @@ namespace TempSoft.CQRS.Domain
     {
         private static readonly Dictionary<Type, Action<T, ICommand>> CommandHandlers = new Dictionary<Type, Action<T, ICommand>>();
         private static readonly Dictionary<Type, Action<T, IEvent>> EventHandlers = new Dictionary<Type, Action<T, IEvent>>();
+        private static readonly Dictionary<Type, MethodInfo> EntityCommandHandler = new Dictionary<Type, MethodInfo>();
+        private static readonly Dictionary<Type, MethodInfo> EntityEventHandler = new Dictionary<Type, MethodInfo>();
 
         // command registry
         private readonly HashSet<Guid> _commandIds = new HashSet<Guid>();
@@ -40,15 +43,30 @@ namespace TempSoft.CQRS.Domain
                 return;
             }
 
-            var type = command.GetType();
-            if (CommandHandlers.TryGetValue(type, out var caller))
+            if (command is IEntityCommand entityCommand)
             {
-                caller((T) this, command);
-                _processedCommands.Add(command);
+
+                if (_entities.TryGetValue(entityCommand.EntityId, out var entity) && EntityCommandHandler.TryGetValue(entity.GetType(), out var method))
+                {
+                    method.Invoke(this, new object[] { entity, entityCommand });
+                }
+                else
+                {
+                    throw new MissingEntityException($"Entity with id {entityCommand.EntityId} not found.");
+                }
             }
             else
             {
-                throw new MissingCommandHandlerException($"No command handler found on {typeof(T).Name} for command {type.Name}");
+                var type = command.GetType();
+                if (CommandHandlers.TryGetValue(type, out var caller))
+                {
+                    caller((T)this, command);
+                    _processedCommands.Add(command);
+                }
+                else
+                {
+                    throw new MissingCommandHandlerException($"No command handler found on {typeof(T).Name} for command {type.Name}");
+                }
             }
         }
 
@@ -125,6 +143,21 @@ namespace TempSoft.CQRS.Domain
             _uncommitedEvents.Add(@event);
         }
 
+        private void HandleCommandForEntity<TEntity>(TEntity entity, IEntityCommand command) where TEntity : Entity<TEntity>
+        {
+            var type = command.GetType();
+            if (Entity<TEntity>.CommandHandlers.TryGetValue(type, out var caller))
+            {
+                caller(entity, command);
+                _processedCommands.Add(command);
+            }
+            else
+            {
+                throw new MissingCommandHandlerException($"No command handler found on {typeof(TEntity).Name} for command {type.Name}");
+            }
+
+        }
+
         private void RegisterEntity(IEntity entity)
         {
             if (_entities.ContainsKey(entity.Id))
@@ -141,14 +174,42 @@ namespace TempSoft.CQRS.Domain
         
         private void ApplyEvent(IEvent @event)
         {
-            var type = @event.GetType();
-            if (EventHandlers.TryGetValue(type, out var handler))
+            if (@event is IEntityEvent entityEvent)
             {
-                handler((T)this, @event);
+                if (_entities.TryGetValue(entityEvent.EntityId, out var entity) && EntityEventHandler.TryGetValue(entity.GetType(), out var method))
+                {
+                    method.Invoke(this, new object[] { entity, entityEvent });
+                }
+                else
+                {
+                    throw new MissingEntityException($"Entity with id {entityEvent.EntityId} not found.");
+                }
             }
             else
             {
-                throw new MissingEventHandlerException($"Aggregate root of type {typeof(T).Name} missing event handler for {type.Name}");
+                var type = @event.GetType();
+                if (EventHandlers.TryGetValue(type, out var handler))
+                {
+                    handler((T)this, @event);
+                }
+                else
+                {
+                    throw new MissingEventHandlerException($"Aggregate root of type {typeof(T).Name} missing event handler for {type.Name}");
+                }
+            }
+        }
+
+
+        private void ApplyEventForEntity<TEntity>(TEntity entity, IEntityEvent entityEvent) where TEntity : Entity<TEntity>
+        {
+            var type = entityEvent.GetType();
+            if (Entity<TEntity>.EventHandlers.TryGetValue(type, out var handler))
+            {
+                handler(entity, entityEvent);
+            }
+            else
+            {
+                throw new MissingEventHandlerException($"Entity {typeof(TEntity).Name} missing event handler for {type.Name}");
             }
         }
 
@@ -185,24 +246,69 @@ namespace TempSoft.CQRS.Domain
 
         public abstract class Entity<TEntity> : IEntity where TEntity : Entity<TEntity>
         {
-            private static readonly Dictionary<Type, Action<TEntity, IEntityCommand>> CommandHandlers = new Dictionary<Type, Action<TEntity, IEntityCommand>>();
-            private static readonly Dictionary<Type, Action<TEntity, IEvent>> EventHandlers = new Dictionary<Type, Action<TEntity, IEvent>>();
+            internal static readonly Dictionary<Type, Action<TEntity, IEntityCommand>> CommandHandlers = new Dictionary<Type, Action<TEntity, IEntityCommand>>();
+            internal static readonly Dictionary<Type, Action<TEntity, IEntityEvent>> EventHandlers = new Dictionary<Type, Action<TEntity, IEntityEvent>>();
 
-            private readonly T _root;
+            protected readonly T Root;
 
             static Entity()
             {
+                InitializeCommandHandlers();
+                InitializeEventHandlers();
 
+                CreateCommandHandlerForEntity();
+                CreateApplyEventForEntity();
             }
 
             protected Entity(T root, Guid id)
             {
                 Id = id;
-                _root = root;
-                _root.RegisterEntity(this);
+                Root = root;
+                Root.RegisterEntity(this);
             }
 
             public Guid Id { get; set; }
+
+
+            private static void InitializeEventHandlers()
+            {
+                // get all methods with event handler attribute decoration.
+                foreach (var eventHandler in typeof(TEntity).GetMethodsForAttribute<EventHandlerAttribute>())
+                {
+                    foreach (var eventHandlerAttribute in eventHandler.GetCustomAttributes(typeof(EventHandlerAttribute), true).Cast<EventHandlerAttribute>())
+                    {
+                        var caller = eventHandler.GenerateHandler<TEntity, IEntityEvent>(eventHandlerAttribute.For);
+                        EventHandlers.Add(eventHandlerAttribute.For, caller);
+                    }
+                }
+
+            }
+
+            private static void InitializeCommandHandlers()
+            {
+                foreach (var commandHandler in typeof(TEntity).GetMethodsForAttribute<CommandHandlerAttribute>())
+                {
+                    foreach (var commandHandlerAttribute in commandHandler.GetCustomAttributes(typeof(CommandHandlerAttribute), true).Cast<CommandHandlerAttribute>())
+                    {
+                        var caller = commandHandler.GenerateHandler<TEntity, IEntityCommand>(commandHandlerAttribute.For);
+                        CommandHandlers.Add(commandHandlerAttribute.For, caller);
+                    }
+                }
+            }
+
+            private static void CreateCommandHandlerForEntity()
+            {
+                var method = typeof(AggregateRoot<T>).GetMethod("HandleCommandForEntity", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(typeof(TEntity));
+
+                AggregateRoot<T>.EntityCommandHandler.Add(typeof(TEntity), method);
+            }
+
+            private static void CreateApplyEventForEntity()
+            {
+                var method = typeof(AggregateRoot<T>).GetMethod("ApplyEventForEntity", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(typeof(TEntity));
+
+                AggregateRoot<T>.EntityEventHandler.Add(typeof(TEntity), method);
+            }
         }
     }
 }

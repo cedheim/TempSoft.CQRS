@@ -7,13 +7,13 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Commands
     {
         private AddAuditorium() { }
 
-        public AddAuditorium(string auditoriumId, string name)
+        public AddAuditorium(Guid auditoriumId, string name)
         {
             AuditoriumId = auditoriumId;
             Name = name;
         }
 
-        public string AuditoriumId { get; private set; }
+        public Guid AuditoriumId { get; private set; }
         public string Name { get; private set; }
     }
 }

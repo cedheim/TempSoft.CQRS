@@ -81,6 +81,18 @@ namespace TempSoft.CQRS.Tests.Mocks
         }
 
         public string Message { get; private set; }
+
+        [CommandHandler(typeof(SetStuffMessage))]
+        public void SetMessage(string message)
+        {
+            Root.ApplyChange(new StuffMessageSet(Id, message));
+        }
+
+        [EventHandler(typeof(StuffMessageSet))]
+        public void Apply(StuffMessageSet @event)
+        {
+            Message = @event.Message;
+        }
     }
 
     public class InitializeAThing : CommandBase
@@ -108,6 +120,19 @@ namespace TempSoft.CQRS.Tests.Mocks
         public string Message { get; private set; }
 
         public Guid EntityId { get; private set; }
+    }
+
+    public class SetStuffMessage : EntityCommandBase
+    {
+        private SetStuffMessage() { }
+
+        public SetStuffMessage(Guid entityId, string message)
+        {
+            Message = message;
+            EntityId = entityId;
+        }
+
+        public string Message { get; private set; }
     }
 
     public class DoSomething : CommandBase
@@ -161,6 +186,19 @@ namespace TempSoft.CQRS.Tests.Mocks
         }
 
         public Guid EntityId { get; private set; }
+        public string Message { get; private set; }
+    }
+
+    public class StuffMessageSet : EntityEventBase
+    {
+        private StuffMessageSet() { }
+
+        public StuffMessageSet(Guid entityId, string message)
+        {
+            EntityId = entityId;
+            Message = message;
+        }
+
         public string Message { get; private set; }
     }
     
