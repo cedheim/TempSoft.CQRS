@@ -19,13 +19,13 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
         public IEnumerable<Version> Versions => _versions;
 
         [CommandHandler(typeof(InitializeMovie))]
-        public async Task Initialize(Guid aggregateRootId, string publicId, CancellationToken cancellationToken)
+        public void Initialize(Guid aggregateRootId, string publicId)
         {
             ApplyChange(new MovieInitialized(aggregateRootId, publicId));
         }
 
         [CommandHandler(typeof(AddMovieVersion))]
-        public async Task AddMovieVersion(Guid versionId, CancellationToken cancellationToken)
+        public void AddMovieVersion(Guid versionId)
         {
             ApplyChange(new AddedMovieVersion(versionId));
         }

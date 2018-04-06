@@ -10,6 +10,17 @@ namespace TempSoft.CQRS.Extensions
 {
     public static class TypeExtensions
     {
+        private static readonly MethodInfo TaskRunMethod;
+
+        static TypeExtensions()
+        {
+            TaskRunMethod = typeof(Task).GetMethods()
+                .Where(m => m.Name == "Run")
+                .Select(m => new { Method = m, Parameters = m.GetParameters() })
+                .FirstOrDefault(q => q.Parameters.Length == 1 && q.Parameters[0].ParameterType == typeof(Action))
+                .Method;
+        }
+
         internal static IEnumerable<MethodInfo> GetMethodsForAttribute<TAttribute>(this Type type) where TAttribute : Attribute
         {
             while (type != default(Type))
@@ -115,15 +126,11 @@ namespace TempSoft.CQRS.Extensions
             }
 
             var rootCall = Expression.Call(rootParameter, method, parameterExpressions);
+            // if the method is void 
             if (method.ReturnType == typeof(void))
             {
                 var callRootLambda = Expression.Lambda<Action>(rootCall);
-                var runMethod = typeof(Task).GetMethods()
-                    .Where(m => m.Name == "Run")
-                    .Select(m => new { Method = m, Parameters = m.GetParameters() })
-                    .FirstOrDefault(q => q.Parameters.Length == 1 && q.Parameters[0].ParameterType == typeof(Action))
-                    .Method;
-                rootCall = Expression.Call(runMethod, callRootLambda);
+                rootCall = Expression.Call(TaskRunMethod, callRootLambda);
             }
             
             var returnLabel = Expression.Label(typeof(Task));

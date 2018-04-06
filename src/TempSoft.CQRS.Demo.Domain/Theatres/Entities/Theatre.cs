@@ -25,7 +25,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
         public string Name { get; private set; }
 
         [CommandHandler(typeof(InitializeTheatre))]
-        public async Task Initialize(Guid aggregateRootId, string name, CancellationToken cancellationToken)
+        public void Initialize(Guid aggregateRootId, string name)
         {
             ApplyChange(new TheatreInitialized(aggregateRootId, name));
         }
@@ -38,7 +38,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
         }
 
         [CommandHandler(typeof(AddAuditorium))]
-        public async Task AddAuditorium(Guid auditoriumId, string name, CancellationToken cancellationToken)
+        public void AddAuditorium(Guid auditoriumId, string name)
         {
             ApplyChange(new AuditoriumAdded(auditoriumId, name));
         }

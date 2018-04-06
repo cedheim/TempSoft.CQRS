@@ -8,12 +8,9 @@ namespace TempSoft.CQRS.Tests
     [SetUpFixture]
     public class GlobalSetUp
     {
-        public static ICommandRouter FakeCommandRouter = A.Fake<ICommandRouter>();
-
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            Services.Register(() => FakeCommandRouter);
         }
     }
 }

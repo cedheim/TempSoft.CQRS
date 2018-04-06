@@ -21,7 +21,7 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Theatres
         public async Task OneTimeSetUp()
         {
             _root = new Theatre();
-            await _root.Initialize(Data.AggregateRootId, Data.TheatreName, CancellationToken.None);
+            _root.Initialize(Data.AggregateRootId, Data.TheatreName);
 
             _command = new AddAuditorium(Data.AuditoriumId, Data.AuditoriumName);
             await _root.Handle(_command, CancellationToken.None);
