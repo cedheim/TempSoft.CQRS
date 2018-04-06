@@ -109,26 +109,28 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 
             var queue = await StateManager.GetOrAddAsync<IReliableConcurrentQueue<EventMessage>>(EventQueueName);
 
-            foreach (var eventMessage in events)
+            while (true)
             {
-                while (true)
+                try
                 {
-                    try
+                    using (var transaction = this.StateManager.CreateTransaction())
                     {
-                        using (var transaction = this.StateManager.CreateTransaction())
+                        foreach (var eventMessage in events)
                         {
                             await queue.EnqueueAsync(transaction, eventMessage, cancellationToken);
-                            await transaction.CommitAsync();
                         }
 
-                        break;
+                        await transaction.CommitAsync();
                     }
-                    catch (TimeoutException)
-                    {
-                        await Task.Delay(100, CancellationToken.None);
-                    }
+
+                    break;
+                }
+                catch (TimeoutException)
+                {
+                    await Task.Delay(100, CancellationToken.None);
                 }
             }
+
 
             stopwatch.Stop();
         }

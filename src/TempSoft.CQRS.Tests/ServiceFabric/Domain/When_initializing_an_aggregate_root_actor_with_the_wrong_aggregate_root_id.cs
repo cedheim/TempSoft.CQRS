@@ -6,13 +6,14 @@ using FluentAssertions;
 using Microsoft.ServiceFabric.Actors;
 using NUnit.Framework;
 using TempSoft.CQRS.ServiceFabric.Domain;
+using TempSoft.CQRS.ServiceFabric.Exceptions;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 using TempSoft.CQRS.Tests.Mocks;
 
 namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
 {
     [TestFixture]
-    public class When_initializing_an_aggregate_root_actor : AggregateRootActorTestBase
+    public class When_initializing_an_aggregate_root_actor_with_the_wrong_aggregate_root_id : AggregateRootActorTestBase
     {
         private AggregateRootActor _actor;
         private CommandMessage _message;
@@ -29,18 +30,12 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
             _actorId = new ActorId(Data.ActorId);
             _actor = ActorService.Activate(_actorId);
 
-            _message = new CommandMessage(typeof(AThingAggregateRoot), new InitializeAThing(Data.ActorId));
+            _message = new CommandMessage(typeof(AThingAggregateRoot), new InitializeAThing(Guid.NewGuid()));
 
-            await _actor.Handle(_message, CancellationToken.None);
+            _actor.Invoking(a => a.Handle(_message, CancellationToken.None).Wait()).Should()
+                .Throw<AggregateRootHasWrongIdException>();
         }
-
-        [Test]
-        public void Should_have_initialized_the_root()
-        {
-            _root.Should().NotBeNull();
-            _root.Id.Should().Be(Data.ActorId);
-        }
-
+        
         [Test]
         public void Should_have_gotten_the_root_from_the_repository()
         {
@@ -49,10 +44,10 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
         }
 
         [Test]
-        public void Should_have_saved_the_aggregate_to_the_repository()
+        public void Should_not_have_saved_the_aggregate_to_the_repository()
         {
-            A.CallTo(() => AggregateRootRepository.Save(_root, A<CancellationToken>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => AggregateRootRepository.Save(A<AThingAggregateRoot>.Ignored, A<CancellationToken>.Ignored))
+                .MustHaveHappened(Repeated.Never);
         }
 
         private static class Data

@@ -7,8 +7,6 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Domain
 {
     public interface IAggregateRootActor : IActor
     {
-        Task Initialize(InitializeMessage message, CancellationToken cancellationToken);
-
         Task Handle(CommandMessage message, CancellationToken cancellationToken);
 
         Task<ReadModelMessage> GetReadModel(GetReadModelMessage query, CancellationToken cancellationToken);

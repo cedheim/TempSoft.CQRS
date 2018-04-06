@@ -39,9 +39,10 @@ namespace TempSoft.CQRS.Tests.Mocks
             Id = @event.AggregateRootId;
         }
 
-        public override void Initialize(Guid id)
+        [CommandHandler(typeof(InitializeAThing))]
+        public void Initialize(Guid aggregateRootId)
         {
-            ApplyChange(new CreatedAThing(id));
+            ApplyChange(new CreatedAThing(aggregateRootId));
         }
 
         public IAggregateRootReadModel GetReadModel()
@@ -55,6 +56,19 @@ namespace TempSoft.CQRS.Tests.Mocks
             };
         }
     }
+
+    public class InitializeAThing : CommandBase
+    {
+        private InitializeAThing() { }
+
+        public InitializeAThing(Guid aggregateRootId)
+        {
+            AggregateRootId = aggregateRootId;
+        }
+
+        public Guid AggregateRootId { get; private set; }
+    }
+
 
     public class DoSomething : CommandBase
     {

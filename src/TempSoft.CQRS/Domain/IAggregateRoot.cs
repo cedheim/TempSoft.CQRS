@@ -11,8 +11,6 @@ namespace TempSoft.CQRS.Domain
 
         int Version { get; }
         
-        void Initialize(Guid id);
-        
         void Handle(ICommand command);
 
         void LoadFrom(IEnumerable<IEvent> events, IEnumerable<Guid> commandIds);

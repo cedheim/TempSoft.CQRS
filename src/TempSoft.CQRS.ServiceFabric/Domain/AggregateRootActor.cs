@@ -6,6 +6,7 @@ using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using TempSoft.CQRS.Domain;
+using TempSoft.CQRS.ServiceFabric.Exceptions;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Domain;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 
@@ -35,31 +36,35 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
 
         public IServiceProxyFactory ServiceProxyFactory { get; }
         
-        public async Task Initialize(InitializeMessage message, CancellationToken cancellationToken)
-        {
-            var id = this.GetActorId().GetGuidId();
-
-            _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
-            _root.Initialize(id);
-
-            await _aggregateRootRepository.Save(_root, cancellationToken);
-        }
-
         public async Task Handle(CommandMessage message, CancellationToken cancellationToken)
         {
-            var id = this.GetActorId().GetGuidId();
-
-            // should we initialize if we receive a command before it has been initialized?
-            if (_root == null)
+            try
             {
-                _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
+                var id = this.GetActorId().GetGuidId();
+
+                // should we initialize if we receive a command before it has been initialized?
+                if (_root == null)
+                {
+                    _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
+                }
+
+                var command = message.Body;
+
+                _root.Handle(command);
+
+                if (_root.Id != id)
+                {
+                    throw new AggregateRootHasWrongIdException($"Has id {_root.Id} but should have id {id}");
+                }
+
+                await _aggregateRootRepository.Save(_root, cancellationToken);
             }
-
-            var command = message.Body;
-            
-            _root.Handle(command);
-
-            await _aggregateRootRepository.Save(_root, cancellationToken);
+            catch (Exception e)
+            {
+                // in case of an exception we reset the aggregate and the next time it will be loaded to the last known state.
+                _root = default(IAggregateRoot);
+                throw;
+            }
         }
 
         public async Task<ReadModelMessage> GetReadModel(GetReadModelMessage message, CancellationToken cancellationToken)

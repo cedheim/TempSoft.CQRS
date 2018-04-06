@@ -30,8 +30,6 @@ namespace TempSoft.CQRS.Domain
 
         public int Version { get; private set; }
 
-        public abstract void Initialize(Guid id);
-        
         public void Handle(ICommand command)
         {
             if (IsDuplicateCommand(command))
@@ -104,6 +102,11 @@ namespace TempSoft.CQRS.Domain
                     throw new InitializationOfAlreadyInitializedAggregateException($"Tried to initialize root that already is initialized.");
                 }
 
+                if (@event.AggregateRootId == Guid.Empty)
+                {
+                    throw new InitializationEventMissingAggregateRootIdException($"Tried to initialize aggregate root without aggregate root id.");
+                }
+
                 Id = @event.AggregateRootId;
             }
             else
@@ -118,14 +121,8 @@ namespace TempSoft.CQRS.Domain
             
             _uncommitedEvents.Add(@event);
         }
-
-        [EventHandler(typeof(IInitializationEvent))]
-        private void Apply(IInitializationEvent e)
-        {
-            Id = e.AggregateRootId;
-        }
-
-        protected virtual void ApplyEvent(IEvent @event)
+        
+        private void ApplyEvent(IEvent @event)
         {
             var type = @event.GetType();
             if (EventHandlers.TryGetValue(type, out var handler))
