@@ -11,6 +11,5 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
         }
 
         public string Name { get; set; }
-
     }
 }

@@ -11,6 +11,7 @@ namespace TempSoft.CQRS.Domain
 {
     public abstract class AggregateRoot<T> : IAggregateRoot where T : AggregateRoot<T>
     {
+        protected readonly ICommandRouter CommandRouter;
         private static readonly Dictionary<Type, Action<T, ICommand>> CommandHandlers = new Dictionary<Type, Action<T, ICommand>>();
         private static readonly Dictionary<Type, Action<T, IEvent>> EventHandlers = new Dictionary<Type, Action<T, IEvent>>();
         private static readonly Dictionary<Type, MethodInfo> EntityCommandHandler = new Dictionary<Type, MethodInfo>();
@@ -30,6 +31,10 @@ namespace TempSoft.CQRS.Domain
         {
             InitializeEventHandlers();
             InitializeCommandHandlers();
+        }
+
+        public AggregateRoot()
+        {
         }
 
         public Guid Id { get; protected set; }

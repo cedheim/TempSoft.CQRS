@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Infrastructure;
 
 namespace TempSoft.CQRS.Domain
 {
@@ -56,7 +57,7 @@ namespace TempSoft.CQRS.Domain
 
         private IAggregateRoot Activate(Type type)
         {
-            return (IAggregateRoot)Activator.CreateInstance(type);
+            return (IAggregateRoot) Services.Resolve(type);
         }
     }
 }

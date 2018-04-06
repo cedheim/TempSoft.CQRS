@@ -17,7 +17,7 @@ namespace TempSoft.CQRS.Tests.Mocks
         public IEnumerable<StuffEntity> Stuff => _stuff;
         public int A { get; private set; }
         public string B { get; private set; }
-
+        
         [CommandHandler(typeof(DoSomething))]
         public void DoSomething(int a, string b)
         {
@@ -73,6 +73,7 @@ namespace TempSoft.CQRS.Tests.Mocks
                 Stuff =  Stuff.Select(s => new StuffReadModel { Id = s.Id, Message = s.Message }).ToArray()
             };
         }
+
     }
 
     public class StuffEntity : AThingAggregateRoot.Entity<StuffEntity>

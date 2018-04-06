@@ -25,5 +25,14 @@ namespace TempSoft.CQRS.ServiceFabric.Commands
 
             await actor.Handle(new CommandMessage(typeof(TAggregate), command), cancellationToken);
         }
+
+        public async Task<TReadModel> GetReadModel<TAggregate, TReadModel>(Guid id, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot where TReadModel : IAggregateRootReadModel
+        {
+            var actor = _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(new ActorId(id));
+
+            var message = await actor.GetReadModel(new GetReadModelMessage(typeof(TAggregate)), cancellationToken);
+
+            return message.GetReadModel<TReadModel>();
+        }
     }
 }
