@@ -9,4 +9,8 @@
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Movies\" />
+  </ItemGroup>
+
 </Project>

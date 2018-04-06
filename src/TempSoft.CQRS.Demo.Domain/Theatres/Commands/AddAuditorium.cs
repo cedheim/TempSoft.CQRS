@@ -15,6 +15,5 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Commands
 
         public string AuditoriumId { get; private set; }
         public string Name { get; private set; }
-
     }
 }

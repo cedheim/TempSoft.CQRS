@@ -19,6 +19,9 @@ namespace TempSoft.CQRS.Domain
         // session cache
         private readonly List<ICommand> _processedCommands = new List<ICommand>();
         private readonly List<IEvent> _uncommitedEvents = new List<IEvent>();
+
+        // registered entities
+        private readonly Dictionary<Guid, IEntity> _entities = new Dictionary<Guid, IEntity>();
         
         static AggregateRoot()
         {
@@ -121,6 +124,20 @@ namespace TempSoft.CQRS.Domain
             
             _uncommitedEvents.Add(@event);
         }
+
+        private void RegisterEntity(IEntity entity)
+        {
+            if (_entities.ContainsKey(entity.Id))
+            {
+                throw new EntityAlreadyExistsException($"An entity with id {entity.Id} already exists.");
+            }
+            if (entity.Id == Guid.Empty)
+            {
+                throw new EntityMissingIdException($"Tried to register an entity without a proper id.");
+            }
+
+            _entities.Add(entity.Id, entity);
+        }
         
         private void ApplyEvent(IEvent @event)
         {
@@ -164,6 +181,28 @@ namespace TempSoft.CQRS.Domain
         private bool IsDuplicateCommand(ICommand command)
         {
             return _commandIds.Contains(command.Id) || _processedCommands.Any(cmd => cmd.Id == command.Id);
+        }
+
+        public abstract class Entity<TEntity> : IEntity where TEntity : Entity<TEntity>
+        {
+            private static readonly Dictionary<Type, Action<TEntity, IEntityCommand>> CommandHandlers = new Dictionary<Type, Action<TEntity, IEntityCommand>>();
+            private static readonly Dictionary<Type, Action<TEntity, IEvent>> EventHandlers = new Dictionary<Type, Action<TEntity, IEvent>>();
+
+            private readonly T _root;
+
+            static Entity()
+            {
+
+            }
+
+            protected Entity(T root, Guid id)
+            {
+                Id = id;
+                _root = root;
+                _root.RegisterEntity(this);
+            }
+
+            public Guid Id { get; set; }
         }
     }
 }

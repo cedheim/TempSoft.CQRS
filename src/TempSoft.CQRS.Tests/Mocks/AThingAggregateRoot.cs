@@ -11,6 +11,9 @@ namespace TempSoft.CQRS.Tests.Mocks
 {
     public class AThingAggregateRoot : AggregateRoot<AThingAggregateRoot>, IAggregateRootWithReadModel
     {
+        private readonly List<StuffEntity> _stuff = new List<StuffEntity>();
+
+        public IEnumerable<StuffEntity> Stuff => _stuff;
         public int A { get; private set; }
         public string B { get; private set; }
 
@@ -45,6 +48,19 @@ namespace TempSoft.CQRS.Tests.Mocks
             ApplyChange(new CreatedAThing(aggregateRootId));
         }
 
+        [CommandHandler(typeof(AddStuff))]
+        public void AddStuff(Guid entityId, string message)
+        {
+            ApplyChange(new AddedStuff(entityId, message));
+        }
+
+        [EventHandler(typeof(AddedStuff))]
+        public void Apply(AddedStuff @event)
+        {
+            var entity = new StuffEntity(this, @event.EntityId, @event.Message);
+            _stuff.Add(entity);
+        }
+
         public IAggregateRootReadModel GetReadModel()
         {
             return new AThingReadModel
@@ -55,6 +71,16 @@ namespace TempSoft.CQRS.Tests.Mocks
                 Id = Id
             };
         }
+    }
+
+    public class StuffEntity : AThingAggregateRoot.Entity<StuffEntity>
+    {
+        public StuffEntity(AThingAggregateRoot root, Guid id, string message) : base(root, id)
+        {
+            Message = message;
+        }
+
+        public string Message { get; private set; }
     }
 
     public class InitializeAThing : CommandBase
@@ -69,6 +95,20 @@ namespace TempSoft.CQRS.Tests.Mocks
         public Guid AggregateRootId { get; private set; }
     }
 
+    public class AddStuff : CommandBase
+    {
+        private AddStuff() { }
+
+        public AddStuff(Guid entityId, string message)
+        {
+            Message = message;
+            EntityId = entityId;
+        }
+
+        public string Message { get; private set; }
+
+        public Guid EntityId { get; private set; }
+    }
 
     public class DoSomething : CommandBase
     {
@@ -108,6 +148,20 @@ namespace TempSoft.CQRS.Tests.Mocks
             : base(aggregateRootId)
         {
         }
+    }
+
+    public class AddedStuff : EventBase
+    {
+        private AddedStuff() { }
+
+        public AddedStuff(Guid entityId, string message)
+        {
+            EntityId = entityId;
+            Message = message;
+        }
+
+        public Guid EntityId { get; private set; }
+        public string Message { get; private set; }
     }
     
     public class AThingQueryBuilder : QueryBuilderBase<AThingQueryBuilder>
