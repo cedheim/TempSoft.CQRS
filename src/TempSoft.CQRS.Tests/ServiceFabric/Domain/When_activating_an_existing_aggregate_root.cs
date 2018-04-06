@@ -22,7 +22,7 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
         public async Task OneTimeSetUp()
         {
             _root = new AThingAggregateRoot();
-            await _root.Initialize(Data.ActorId, CancellationToken.None);
+            _root.Initialize(Data.ActorId);
             await _root.Handle(new DoSomething(12312, "WAAAAAA"), CancellationToken.None);
             _root.Commit();
 

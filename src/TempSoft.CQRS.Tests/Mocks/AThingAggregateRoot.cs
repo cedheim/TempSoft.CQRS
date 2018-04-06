@@ -44,7 +44,7 @@ namespace TempSoft.CQRS.Tests.Mocks
         }
 
         [CommandHandler(typeof(InitializeAThing))]
-        public async Task Initialize(Guid aggregateRootId, CancellationToken cancellationToken)
+        public void Initialize(Guid aggregateRootId)
         {
             ApplyChange(new CreatedAThing(aggregateRootId));
         }

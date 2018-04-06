@@ -19,14 +19,14 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         public async Task OneTimeSetUp()
         {
             _root = new AThingAggregateRoot();
-            await _root.Initialize(Data.RootId, CancellationToken.None);
+            _root.Initialize(Data.RootId);
             _events = _root.Commit().Events;
         }
 
         [Test]
         public void Should_throw_an_already_initialized_exception()
         {
-            _root.Invoking(r => r.Initialize(Data.RootId, CancellationToken.None).Wait())
+            _root.Invoking(r => r.Initialize(Data.RootId))
                 .Should().Throw<InitializationOfAlreadyInitializedAggregateException>();
         }
         

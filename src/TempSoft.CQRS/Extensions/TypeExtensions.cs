@@ -115,7 +115,17 @@ namespace TempSoft.CQRS.Extensions
             }
 
             var rootCall = Expression.Call(rootParameter, method, parameterExpressions);
-
+            if (method.ReturnType == typeof(void))
+            {
+                var callRootLambda = Expression.Lambda<Action>(rootCall);
+                var runMethod = typeof(Task).GetMethods()
+                    .Where(m => m.Name == "Run")
+                    .Select(m => new { Method = m, Parameters = m.GetParameters() })
+                    .FirstOrDefault(q => q.Parameters.Length == 1 && q.Parameters[0].ParameterType == typeof(Action))
+                    .Method;
+                rootCall = Expression.Call(runMethod, callRootLambda);
+            }
+            
             var returnLabel = Expression.Label(typeof(Task));
             var returnValue = Expression.Return(returnLabel, rootCall, typeof(Task));
             var returnLabelExpression = Expression.Label(returnLabel, Expression.Constant(default(Task), typeof(Task)));
