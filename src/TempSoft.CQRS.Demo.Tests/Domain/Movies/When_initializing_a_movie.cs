@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Demo.Domain.Movies.Commands;
@@ -15,10 +17,10 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
         private Commit _commit;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public async Task OneTimeSetUp()
         {
             _root = new Movie();
-            _root.Handle(new InitializeMovie(Data.AggregateRootId, Data.PublicId));
+            await _root.Handle(new InitializeMovie(Data.AggregateRootId, Data.PublicId), CancellationToken.None);
 
             _commit = _root.Commit();
         }

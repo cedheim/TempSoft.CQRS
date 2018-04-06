@@ -50,7 +50,7 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
 
                 var command = message.Body;
 
-                _root.Handle(command);
+                await _root.Handle(command, cancellationToken);
 
                 if (_root.Id != id)
                 {

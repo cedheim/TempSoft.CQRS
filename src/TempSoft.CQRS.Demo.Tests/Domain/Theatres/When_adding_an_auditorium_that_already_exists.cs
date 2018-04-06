@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Demo.Domain.Theatres.Commands;
@@ -16,15 +18,15 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Theatres
         private Commit _commit;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public async Task OneTimeSetUp()
         {
             _root = new Theatre();
-            _root.Initialize(Data.AggregateRootId, Data.TheatreName);
+            await _root.Initialize(Data.AggregateRootId, Data.TheatreName, CancellationToken.None);
 
             var command1 = new AddAuditorium(Data.AuditoriumId, Data.AuditoriumName);
             var command2 = new AddAuditorium(Data.AuditoriumId, Data.AuditoriumName);
-            _root.Handle(command1);
-            _root.Invoking(r => r.Handle(command2)).Should().Throw<DuplicateAuditoriumAddedException>();
+            await _root.Handle(command1, CancellationToken.None);
+            _root.Invoking(r => r.Handle(command2, CancellationToken.None).Wait()).Should().Throw<DuplicateAuditoriumAddedException>();
 
             _commit = _root.Commit();
         }

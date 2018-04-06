@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Domain;
@@ -14,12 +16,12 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         private Commit _commit;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public async Task OneTimeSetUp()
         {
             _root = new AThingAggregateRoot();
-            _root.Initialize(Data.RootId);
-            _root.AddStuff(Data.EntityId, Data.StuffMessage);
-            _root.Handle(new SetStuffMessage(Data.EntityId, Data.ChangedStuffMessage));
+            await _root.Initialize(Data.RootId, CancellationToken.None);
+            await _root.AddStuff(Data.EntityId, Data.StuffMessage, CancellationToken.None);
+            await _root.Handle(new SetStuffMessage(Data.EntityId, Data.ChangedStuffMessage), CancellationToken.None);
 
             _commit = _root.Commit();
         }

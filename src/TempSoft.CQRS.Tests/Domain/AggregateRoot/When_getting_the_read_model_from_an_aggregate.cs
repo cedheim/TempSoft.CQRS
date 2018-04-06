@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Tests.Mocks;
@@ -12,11 +14,11 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         private AThingReadModel _readModel;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public async Task OneTimeSetUp()
         {
             _root = new AThingAggregateRoot();
-            _root.Initialize(Data.RootId);
-            _root.Handle(new DoSomething(Data.AValue, Data.BValue));
+            await _root.Initialize(Data.RootId, CancellationToken.None);
+            await _root.Handle(new DoSomething(Data.AValue, Data.BValue), CancellationToken.None);
             _root.Commit();
 
             _readModel = _root.GetReadModel() as AThingReadModel;

@@ -30,8 +30,8 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
             _aggregateRootRepository = new CQRS.Domain.AggregateRootRepository(_eventStore, _eventBus, _commandRegistry);
 
             _root = new AThingAggregateRoot();
-            _root.Initialize(Data.AggregateRootId);
-            _root.Handle(new DoSomething(Data.AValue, Data.BValue));
+            await _root.Initialize(Data.AggregateRootId, CancellationToken.None);
+            await _root.Handle(new DoSomething(Data.AValue, Data.BValue), CancellationToken.None);
 
             await _aggregateRootRepository.Save(_root, CancellationToken.None);
         }

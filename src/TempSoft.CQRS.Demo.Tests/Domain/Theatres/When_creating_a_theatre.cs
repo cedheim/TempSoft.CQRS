@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Demo.Domain.Theatres.Commands;
@@ -16,12 +18,12 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Theatres
         private Commit _commit;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public async Task OneTimeSetUp()
         {
             _root = new Theatre();
             _command = new InitializeTheatre(Data.AggregateRootId, Data.Name);
             
-            _root.Handle(_command);
+            await _root.Handle(_command, CancellationToken.None);
             _commit = _root.Commit();
         }
 

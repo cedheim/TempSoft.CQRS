@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Events;
@@ -14,17 +16,17 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         private IEvent[] _events;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public async Task OneTimeSetUp()
         {
             _root = new AThingAggregateRoot();
-            _root.Initialize(Data.RootId);
+            await _root.Initialize(Data.RootId, CancellationToken.None);
             _events = _root.Commit().Events;
         }
 
         [Test]
         public void Should_throw_an_already_initialized_exception()
         {
-            _root.Invoking(r => r.Initialize(Data.RootId))
+            _root.Invoking(r => r.Initialize(Data.RootId, CancellationToken.None).Wait())
                 .Should().Throw<InitializationOfAlreadyInitializedAggregateException>();
         }
         

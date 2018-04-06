@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Exceptions;
@@ -12,7 +14,7 @@ namespace TempSoft.CQRS.Domain
     public abstract class AggregateRoot<T> : IAggregateRoot where T : AggregateRoot<T>
     {
         protected readonly ICommandRouter CommandRouter;
-        private static readonly Dictionary<Type, Action<T, ICommand>> CommandHandlers = new Dictionary<Type, Action<T, ICommand>>();
+        private static readonly Dictionary<Type, Func<T, ICommand, CancellationToken, Task>> CommandHandlers = new Dictionary<Type, Func<T, ICommand, CancellationToken, Task>>();
         private static readonly Dictionary<Type, Action<T, IEvent>> EventHandlers = new Dictionary<Type, Action<T, IEvent>>();
         private static readonly Dictionary<Type, MethodInfo> EntityCommandHandler = new Dictionary<Type, MethodInfo>();
         private static readonly Dictionary<Type, MethodInfo> EntityEventHandler = new Dictionary<Type, MethodInfo>();
@@ -32,16 +34,12 @@ namespace TempSoft.CQRS.Domain
             InitializeEventHandlers();
             InitializeCommandHandlers();
         }
-
-        public AggregateRoot()
-        {
-        }
-
+        
         public Guid Id { get; protected set; }
 
         public int Version { get; private set; }
 
-        public void Handle(ICommand command)
+        public async Task Handle(ICommand command, CancellationToken cancellationToken)
         {
             if (IsDuplicateCommand(command))
             {
@@ -53,7 +51,8 @@ namespace TempSoft.CQRS.Domain
 
                 if (_entities.TryGetValue(entityCommand.EntityId, out var entity) && EntityCommandHandler.TryGetValue(entity.GetType(), out var method))
                 {
-                    method.Invoke(this, new object[] { entity, entityCommand });
+                    var task = (Task)method.Invoke(this, new object[] { entity, entityCommand, cancellationToken });
+                    await task;
                 }
                 else
                 {
@@ -65,7 +64,7 @@ namespace TempSoft.CQRS.Domain
                 var type = command.GetType();
                 if (CommandHandlers.TryGetValue(type, out var caller))
                 {
-                    caller((T)this, command);
+                    await caller((T)this, command, cancellationToken);
                     _processedCommands.Add(command);
                 }
                 else
@@ -148,12 +147,12 @@ namespace TempSoft.CQRS.Domain
             _uncommitedEvents.Add(@event);
         }
 
-        private void HandleCommandForEntity<TEntity>(TEntity entity, IEntityCommand command) where TEntity : Entity<TEntity>
+        private async Task HandleCommandForEntity<TEntity>(TEntity entity, IEntityCommand command, CancellationToken cancellationToken) where TEntity : Entity<TEntity>
         {
             var type = command.GetType();
             if (Entity<TEntity>.CommandHandlers.TryGetValue(type, out var caller))
             {
-                caller(entity, command);
+                await caller(entity, command, cancellationToken);
                 _processedCommands.Add(command);
             }
             else
@@ -204,7 +203,6 @@ namespace TempSoft.CQRS.Domain
             }
         }
 
-
         private void ApplyEventForEntity<TEntity>(TEntity entity, IEntityEvent entityEvent) where TEntity : Entity<TEntity>
         {
             var type = entityEvent.GetType();
@@ -238,7 +236,7 @@ namespace TempSoft.CQRS.Domain
             {
                 foreach (var commandHandlerAttribute in commandHandler.GetCustomAttributes(typeof(CommandHandlerAttribute), true).Cast<CommandHandlerAttribute>())
                 {
-                    var caller = commandHandler.GenerateHandler<T, ICommand>(commandHandlerAttribute.For);
+                    var caller = commandHandler.GenerateAsyncHandler<T, ICommand>(commandHandlerAttribute.For);
                     CommandHandlers.Add(commandHandlerAttribute.For, caller);
                 }
             }
@@ -251,7 +249,7 @@ namespace TempSoft.CQRS.Domain
 
         public abstract class Entity<TEntity> : IEntity where TEntity : Entity<TEntity>
         {
-            internal static readonly Dictionary<Type, Action<TEntity, IEntityCommand>> CommandHandlers = new Dictionary<Type, Action<TEntity, IEntityCommand>>();
+            internal static readonly Dictionary<Type, Func<TEntity, IEntityCommand, CancellationToken, Task>> CommandHandlers = new Dictionary<Type, Func<TEntity, IEntityCommand, CancellationToken, Task>>();
             internal static readonly Dictionary<Type, Action<TEntity, IEntityEvent>> EventHandlers = new Dictionary<Type, Action<TEntity, IEntityEvent>>();
 
             protected readonly T Root;
@@ -295,7 +293,7 @@ namespace TempSoft.CQRS.Domain
                 {
                     foreach (var commandHandlerAttribute in commandHandler.GetCustomAttributes(typeof(CommandHandlerAttribute), true).Cast<CommandHandlerAttribute>())
                     {
-                        var caller = commandHandler.GenerateHandler<TEntity, IEntityCommand>(commandHandlerAttribute.For);
+                        var caller = commandHandler.GenerateAsyncHandler<TEntity, IEntityCommand>(commandHandlerAttribute.For);
                         CommandHandlers.Add(commandHandlerAttribute.For, caller);
                     }
                 }

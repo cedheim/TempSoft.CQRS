@@ -71,12 +71,35 @@ namespace TempSoft.CQRS.Infrastructure
         {
             return new RegisterOptions(_container.Register(registerType, registerImplementation, instance, name));
         }
+
+        public static RegisterOptions Register(Type registerType, Func<object> factory)
+        {
+            return new RegisterOptions(_container.Register(registerType, (conctainer, overloads) => factory()));
+        }
         
+        public static RegisterOptions Register(Type registerType, Func<object> factory, string name)
+        {
+            return new RegisterOptions(_container.Register(registerType, (conctainer, overloads) => factory(), name));
+        }
+
         public static RegisterOptions Register<RegisterType>()
             where RegisterType : class
         {
             return new RegisterOptions(_container.Register<RegisterType>());
         }
+
+        public static RegisterOptions Register<RegisterType>(Func<RegisterType> factory)
+            where RegisterType : class
+        {
+            return new RegisterOptions(_container.Register<RegisterType>((conctainer, overloads) => factory()));
+        }
+
+        public static RegisterOptions Register<RegisterType>(Func<RegisterType> factory, string name)
+            where RegisterType : class
+        {
+            return new RegisterOptions(_container.Register<RegisterType>((conctainer, overloads) => factory(), name));
+        }
+
 
         public static RegisterOptions Register<RegisterType>(string name)
             where RegisterType : class
@@ -135,6 +158,7 @@ namespace TempSoft.CQRS.Infrastructure
         {
             return new MultiRegisterOptions(_container.RegisterMultiple(registrationType, implementationTypes));
         }
+
         public static object Resolve(Type resolveType)
         {
             return _container.Resolve(resolveType);

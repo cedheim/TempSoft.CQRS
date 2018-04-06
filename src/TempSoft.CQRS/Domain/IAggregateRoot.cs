@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Events;
 
@@ -11,7 +13,7 @@ namespace TempSoft.CQRS.Domain
 
         int Version { get; }
         
-        void Handle(ICommand command);
+        Task Handle(ICommand command, CancellationToken cancellationToken);
 
         void LoadFrom(IEnumerable<IEvent> events, IEnumerable<Guid> commandIds);
 

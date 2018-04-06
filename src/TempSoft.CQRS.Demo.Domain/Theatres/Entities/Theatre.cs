@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Demo.Domain.Theatres.Commands;
 using TempSoft.CQRS.Demo.Domain.Theatres.Events;
@@ -23,7 +25,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
         public string Name { get; private set; }
 
         [CommandHandler(typeof(InitializeTheatre))]
-        public void Initialize(Guid aggregateRootId, string name)
+        public async Task Initialize(Guid aggregateRootId, string name, CancellationToken cancellationToken)
         {
             ApplyChange(new TheatreInitialized(aggregateRootId, name));
         }
@@ -36,7 +38,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
         }
 
         [CommandHandler(typeof(AddAuditorium))]
-        public void AddAuditorium(Guid auditoriumId, string name)
+        public async Task AddAuditorium(Guid auditoriumId, string name, CancellationToken cancellationToken)
         {
             ApplyChange(new AuditoriumAdded(auditoriumId, name));
         }

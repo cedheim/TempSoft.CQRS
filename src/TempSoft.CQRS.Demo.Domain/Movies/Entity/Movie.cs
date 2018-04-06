@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Events;
@@ -17,13 +19,13 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
         public IEnumerable<Version> Versions => _versions;
 
         [CommandHandler(typeof(InitializeMovie))]
-        public void Initialize(Guid aggregateRootId, string publicId)
+        public async Task Initialize(Guid aggregateRootId, string publicId, CancellationToken cancellationToken)
         {
             ApplyChange(new MovieInitialized(aggregateRootId, publicId));
         }
 
         [CommandHandler(typeof(AddMovieVersion))]
-        public void AddMovieVersion(Guid versionId)
+        public async Task AddMovieVersion(Guid versionId, CancellationToken cancellationToken)
         {
             ApplyChange(new AddedMovieVersion(versionId));
         }
@@ -33,6 +35,8 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
         {
             PublicId = @event.PublicId;
             Id = @event.AggregateRootId;
+
+            
         }
 
         [EventHandler(typeof(AddedMovieVersion))]

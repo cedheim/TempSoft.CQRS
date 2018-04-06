@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Events;
@@ -14,11 +16,11 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         private IEvent[] _events;
 
         [OneTimeSetUp]
-        public void OneTimeSetUp()
+        public async Task OneTimeSetUp()
         {
             var original = new AThingAggregateRoot();
-            original.Initialize(Data.RootId);
-            original.Handle(new DoSomething(Data.AValue, Data.BValue));
+            await original.Initialize(Data.RootId, CancellationToken.None);
+            await original.Handle(new DoSomething(Data.AValue, Data.BValue), CancellationToken.None);
             _events = original.Commit().Events;
 
             _root = new AThingAggregateRoot();

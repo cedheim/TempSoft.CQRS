@@ -19,7 +19,7 @@ namespace TempSoft.CQRS.Tests.Mocks
         public string B { get; private set; }
         
         [CommandHandler(typeof(DoSomething))]
-        public void DoSomething(int a, string b)
+        public async Task DoSomething(int a, string b, CancellationToken cancellationToken)
         {
             ApplyChange(new ChangedAValue(a));
             ApplyChange(new ChangedBValue(b));
@@ -44,13 +44,13 @@ namespace TempSoft.CQRS.Tests.Mocks
         }
 
         [CommandHandler(typeof(InitializeAThing))]
-        public void Initialize(Guid aggregateRootId)
+        public async Task Initialize(Guid aggregateRootId, CancellationToken cancellationToken)
         {
             ApplyChange(new CreatedAThing(aggregateRootId));
         }
 
         [CommandHandler(typeof(AddStuff))]
-        public void AddStuff(Guid entityId, string message)
+        public async Task AddStuff(Guid entityId, string message, CancellationToken cancellationToken)
         {
             ApplyChange(new AddedStuff(entityId, message));
         }
@@ -86,7 +86,7 @@ namespace TempSoft.CQRS.Tests.Mocks
         public string Message { get; private set; }
 
         [CommandHandler(typeof(SetStuffMessage))]
-        public void SetMessage(string message)
+        public async Task SetMessage(string message, CancellationToken cancellationToken)
         {
             Root.ApplyChange(new StuffMessageSet(Id, message));
         }
