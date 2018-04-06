@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
@@ -68,7 +69,8 @@ namespace TempSoft.CQRS.Tests.Mocks
                 A = A,
                 B = B,
                 Version = Version,
-                Id = Id
+                Id = Id,
+                Stuff =  Stuff.Select(s => new StuffReadModel { Id = s.Id, Message = s.Message }).ToArray()
             };
         }
     }
@@ -248,6 +250,13 @@ namespace TempSoft.CQRS.Tests.Mocks
         public string B { get; set; }
     }
 
+    public class StuffReadModel
+    {
+        public Guid Id { get; set; }
+
+        public string Message { get; set; }
+    }
+
     public class AThingReadModel : IAggregateRootReadModel
     {
         public Guid Id { get; set; }
@@ -255,6 +264,8 @@ namespace TempSoft.CQRS.Tests.Mocks
         public int A { get; set; }
 
         public string B { get; set; }
+
+        public StuffReadModel[] Stuff { get; set; }
     }
 
 }
