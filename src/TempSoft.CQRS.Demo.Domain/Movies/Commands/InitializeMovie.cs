@@ -7,14 +7,15 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
     {
         private InitializeMovie() { }
 
-        public InitializeMovie(Guid aggregateRootId, string publicId)
+        public InitializeMovie(Guid aggregateRootId, string publicId, string title)
         {
             AggregateRootId = aggregateRootId;
             PublicId = publicId;
+            Title = title;
         }
 
         public Guid AggregateRootId { get; private set; }
         public string PublicId { get; private set; }
-
+        public string Title { get; private set; }
     }
 }

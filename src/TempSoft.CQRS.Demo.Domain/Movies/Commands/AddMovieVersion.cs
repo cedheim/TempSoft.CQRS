@@ -5,14 +5,18 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
 {
     public class AddMovieVersion : CommandBase
     {
-        private AddMovieVersion() { }
+        private AddMovieVersion()
+        {
+        }
 
-        public AddMovieVersion(Guid versionId)
+        public AddMovieVersion(Guid versionId, string name)
         {
             VersionId = versionId;
+            Name = name;
         }
 
         public Guid VersionId { get; private set; }
 
+        public string Name { get; private set; }
     }
 }
