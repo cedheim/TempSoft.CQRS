@@ -21,11 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Aggregat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Api", "TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj", "{FB8F2CD8-6AEB-44F1-8C9D-BD0A7EE1344D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.EventHub", "TempSoft.CQRS.Demo.EventHub\TempSoft.CQRS.Demo.EventHub.csproj", "{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.EventHub", "TempSoft.CQRS.Demo.EventHub\TempSoft.CQRS.Demo.EventHub.csproj", "{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Domain", "TempSoft.CQRS.Demo.Domain\TempSoft.CQRS.Demo.Domain.csproj", "{23B9912C-C170-4616-8A7A-B44150461A71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Domain", "TempSoft.CQRS.Demo.Domain\TempSoft.CQRS.Demo.Domain.csproj", "{23B9912C-C170-4616-8A7A-B44150461A71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Tests", "TempSoft.CQRS.Demo.Tests\TempSoft.CQRS.Demo.Tests.csproj", "{4E3B91E5-687C-43C7-A8F9-AC7F187C77D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Tests", "TempSoft.CQRS.Demo.Tests\TempSoft.CQRS.Demo.Tests.csproj", "{4E3B91E5-687C-43C7-A8F9-AC7F187C77D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.CosmosDb", "TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj", "{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -121,6 +123,12 @@ Global
 		{4E3B91E5-687C-43C7-A8F9-AC7F187C77D9}.Release|Any CPU.ActiveCfg = Release|x64
 		{4E3B91E5-687C-43C7-A8F9-AC7F187C77D9}.Release|x64.ActiveCfg = Release|x64
 		{4E3B91E5-687C-43C7-A8F9-AC7F187C77D9}.Release|x64.Build.0 = Release|x64
+		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Debug|x64.ActiveCfg = Debug|x64
+		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Debug|x64.Build.0 = Debug|x64
+		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Release|Any CPU.ActiveCfg = Release|x64
+		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Release|x64.ActiveCfg = Release|x64
+		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

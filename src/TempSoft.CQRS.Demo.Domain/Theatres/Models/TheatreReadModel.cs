@@ -12,5 +12,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Models
         public int Version { get; set; }
 
         public AuditoriumReadModel[]  Auditoriums { get; set; }
+
+        public SlotReadModel[] Slots { get; set; }
     }
 }
