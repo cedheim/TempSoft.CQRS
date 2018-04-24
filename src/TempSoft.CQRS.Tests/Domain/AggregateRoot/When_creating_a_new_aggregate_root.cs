@@ -31,7 +31,7 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         [Test]
         public void Should_have_triggered_an_event()
         {
-            _events.Should().ContainSingle(e => e is IInitializationEvent && e.Version == 1);
+            _events.Should().ContainSingle(e => e is IInitializationEvent && e.Version == 1 && e.EventGroup == nameof(AThingAggregateRoot));
         }
 
         [Test]

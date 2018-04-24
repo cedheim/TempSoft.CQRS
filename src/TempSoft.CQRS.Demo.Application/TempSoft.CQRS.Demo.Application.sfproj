@@ -29,12 +29,12 @@
     <None Include="Scripts\Deploy-FabricApplication.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.Demo.AggregateRoots\TempSoft.CQRS.Demo.AggregateRoots.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Demo.EventHub\TempSoft.CQRS.Demo.EventHub.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

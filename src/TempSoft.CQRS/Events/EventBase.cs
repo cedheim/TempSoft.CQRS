@@ -14,5 +14,6 @@ namespace TempSoft.CQRS.Events
         public DateTime Timestamp { get; set; }
         public int Version { get; set; }
         public Guid AggregateRootId { get; set; }
+        public string EventGroup { get; set; }
     }
 }

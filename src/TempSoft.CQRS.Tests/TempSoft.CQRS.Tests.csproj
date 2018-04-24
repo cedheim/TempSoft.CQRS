@@ -9,24 +9,25 @@
 
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="4.5.1" />
-    <PackageReference Include="FluentAssertions" Version="5.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.2" />
+    <PackageReference Include="FluentAssertions" Version="5.3.0" />
+    <PackageReference Include="Microsoft.Azure.DocumentDB" Version="1.22.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-    <PackageReference Include="ServiceFabric.Mocks" Version="3.2.3" />
+    <PackageReference Include="ServiceFabric.Mocks" Version="3.3.1" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <!--<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core">
-      <Version>1.9.1</Version>
+      <Version>1.10.0</Version>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <PackageReference Include="Microsoft.Azure.DocumentDB">
-      <Version>1.21.1</Version>
+      <Version>1.22.0</Version>
     </PackageReference>
-  </ItemGroup>
+  </ItemGroup>-->
 
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj" />

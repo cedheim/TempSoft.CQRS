@@ -18,6 +18,7 @@ namespace TempSoft.CQRS.Domain
         private static readonly Dictionary<Type, Action<T, IEvent>> EventHandlers = new Dictionary<Type, Action<T, IEvent>>();
         private static readonly Dictionary<Type, MethodInfo> EntityCommandHandler = new Dictionary<Type, MethodInfo>();
         private static readonly Dictionary<Type, MethodInfo> EntityEventHandler = new Dictionary<Type, MethodInfo>();
+        private static readonly string AggregateRootTypeName = typeof(T).Name;
 
         // command registry
         private readonly HashSet<Guid> _commandIds = new HashSet<Guid>();
@@ -111,12 +112,10 @@ namespace TempSoft.CQRS.Domain
 
         public void ApplyChange(IEvent @event)
         {
-            var type = @event.GetType();
-
             // validate event.
             if (Version == 0 && !(@event is IInitializationEvent))
             {
-                throw new DomainEventOnUninitializedAggregateException($"Domain event of type {type.Name} on uninitialized root.");
+                throw new DomainEventOnUninitializedAggregateException($"Domain event of type {@event.GetType().Name} on uninitialized root.");
 
             }
 
@@ -140,7 +139,9 @@ namespace TempSoft.CQRS.Domain
             }
 
             ++Version;
+
             @event.Version = Version;
+            @event.EventGroup = AggregateRootTypeName;
 
             ApplyEvent(@event);
             
