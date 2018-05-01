@@ -29,7 +29,7 @@ namespace TempSoft.CQRS.ServiceFabric.Events
             var tasks = 
                 from eventGroup in events.GroupBy(e => e.AggregateRootId)
                 let hash = eventGroup.Key.GetHashCode64()
-                let messages = eventGroup.Select(e => new EventMessage(e)).OrderBy(e => e.Body.Timestamp).ToArray()
+                let messages = eventGroup.Select(e => new EventMessage(e)).OrderBy(e => e.Body.Version).ToArray()
                 let spk = new ServicePartitionKey(hash)
                 let proxy = _proxyFactory.CreateServiceProxy<IEventBusService>(_uri, spk)
                 select proxy.Publish(messages, cancellationToken);

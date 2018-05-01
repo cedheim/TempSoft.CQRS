@@ -48,7 +48,7 @@ namespace TempSoft.CQRS.Domain
         {
             var commit = root.Commit();
 
-            var saveEventsTask = _eventStore.Save(commit.AggregateRootId, commit.Events, cancellationToken);
+            var saveEventsTask = _eventStore.Save(commit.Events, cancellationToken);
             var saveCommandIdsTask = _commandRegistry.Save(commit.AggregateRootId, commit.CommandIds, cancellationToken);
 
             await Task.WhenAll(saveCommandIdsTask, saveEventsTask);

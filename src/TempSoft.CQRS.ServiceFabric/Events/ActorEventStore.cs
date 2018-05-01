@@ -30,11 +30,16 @@ namespace TempSoft.CQRS.ServiceFabric.Events
                 : Enumerable.Empty<IEvent>();
         }
 
-        public async Task Save(Guid id, IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))
         {
             var eventStream = new EventStream(events);
 
             await _stateManager.AddOrUpdateStateAsync(EventStreamStateName, eventStream, (s, stream) => stream.AddToEnd(eventStream), cancellationToken);
+        }
+
+        public Task List(EventStoreFilter filter, Func<IEvent, CancellationToken, Task> callback, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            throw new NotImplementedException();
         }
     }
 }

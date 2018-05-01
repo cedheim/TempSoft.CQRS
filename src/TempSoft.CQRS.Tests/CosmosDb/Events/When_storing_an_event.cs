@@ -34,7 +34,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
                 .Returns(new FeedResponse<DocumentCollection>(Enumerable.Empty<DocumentCollection>()));
 
             _repository = new CosmosDbEventStore(_client, _pager, Data.DatabaseId, Data.Collectionid);
-            await _repository.Save(Data.AggregateRootId, new[] {_event});
+            await _repository.Save(new[] {_event});
         }
 
         [Test]

@@ -25,7 +25,7 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.ActorEventStore
 
             _events = new IEvent[] {new ChangedAValue(5) {Version = 2}, new CreatedAThing(Data.ActorId) {Version = 1}};
 
-            await _store.Save(Data.ActorId, _events, CancellationToken.None);
+            await _store.Save(_events, CancellationToken.None);
 
         }
         

@@ -40,7 +40,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
         public void Should_have_saved_the_events()
         {
             A.CallTo(() =>
-                    _eventStore.Save(Data.AggregateRootId,
+                    _eventStore.Save(
                         A<IEnumerable<IEvent>>.That.Matches(es =>
                             es.Any(e => e is IInitializationEvent) && 
                             es.Any(e => e is ChangedAValue) &&

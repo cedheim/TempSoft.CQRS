@@ -17,8 +17,8 @@ namespace TempSoft.CQRS.CosmosDb.Events
             Payload = JObject.FromObject(@event);
             PayloadType = @event.GetType().ToFriendlyName();
             Version = @event.Version;
-            Timestamp = @event.Timestamp;
             AggregateRootId = @event.AggregateRootId;
+            EventGroup = @event.EventGroup;
         }
 
         [JsonProperty("id")]
@@ -32,7 +32,10 @@ namespace TempSoft.CQRS.CosmosDb.Events
 
         public Guid AggregateRootId { get; set; }
 
-        public DateTime Timestamp { get; set; }
+        public string EventGroup { get; set; }
+
+        [JsonProperty("_ts")]
+        public long Timestamp { get; set; }
 
         public IEvent GetEvent()
         {
