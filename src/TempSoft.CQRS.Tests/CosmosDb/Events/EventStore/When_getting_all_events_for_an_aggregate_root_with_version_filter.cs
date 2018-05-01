@@ -11,22 +11,28 @@ using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Tests.Mocks;
 
-namespace TempSoft.CQRS.Tests.CosmosDb.Events
+namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
 {
     [TestFixture]
-    public class When_getting_all_events_for_an_aggregate_root
+    public class When_getting_all_events_for_an_aggregate_root_with_version_filter
     {
         private IDocumentClient _client;
         private CosmosDbEventStore _repository;
         private Database _database;
+        private IEvent[] _results;
         private IEvent[] _events;
-        private IEvent _event;
         private ICosmosDbQueryPager _pager;
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _event = new ChangedAValue(Data.AValue){ AggregateRootId = Data.AggregateRootId };
+            _events = new[]
+            {
+                new ChangedAValue(Data.AValue) {AggregateRootId = Data.AggregateRootId, Version = 3},
+                new ChangedAValue(Data.AValue) {AggregateRootId = Data.AggregateRootId, Version = 1},
+                new ChangedAValue(Data.AValue) {AggregateRootId = Data.AggregateRootId, Version = 2},
+                new ChangedAValue(Data.AValue) {AggregateRootId = Data.AggregateRootId, Version = 0},
+            };
             _client = A.Fake<IDocumentClient>();
             _pager = A.Fake<ICosmosDbQueryPager>();
             _database = new Database(){ Id = Data.DatabaseId };
@@ -38,10 +44,10 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
             A.CallTo(() => _pager.CreatePagedQuery(A<IQueryable<EventPayloadWrapper>>.Ignored))
                 .ReturnsLazily(foc => new MockDocumentQuery<EventPayloadWrapper>(foc.GetArgument<IQueryable<EventPayloadWrapper>>(0)));
             A.CallTo(() => _client.CreateDocumentQuery<EventPayloadWrapper>(A<Uri>.Ignored, A<FeedOptions>.Ignored))
-                .Returns(Enumerable.Repeat(new EventPayloadWrapper(_event), 1).AsQueryable().OrderBy(e => e.Version));
+                .Returns(_events.Select(e => new EventPayloadWrapper(e)).AsQueryable().OrderBy(e => e.Version));
 
             _repository = new CosmosDbEventStore(_client, _pager, Data.DatabaseId, Data.Collectionid);
-            _events = (await _repository.Get(Data.AggregateRootId)).ToArray();
+            _results = (await _repository.Get(Data.AggregateRootId, Data.Version)).ToArray();
         }
 
         [Test]
@@ -52,12 +58,15 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
         }
 
         [Test]
-        public void Should_have_returned_the_correct_event()
+        public void Should_have_returned_the_correct_events()
         {
-            _events.Should().HaveCount(1);
-            var @event = _events.FirstOrDefault();
+            _results.Should().NotContain(e => e.Version < Data.Version);
+        }
 
-            @event.Should().BeEquivalentTo(_event);
+        [Test]
+        public void Should_be_ordered()
+        {
+            _results.Should().BeInAscendingOrder(e => e.Version);
         }
 
         private static class Data
@@ -66,6 +75,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
             public const string Collectionid = "events";
             public const string DatabaseLink = "database";
             public const int AValue = 5;
+            public const int Version = 2;
 
             public static readonly Guid AggregateRootId = Guid.NewGuid();
         }

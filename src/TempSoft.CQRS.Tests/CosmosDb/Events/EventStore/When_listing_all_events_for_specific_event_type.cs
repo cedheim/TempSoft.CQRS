@@ -13,10 +13,10 @@ using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Tests.Mocks;
 
-namespace TempSoft.CQRS.Tests.CosmosDb.Events
+namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
 {
     [TestFixture]
-    public class When_listing_all_events_for_specific_event_group
+    public class When_listing_all_events_for_specific_event_type
     {
         private IDocumentClient _client;
         private CosmosDbEventStore _repository;
@@ -38,7 +38,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
                 new ChangedAValue(Data.AValue) { Version = 1, AggregateRootId = Data.AggregateRootId1, EventGroup = nameof(AThingAggregateRoot) },
                 new ChangedBValue(Data.BValue) { Version = 1, AggregateRootId = Data.AggregateRootId2, EventGroup = nameof(AThingAggregateRoot) },
                 new ChangedBValue(Data.BValue) { Version = 2, AggregateRootId = Data.AggregateRootId1, EventGroup = nameof(AThingAggregateRoot) },
-                new ChangedBValue(Data.BValue) { Version = 2, AggregateRootId = Data.AggregateRootId2, EventGroup = Guid.NewGuid().ToString() },
+                new ChangedBValue(Data.BValue) { Version = 2, AggregateRootId = Data.AggregateRootId2, EventGroup = nameof(AThingAggregateRoot) },
             };
             _result = new List<IEvent>();
 
@@ -57,7 +57,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
 
             var filter = new EventStoreFilter
             {
-                EventGroups = new string[] { nameof(AThingAggregateRoot) }
+                EventTypes = new string[] { typeof(ChangedAValue).ToFriendlyName() }
             };
 
             _repository = new CosmosDbEventStore(_client, _pager, Data.DatabaseId, Data.Collectionid);
@@ -83,8 +83,8 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
         [Test]
         public void Should_have_returned_the_correct_event()
         {
-            _result.Should().OnlyContain(e => e.EventGroup == nameof(AThingAggregateRoot));
-            _result.Should().HaveCount(_events.Count(e => e.EventGroup == nameof(AThingAggregateRoot)));
+            _result.Should().AllBeOfType<ChangedAValue>();
+            _result.Should().HaveCount(_events.Count(e => e is ChangedAValue));
         }
 
         private static class Data

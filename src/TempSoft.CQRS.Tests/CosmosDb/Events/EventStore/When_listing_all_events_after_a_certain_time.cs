@@ -13,7 +13,7 @@ using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Tests.Mocks;
 
-namespace TempSoft.CQRS.Tests.CosmosDb.Events
+namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
 {
     [TestFixture]
     public class When_listing_all_events_after_a_certain_time

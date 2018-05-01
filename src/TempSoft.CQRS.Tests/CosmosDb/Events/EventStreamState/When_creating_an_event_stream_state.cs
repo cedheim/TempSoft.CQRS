@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -7,13 +6,13 @@ using NUnit.Framework;
 using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
 
-namespace TempSoft.CQRS.Tests.CosmosDb.Events
+namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
 {
     [TestFixture]
-    public class When_creating_an_event_store
+    public class When_creating_an_event_stream_state
     {
         private IDocumentClient _client;
-        private CosmosDbEventStore _repository;
+        private CosmosDbEventStreamStateManager _repository;
         private Database _database;
         private ICosmosDbQueryPager _pager;
 
@@ -29,7 +28,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
                 .Returns(new FeedResponse<DocumentCollection>(Enumerable.Empty<DocumentCollection>()));
 
-            _repository = new CosmosDbEventStore(_client, _pager, Data.DatabaseId, Data.Collectionid);
+            _repository = new CosmosDbEventStreamStateManager(_client, _pager, Data.DatabaseId, Data.Collectionid);
         }
 
         [Test]
@@ -63,7 +62,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
         private static class Data
         {
             public const string DatabaseId = "tempsoft";
-            public const string Collectionid = "events";
+            public const string Collectionid = "event_stream_states";
             public const string DatabaseLink = "database";
         }
     }

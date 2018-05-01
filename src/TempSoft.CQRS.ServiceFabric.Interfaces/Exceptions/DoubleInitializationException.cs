@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using TempSoft.CQRS.Exceptions;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Exceptions
 {
-    public class DoubleInitializationException : System.Exception
+    [Serializable]
+    public class DoubleInitializationException : DomainException
     {
         public DoubleInitializationException()
         {

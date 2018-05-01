@@ -12,7 +12,7 @@ using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Tests.Mocks;
 
-namespace TempSoft.CQRS.Tests.CosmosDb.Events
+namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
 {
     [TestFixture]
     [Category("Integration")]

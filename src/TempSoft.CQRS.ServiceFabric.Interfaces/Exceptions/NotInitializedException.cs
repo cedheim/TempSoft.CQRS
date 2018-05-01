@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using TempSoft.CQRS.Exceptions;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Exceptions
 {
     [Serializable]
-    public class NotInitializedException : System.Exception
+    public class NotInitializedException : DomainException
     {
         public NotInitializedException()
         {
