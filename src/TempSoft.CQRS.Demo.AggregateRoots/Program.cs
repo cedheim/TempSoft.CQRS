@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using TempSoft.CQRS.Common.Uri;
+using TempSoft.CQRS.CosmosDb.Commands;
+using TempSoft.CQRS.CosmosDb.Events;
+using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.ServiceFabric.Commands;
 using TempSoft.CQRS.ServiceFabric.Domain;
@@ -31,12 +36,21 @@ namespace TempSoft.CQRS.Demo.Actors
                 var serviceProxyFactory = new ServiceProxyFactory();
                 var uriHelper = new UriHelper();
                 var eventBus = new ServiceFabricEventBus(serviceProxyFactory, uriHelper);
+                var configuration = GenerateConfiguration(FabricRuntime.GetActivationContext());
+                var eventStoreClient = new DocumentClient(new Uri(configuration["EventStore_EndpointUri"]), configuration["EventStore_PrimaryKey"]);
+                var commandRegistryClient = new DocumentClient(new Uri(configuration["CommandRegistry_EndpointUri"]), configuration["CommandRegistry_PrimaryKey"]);
+
+                commandRegistryClient.OpenAsync().Wait();
+                eventStoreClient.OpenAsync().Wait();
+
+                var eventStore = new CosmosDbEventStore(eventStoreClient, new CosmosDbQueryPager(), configuration["EventStore_DatabaseId"], configuration["EventStore_CollectionId"]);
+                var commandRegistry = new CosmosDbCommandRegistry(commandRegistryClient, new CosmosDbQueryPager(), configuration["CommandRegistry_DatabaseId"], configuration["CommandRegistry_CollectionId"]);
 
                 ActorRuntime.RegisterActorAsync<AggregateRootActor> (
                     (context, actorType) => new ActorService(
                         context, 
                         actorType, 
-                        (service, id) => new AggregateRootActor(service, id, actor => new AggregateRootRepository(new ActorEventStore(actor.StateManager), eventBus, new ActorCommandRegistry(actor.StateManager)), actorProxyFactory, serviceProxyFactory))
+                        (service, id) => new AggregateRootActor(service, id, actor => new AggregateRootRepository(eventStore, eventBus, commandRegistry), actorProxyFactory, serviceProxyFactory))
                     ).GetAwaiter().GetResult();
 
                 Thread.Sleep(Timeout.Infinite);
@@ -46,6 +60,32 @@ namespace TempSoft.CQRS.Demo.Actors
                 ActorEventSource.Current.ActorHostInitializationFailed(e.ToString());
                 throw;
             }
+        }
+
+        private static IDictionary<string, string> GenerateConfiguration(ICodePackageActivationContext context)
+        {
+            var configuration = new Dictionary<string, string>();
+
+            var sections = context.GetConfigurationPackageObject("Config")?.Settings?.Sections;
+            if (sections == null)
+                return configuration;
+
+            foreach (var section in sections)
+            {
+                var parameters = section?.Parameters;
+                if (parameters == null)
+                    continue;
+
+                foreach (var parameter in parameters)
+                {
+                    if (configuration.ContainsKey(parameter.Name))
+                        continue;
+
+                    configuration.Add(parameter.Name, parameter.Value);
+                }
+            }
+
+            return configuration;
         }
     }
 }

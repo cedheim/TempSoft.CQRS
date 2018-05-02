@@ -7,4 +7,16 @@
   <Section Name="AggregateRootActorServiceReplicatorSecurityConfig">
     <Parameter Name="CredentialType" Value="None" />
   </Section>
+  <Section Name="EventStoreConfig">
+    <Parameter Name="EventStore_EndpointUri" Value="" />
+    <Parameter Name="EventStore_PrimaryKey" Value="" />
+    <Parameter Name="EventStore_DatabaseId" Value="" />
+    <Parameter Name="EventStore_CollectionId" Value="" />
+  </Section>
+  <Section Name="CommandRegistryConfig">
+    <Parameter Name="CommandRegistry_EndpointUri" Value="" />
+    <Parameter Name="CommandRegistry_PrimaryKey" Value="" />
+    <Parameter Name="CommandRegistry_DatabaseId" Value="" />
+    <Parameter Name="CommandRegistry_CollectionId" Value="" />
+  </Section>
 </Settings>

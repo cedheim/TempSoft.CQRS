@@ -8,6 +8,14 @@
     <Parameter Name="AggregateRootActorService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="AggregateRootActorService_MinReplicaSetSize" DefaultValue="1" />
     <Parameter Name="AggregateRootActorService_PartitionCount" DefaultValue="3" />
+    <Parameter Name="EventStore_EndpointUri" DefaultValue="https://localhost:8081" />
+    <Parameter Name="EventStore_PrimaryKey" DefaultValue="C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" />
+    <Parameter Name="EventStore_DatabaseId" DefaultValue="tempsoft_cqrs_demo" />
+    <Parameter Name="EventStore_CollectionId" DefaultValue="events" />
+    <Parameter Name="CommandRegistry_EndpointUri" DefaultValue="https://localhost:8081" />
+    <Parameter Name="CommandRegistry_PrimaryKey" DefaultValue="C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" />
+    <Parameter Name="CommandRegistry_DatabaseId" DefaultValue="tempsoft_cqrs_demo" />
+    <Parameter Name="CommandRegistry_CollectionId" DefaultValue="commands" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -22,7 +30,27 @@
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="TempSoft.CQRS.Demo.AggregateRootsPkg" ServiceManifestVersion="1.0.0" />
-    <ConfigOverrides />
+    <ConfigOverrides>
+      <ConfigOverride Name="Config">
+        <Settings>
+          <Section Name="EventStoreConfig">
+            <Parameter Name="EventStore_EndpointUri" Value="[EventStore_EndpointUri]" />
+            <Parameter Name="EventStore_PrimaryKey" Value="[EventStore_PrimaryKey]" />
+            <Parameter Name="EventStore_DatabaseId" Value="[EventStore_DatabaseId]" />
+            <Parameter Name="EventStore_CollectionId" Value="[EventStore_CollectionId]" />
+          </Section>
+          <Section Name="CommandRegistryConfig">
+            <Parameter Name="CommandRegistry_EndpointUri" Value="[CommandRegistry_EndpointUri]" />
+            <Parameter Name="CommandRegistry_PrimaryKey" Value="[CommandRegistry_PrimaryKey]" />
+            <Parameter Name="CommandRegistry_DatabaseId" Value="[CommandRegistry_DatabaseId]" />
+            <Parameter Name="CommandRegistry_CollectionId" Value="[CommandRegistry_CollectionId]" />
+          </Section>
+          <Section Name="Monitoring">
+            <Parameter Name="ApplicationInsights_InstrumentationKey" Value="[ApplicationInsights_InstrumentationKey]" />
+          </Section>
+        </Settings>
+      </ConfigOverride>
+    </ConfigOverrides>
   </ServiceManifestImport>
   <DefaultServices>
     <Service Name="EventHubService" ServicePackageActivationMode="ExclusiveProcess">

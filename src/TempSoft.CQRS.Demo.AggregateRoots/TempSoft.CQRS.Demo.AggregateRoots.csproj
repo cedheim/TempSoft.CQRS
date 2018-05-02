@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.Common\TempSoft.CQRS.Common.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric\TempSoft.CQRS.ServiceFabric.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
