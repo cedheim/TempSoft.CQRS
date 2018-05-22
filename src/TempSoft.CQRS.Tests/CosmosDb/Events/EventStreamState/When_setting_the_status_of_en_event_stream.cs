@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.Documents.Linq;
 using NUnit.Framework;
 using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
@@ -32,7 +33,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
                 .Returns(new FeedResponse<DocumentCollection>(Enumerable.Empty<DocumentCollection>()));
             A.CallTo(() => _client.ReadDocumentAsync(A<Uri>.Ignored, A<RequestOptions>.Ignored))
-                .Throws(foc => A.Fake<DocumentClientException>());
+                .Throws(foc => new DocumentQueryException(string.Empty));
 
             _repository = new CosmosDbEventStreamStateManager(_client, _pager, Data.DatabaseId, Data.Collectionid);
             await _repository.SetStatusForStream(Data.EventStreamName, EventStreamStatus.Initialized);

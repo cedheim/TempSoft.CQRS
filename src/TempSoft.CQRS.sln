@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.CosmosDb", "TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj", "{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Common", "TempSoft.CQRS.Demo.Common\TempSoft.CQRS.Demo.Common.csproj", "{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,13 @@ Global
 		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Release|x64.ActiveCfg = Release|Any CPU
 		{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}.Release|x64.Build.0 = Release|Any CPU
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}.Debug|Any CPU.Build.0 = Debug|x64
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}.Debug|x64.ActiveCfg = Debug|x64
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}.Debug|x64.Build.0 = Debug|x64
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}.Release|Any CPU.ActiveCfg = Release|x64
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}.Release|x64.ActiveCfg = Release|x64
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,6 +155,7 @@ Global
 		{190E473A-0C0C-4E1F-A36B-7011B9BC1C8F} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 		{23B9912C-C170-4616-8A7A-B44150461A71} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 		{4E3B91E5-687C-43C7-A8F9-AC7F187C77D9} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
+		{99CA40E9-AF00-4E88-A2EA-C0C9EDA6A764} = {020AC8C0-6606-4A7D-A557-7692F84F3948}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0CA8D8D1-D426-4E57-9D92-F8FB1006B9A1}

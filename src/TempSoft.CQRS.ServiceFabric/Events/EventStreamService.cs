@@ -136,10 +136,10 @@ namespace TempSoft.CQRS.ServiceFabric.Events
             await AddEventToStream(message, cancellationToken);
         }
 
-        public async Task<EventMessage> Read(double timeoutms, CancellationToken cancellationToken)
+        public async Task<EventMessage> Read(TimeSpan timeout, CancellationToken cancellationToken)
         {
             var start = DateTime.UtcNow;
-            var end = start.AddMilliseconds(timeoutms);
+            var end = start + timeout;
 
             var queue = await StateManager.GetOrAddAsync<IReliableQueue<EventMessage>>(EventStreamQueue);
 
@@ -149,7 +149,7 @@ namespace TempSoft.CQRS.ServiceFabric.Events
                 {
                     using (var transaction = this.StateManager.CreateTransaction())
                     {
-                        var conditionalResult = await queue.TryDequeueAsync(transaction, TimeSpan.FromMilliseconds(timeoutms), cancellationToken);
+                        var conditionalResult = await queue.TryDequeueAsync(transaction, TimeSpan.FromMilliseconds(100), cancellationToken);
                         await transaction.CommitAsync();
 
                         if (conditionalResult.HasValue)

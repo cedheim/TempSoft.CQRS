@@ -72,7 +72,7 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
         [Test]
         public async Task Should_be_able_to_read_from_the_stream()
         {
-            var eventMessage = await Service.Read(1000.0, CancellationToken.None);
+            var eventMessage = await Service.Read(TimeSpan.FromSeconds(1), CancellationToken.None);
             var @event = eventMessage.Body;
 
             @event.Should().BeEquivalentTo(_events[0]);

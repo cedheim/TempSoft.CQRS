@@ -4,10 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.ServiceFabric.Actors;
+using Microsoft.ServiceFabric.Services.Client;
+using Microsoft.ServiceFabric.Services.Communication.Client;
 using NUnit.Framework;
 using TempSoft.CQRS.Common.Extensions;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Queries;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Queries;
 using TempSoft.CQRS.Tests.Mocks;
@@ -18,22 +21,17 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
     public class When_publishing_events : EventBusServiceTestBase
     {
         private IEvent[] _events;
-        private IQueryBuilder _builder;
+        private EventStreamDefinition _definition;
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _builder = new AThingQueryBuilder(A.Fake<IQueryModelRepository>());
-
-            Registry.Register(_builder);
-
-            A.CallTo(() => ActorProxyFactory.CreateActorProxy<IQueryBuilderActor>(A<ActorId>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored))
-                .Returns(Actor);
+            _definition = new EventStreamDefinition(Data.EventStreamName, new EventFilter());
+            A.CallTo(() => Registry.GetEventStreamsByEvent(A<IEvent>.Ignored)).Returns(new[] {_definition});
 
             _events = new IEvent[]
             {
-                new CreatedAThing(Data.RootId) {Version = 1},
-                new ChangedAValue(5) {AggregateRootId = Data.RootId, Version = 2}
+                new CreatedAThing(Data.RootId) {Version = 1}
             };
             
             var messages = _events.Select(e => new EventMessage(e)).ToArray();
@@ -53,24 +51,30 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
         }
 
         [Test]
-        public void Should_have_tried_to_create_an_actor_proxy()
+        public void Should_have_written_the_event_to_the_stream()
         {
-            A.CallTo(() => ActorProxyFactory.CreateActorProxy<IQueryBuilderActor>(A<ActorId>.That.Matches(aId => aId.GetStringId() == _builder.GetType().ToFriendlyName()), A<string>.Ignored, A<string>.Ignored, A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Times(_events.Length));
+            A.CallTo(() => StreamService.Write(A<EventMessage>.That.Matches(msg => msg.Body == _events[0]), A<CancellationToken>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
-        public void Should_have_called_the_query_builder_actor()
+        public void Should_have_created_a_service_proxy()
         {
-            foreach (var @event in _events)
-            {
-                A.CallTo(() => Actor.Apply(A<EventMessage>.That.Matches(em => em.Body.Id == @event.Id), A<CancellationToken>.Ignored))
-                    .MustHaveHappened(Repeated.Exactly.Once);
-            }
+            A.CallTo(() => ServiceProxyFactory.CreateServiceProxy<IEventStreamService>(A<Uri>.Ignored, A<ServicePartitionKey>.That.Matches(pk => pk.Value.ToString() == Data.EventStreamName), A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
+
+        [Test]
+        public void Should_have_generated_the_uri_for_the_service()
+        {
+            A.CallTo(() => UriBuilder.Build(nameof(CQRS.ServiceFabric.Events.EventStreamService)))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
 
         private static class Data
         {
+            public const string EventStreamName = "EventStream";
             public static readonly Guid RootId = Guid.NewGuid();
         }
     }

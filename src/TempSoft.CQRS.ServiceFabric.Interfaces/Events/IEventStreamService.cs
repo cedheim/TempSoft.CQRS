@@ -11,6 +11,6 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Events
     {
         Task Write(EventMessage message, CancellationToken cancellationToken);
 
-        Task<EventMessage> Read(double timeoutms, CancellationToken cancellationToken);
+        Task<EventMessage> Read(TimeSpan timeout, CancellationToken cancellationToken);
     }
 }

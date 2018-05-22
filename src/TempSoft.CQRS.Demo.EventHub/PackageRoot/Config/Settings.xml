@@ -7,6 +7,20 @@
   <!-- This is used for securing StateManager's replication traffic. -->
   <Section Name="ReplicatorSecurityConfig" />
 
+  <Section Name="EventStoreConfig">
+    <Parameter Name="EventStore_EndpointUri" Value="" />
+    <Parameter Name="EventStore_PrimaryKey" Value="" />
+    <Parameter Name="EventStore_DatabaseId" Value="" />
+    <Parameter Name="EventStore_CollectionId" Value="" />
+  </Section>
+  
+  <Section Name="EventStreamStateConfig">
+    <Parameter Name="EventStreamState_EndpointUri" Value="" />
+    <Parameter Name="EventStreamState_PrimaryKey" Value="" />
+    <Parameter Name="EventStreamState_DatabaseId" Value="" />
+    <Parameter Name="EventStreamState_CollectionId" Value="" />
+  </Section>
+
   <!-- Add your custom configuration sections and parameters here. -->
   <!--
   <Section Name="MyConfigSection">

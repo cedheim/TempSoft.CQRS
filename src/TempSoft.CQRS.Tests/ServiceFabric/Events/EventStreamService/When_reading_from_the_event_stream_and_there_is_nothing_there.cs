@@ -46,7 +46,7 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
 
             stopwatch.Start();
 
-            var eventMessage = await Service.Read(timeout.TotalMilliseconds, CancellationToken.None);
+            var eventMessage = await Service.Read(timeout, CancellationToken.None);
 
             stopwatch.Stop();
 

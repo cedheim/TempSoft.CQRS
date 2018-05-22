@@ -27,7 +27,7 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
 
             await Service.Write(new CQRS.ServiceFabric.Interfaces.Messaging.EventMessage(_event), CancellationToken.None);
 
-            _result = await Service.Read(500, CancellationToken.None);
+            _result = await Service.Read(TimeSpan.FromMilliseconds(500), CancellationToken.None);
         }
 
         [Test]
