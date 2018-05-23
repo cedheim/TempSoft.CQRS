@@ -26,7 +26,7 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 
         public async Task Publish(IEnumerable<IEvent> events, CancellationToken cancellationToken)
         {
-            var tasks = 
+            var tasks =
                 from eventGroup in events.GroupBy(e => e.AggregateRootId)
                 let hash = eventGroup.Key.GetHashCode64()
                 let messages = eventGroup.Select(e => new EventMessage(e)).OrderBy(e => e.Body.Version).ToArray()

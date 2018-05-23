@@ -21,38 +21,41 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
         public async Task OneTimeSetUp()
         {
             _stateManager = A.Fake<IActorStateManager>();
-            _commandIds = new[] { Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid() };
+            _commandIds = new[] {Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()};
 
-            A.CallTo(() => _stateManager.AddOrUpdateStateAsync(A<string>.Ignored, A<Guid[]>.Ignored, A<Func<string, Guid[], Guid[]>>.That.IsNotNull(), A<CancellationToken>.Ignored))
+            A.CallTo(() => _stateManager.AddOrUpdateStateAsync(A<string>.Ignored, A<Guid[]>.Ignored,
+                    A<Func<string, Guid[], Guid[]>>.That.IsNotNull(), A<CancellationToken>.Ignored))
                 .Invokes(fac => _callback = fac.GetArgument<Func<string, Guid[], Guid[]>>(2));
 
-           
+
             _registry = new CQRS.ServiceFabric.Commands.ActorCommandRegistry(_stateManager);
             await _registry.Save(Data.ActorId, _commandIds, CancellationToken.None);
         }
 
-        [Test]
-        public void Should_have_tried_to_set_the_state()
+        private static class Data
         {
-            A.CallTo(() => _stateManager.AddOrUpdateStateAsync(A<string>.Ignored, A<Guid[]>.That.Matches(ids => ids.Length == _commandIds.Length && ids.All(id => _commandIds.Contains(id))), A<Func<string, Guid[], Guid[]>>.That.IsNotNull(), A<CancellationToken>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            public static readonly Guid ActorId = Guid.NewGuid();
         }
 
         [Test]
         public void Should_have_specified_a_proper_merge_method()
         {
-            var existing = new Guid[] {Guid.NewGuid(), Guid.NewGuid()};
+            var existing = new[] {Guid.NewGuid(), Guid.NewGuid()};
 
             var result = _callback(string.Empty, existing);
 
             result.Should().Contain(existing);
             result.Should().Contain(_commandIds);
         }
-        
-        private static class Data
-        {
-            public static readonly Guid ActorId = Guid.NewGuid();
-        }
 
+        [Test]
+        public void Should_have_tried_to_set_the_state()
+        {
+            A.CallTo(() => _stateManager.AddOrUpdateStateAsync(A<string>.Ignored,
+                    A<Guid[]>.That.Matches(ids =>
+                        ids.Length == _commandIds.Length && ids.All(id => _commandIds.Contains(id))),
+                    A<Func<string, Guid[], Guid[]>>.That.IsNotNull(), A<CancellationToken>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
     }
 }

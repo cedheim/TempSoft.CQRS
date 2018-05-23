@@ -5,7 +5,9 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Commands
 {
     public class AddAuditorium : CommandBase
     {
-        private AddAuditorium() { }
+        private AddAuditorium()
+        {
+        }
 
         public AddAuditorium(Guid auditoriumId, string name)
         {
@@ -13,7 +15,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Commands
             Name = name;
         }
 
-        public Guid AuditoriumId { get; private set; }
-        public string Name { get; private set; }
+        public Guid AuditoriumId { get; }
+        public string Name { get; }
     }
 }

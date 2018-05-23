@@ -8,10 +8,10 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class ServiceFabricEventStream : IEventStream
     {
-        private readonly IEventStreamService _service;
         private readonly EventStreamDefinition _definition;
+        private readonly IEventStreamService _service;
 
-        public ServiceFabricEventStream(EventStreamDefinition definition,IEventStreamService service)
+        public ServiceFabricEventStream(EventStreamDefinition definition, IEventStreamService service)
         {
             _service = service;
             _definition = definition;

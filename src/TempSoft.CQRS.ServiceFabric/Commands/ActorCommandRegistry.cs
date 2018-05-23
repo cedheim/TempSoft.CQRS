@@ -18,20 +18,24 @@ namespace TempSoft.CQRS.ServiceFabric.Commands
             _stateManager = stateManager;
         }
 
-        public async Task<IEnumerable<Guid>> Get(Guid id, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IEnumerable<Guid>> Get(Guid id,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            var tryGetEventStream = await _stateManager.TryGetStateAsync<Guid[]>(CommandLogStateName, cancellationToken);
+            var tryGetEventStream =
+                await _stateManager.TryGetStateAsync<Guid[]>(CommandLogStateName, cancellationToken);
 
             return tryGetEventStream.HasValue
                 ? tryGetEventStream.Value
                 : Enumerable.Empty<Guid>();
         }
 
-        public async Task Save(Guid id, IEnumerable<Guid> commandIds, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Save(Guid id, IEnumerable<Guid> commandIds,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var cmds = commandIds.ToArray();
 
-            await _stateManager.AddOrUpdateStateAsync(CommandLogStateName, cmds, (s, guids) => guids.Union(cmds).ToArray(), cancellationToken);
+            await _stateManager.AddOrUpdateStateAsync(CommandLogStateName, cmds,
+                (s, guids) => guids.Union(cmds).ToArray(), cancellationToken);
         }
     }
 }

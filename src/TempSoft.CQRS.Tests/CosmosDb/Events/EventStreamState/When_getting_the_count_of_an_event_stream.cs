@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
-using TempSoft.CQRS.CosmosDb.Queries;
 using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
@@ -30,7 +29,7 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
         {
             _client = A.Fake<IDocumentClient>();
             _pager = A.Fake<ICosmosDbQueryPager>();
-            _database = new Database(){ Id = Data.DatabaseId };
+            _database = new Database {Id = Data.DatabaseId};
 
             _state = new CQRS.CosmosDb.Events.EventStreamState
             {
@@ -40,11 +39,11 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
             };
 
             var document = new Document();
-            document.LoadFrom(new JsonTextReader(new StringReader(Newtonsoft.Json.JsonConvert.SerializeObject(_state))));
+            document.LoadFrom(new JsonTextReader(new StringReader(JsonConvert.SerializeObject(_state))));
 
 
-
-            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored)).Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
+            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored))
+                .Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
             A.CallTo(() => _client.CreateDatabaseAsync(A<Database>.Ignored, A<RequestOptions>.Ignored))
                 .Returns(new ResourceResponse<Database>(_database));
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
@@ -54,6 +53,15 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
 
             _repository = new CosmosDbEventStreamStateManager(_client, _pager, Data.DatabaseId, Data.Collectionid);
             _result = await _repository.GetEventCountForStream(Data.EventStreamName);
+        }
+
+        private static class Data
+        {
+            public const string DatabaseId = "tempsoft";
+            public const string Collectionid = "event_stream_states";
+            public const string DatabaseLink = "database";
+
+            public const string EventStreamName = "EVENT STREAM";
         }
 
         [Test]
@@ -69,15 +77,6 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
         public void Should_have_returned_the_correct_result()
         {
             _result.Should().Be(_state.EventCount);
-        }
-
-        private static class Data
-        {
-            public const string DatabaseId = "tempsoft";
-            public const string Collectionid = "event_stream_states";
-            public const string DatabaseLink = "database";
-
-            public const string EventStreamName = "EVENT STREAM";
         }
     }
 }

@@ -16,25 +16,27 @@ namespace TempSoft.CQRS.Extensions
         {
             TaskRunMethod = typeof(Task).GetMethods()
                 .Where(m => m.Name == "Run")
-                .Select(m => new { Method = m, Parameters = m.GetParameters() })
+                .Select(m => new {Method = m, Parameters = m.GetParameters()})
                 .FirstOrDefault(q => q.Parameters.Length == 1 && q.Parameters[0].ParameterType == typeof(Action))
                 .Method;
         }
 
-        internal static IEnumerable<MethodInfo> GetMethodsForAttribute<TAttribute>(this Type type) where TAttribute : Attribute
+        internal static IEnumerable<MethodInfo> GetMethodsForAttribute<TAttribute>(this Type type)
+            where TAttribute : Attribute
         {
             while (type != default(Type))
             {
-                foreach (var methodInfo in type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).Where(m => m.CustomAttributes.Any(a => a.AttributeType == typeof(TAttribute))))
-                {
+                foreach (var methodInfo in type
+                    .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                    .Where(m => m.CustomAttributes.Any(a => a.AttributeType == typeof(TAttribute))))
                     yield return methodInfo;
-                }
 
                 type = type.BaseType;
             }
         }
 
-        internal static Action<TDomain, TArgument> GenerateHandler<TDomain, TArgument>(this MethodInfo method, Type objectType)
+        internal static Action<TDomain, TArgument> GenerateHandler<TDomain, TArgument>(this MethodInfo method,
+            Type objectType)
         {
             // declaration of action parameters.
             var rootParameter = Expression.Parameter(typeof(TDomain), "root");
@@ -62,11 +64,12 @@ namespace TempSoft.CQRS.Extensions
 
                 foreach (var parameter in parameters)
                 {
-                    var matchingProperty = publicProperties.FirstOrDefault(property => string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && parameter.ParameterType.IsAssignableFrom(property.PropertyType));
+                    var matchingProperty = publicProperties.FirstOrDefault(property =>
+                        string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) ==
+                        0 && parameter.ParameterType.IsAssignableFrom(property.PropertyType));
                     if (matchingProperty == default(PropertyInfo))
-                    {
-                        throw new System.Exception($"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
-                    }
+                        throw new Exception(
+                            $"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
 
                     parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
                 }
@@ -75,7 +78,7 @@ namespace TempSoft.CQRS.Extensions
             }
 
             // generate lambda expression.
-            var body = Expression.Block(new ParameterExpression[] { eventVariable }, new Expression[] { assignment, rootCall });
+            var body = Expression.Block(new[] {eventVariable}, assignment, rootCall);
             var lambda = Expression.Lambda<Action<TDomain, TArgument>>(body, rootParameter, objectParameter);
 
             var action = lambda.Compile();
@@ -83,7 +86,8 @@ namespace TempSoft.CQRS.Extensions
             return action;
         }
 
-        internal static Func<TDomain, TArgument, CancellationToken, Task> GenerateAsyncHandler<TDomain, TArgument>(this MethodInfo method, Type objectType)
+        internal static Func<TDomain, TArgument, CancellationToken, Task> GenerateAsyncHandler<TDomain, TArgument>(
+            this MethodInfo method, Type objectType)
         {
             // declaration of action parameters.
             var rootParameter = Expression.Parameter(typeof(TDomain), "root");
@@ -116,11 +120,12 @@ namespace TempSoft.CQRS.Extensions
                     continue;
                 }
 
-                var matchingProperty = publicProperties.FirstOrDefault(property => string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 && parameter.ParameterType.IsAssignableFrom(property.PropertyType));
+                var matchingProperty = publicProperties.FirstOrDefault(property =>
+                    string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 &&
+                    parameter.ParameterType.IsAssignableFrom(property.PropertyType));
                 if (matchingProperty == default(PropertyInfo))
-                {
-                    throw new System.Exception($"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
-                }
+                    throw new Exception(
+                        $"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
 
                 parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
             }
@@ -132,14 +137,16 @@ namespace TempSoft.CQRS.Extensions
                 var callRootLambda = Expression.Lambda<Action>(rootCall);
                 rootCall = Expression.Call(TaskRunMethod, callRootLambda);
             }
-            
+
             var returnLabel = Expression.Label(typeof(Task));
             var returnValue = Expression.Return(returnLabel, rootCall, typeof(Task));
             var returnLabelExpression = Expression.Label(returnLabel, Expression.Constant(default(Task), typeof(Task)));
 
             // generate lambda expression.
-            var body = Expression.Block(new ParameterExpression[] { eventVariable }, new Expression[] { assignment, returnValue, returnLabelExpression });
-            var lambda = Expression.Lambda<Func<TDomain, TArgument, CancellationToken, Task>>(body, rootParameter, objectParameter, cancellationParameter);
+            var body = Expression.Block(new[] {eventVariable}, assignment, returnValue, returnLabelExpression);
+            var lambda =
+                Expression.Lambda<Func<TDomain, TArgument, CancellationToken, Task>>(body, rootParameter,
+                    objectParameter, cancellationParameter);
 
             var action = lambda.Compile();
 

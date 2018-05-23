@@ -1,8 +1,9 @@
 ﻿using System;
+using TempSoft.CQRS.Domain;
 
 namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
 {
-    public class Slot : Theatre.Entity<Slot>
+    public class Slot : AggregateRoot<Theatre>.Entity<Slot>
     {
         public Slot(Theatre root, Guid id, string name, int order) : base(root, id)
         {
@@ -10,8 +11,8 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
             Order = order;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public int Order { get; private set; }
+        public int Order { get; }
     }
 }

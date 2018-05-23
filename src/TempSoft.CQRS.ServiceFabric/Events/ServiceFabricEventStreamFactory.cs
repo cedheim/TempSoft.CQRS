@@ -10,11 +10,12 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class ServiceFabricEventStreamFactory : IEventStreamFactory
     {
-        private readonly IUriHelper _uriHelper;
-        private readonly IEventStreamRegistry _streamRegistry;
         private readonly IServiceProxyFactory _serviceProxyFactory;
+        private readonly IEventStreamRegistry _streamRegistry;
+        private readonly IUriHelper _uriHelper;
 
-        public ServiceFabricEventStreamFactory(IUriHelper uriHelper, IEventStreamRegistry streamRegistry, IServiceProxyFactory serviceProxyFactory)
+        public ServiceFabricEventStreamFactory(IUriHelper uriHelper, IEventStreamRegistry streamRegistry,
+            IServiceProxyFactory serviceProxyFactory)
         {
             _uriHelper = uriHelper;
             _streamRegistry = streamRegistry;
@@ -24,12 +25,11 @@ namespace TempSoft.CQRS.ServiceFabric.Events
         public async Task<IEventStream> Open(string name)
         {
             var definition = _streamRegistry.GetEventStreamByName(name);
-            if (object.ReferenceEquals(definition, default(EventStreamDefinition)))
-            {
+            if (ReferenceEquals(definition, default(EventStreamDefinition)))
                 throw new EventStreamNotFoundException($"Could not find event stream with name {name}");
-            }
 
-            var proxy = _serviceProxyFactory.CreateServiceProxy<IEventStreamService>(_uriHelper.GetUriForSerivce<IEventStreamService>(), new ServicePartitionKey(definition.Name));
+            var proxy = _serviceProxyFactory.CreateServiceProxy<IEventStreamService>(
+                _uriHelper.GetUriForSerivce<IEventStreamService>(), new ServicePartitionKey(definition.Name));
             return new ServiceFabricEventStream(definition, proxy);
         }
     }

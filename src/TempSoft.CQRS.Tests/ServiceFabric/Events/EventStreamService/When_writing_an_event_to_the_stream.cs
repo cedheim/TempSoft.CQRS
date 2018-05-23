@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Fabric;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
-using Microsoft.ServiceFabric.Data.Collections;
 using NUnit.Framework;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.ServiceFabric.Events;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 using TempSoft.CQRS.Tests.Mocks;
 
@@ -25,9 +21,13 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
         {
             _event = new ChangedAValue(5) {EventGroup = nameof(AThingAggregateRoot)};
 
-            await Service.Write(new CQRS.ServiceFabric.Interfaces.Messaging.EventMessage(_event), CancellationToken.None);
+            await Service.Write(new EventMessage(_event), CancellationToken.None);
 
             _result = await Service.Read(TimeSpan.FromMilliseconds(500), CancellationToken.None);
+        }
+
+        private static class Data
+        {
         }
 
         [Test]
@@ -44,11 +44,6 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
         {
             A.CallTo(() => StreamStateManager.AddToEventCountForStream(EventStreamName, 1))
                 .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        private static class Data
-        {
-
         }
     }
 }

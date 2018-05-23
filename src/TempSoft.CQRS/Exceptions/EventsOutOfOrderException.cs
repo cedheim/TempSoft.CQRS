@@ -14,7 +14,7 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public EventsOutOfOrderException(string message, System.Exception innerException) : base(message, innerException)
+        public EventsOutOfOrderException(string message, Exception innerException) : base(message, innerException)
         {
         }
 

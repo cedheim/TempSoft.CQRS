@@ -6,7 +6,7 @@ namespace TempSoft.CQRS.Infrastructure
     {
         private readonly TinyIoCContainer.RegisterOptions _registerOptions;
 
-        internal RegisterOptions(TinyIoC.TinyIoCContainer.RegisterOptions registerOptions)
+        internal RegisterOptions(TinyIoCContainer.RegisterOptions registerOptions)
         {
             _registerOptions = registerOptions;
         }

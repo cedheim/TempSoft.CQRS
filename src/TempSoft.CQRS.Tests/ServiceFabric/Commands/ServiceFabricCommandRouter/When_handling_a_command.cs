@@ -25,7 +25,8 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ServiceFabricCommandRouter
             _actorProxyFactory = A.Fake<IActorProxyFactory>();
             _actor = A.Fake<IAggregateRootActor>();
 
-            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(A<ActorId>.Ignored, A<string>.Ignored, A<string>.Ignored, A<string>.Ignored))
+            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(A<ActorId>.Ignored,
+                    A<string>.Ignored, A<string>.Ignored, A<string>.Ignored))
                 .Returns(_actor);
 
             _router = new CQRS.ServiceFabric.Commands.ServiceFabricCommandRouter(_actorProxyFactory);
@@ -34,23 +35,29 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ServiceFabricCommandRouter
             await _router.Handle<AThingAggregateRoot>(Data.RootId, _command, CancellationToken.None);
         }
 
-        [Test]
-        public void Should_have_created_an_actor_proxy()
+        private static class Data
         {
-            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(A<ActorId>.That.Matches(a => a.GetGuidId() == Data.RootId), A<string>.Ignored, A<string>.Ignored, A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            public static readonly Guid RootId = Guid.NewGuid();
         }
 
         [Test]
         public void Should_have_called_handle_on_the_actor()
         {
-            A.CallTo(() => _actor.Handle(A<CommandMessage>.That.Matches(msg => msg.AggregateRootType == typeof(AThingAggregateRoot) && msg.Body.Id == _command.Id), A<CancellationToken>.Ignored))
+            A.CallTo(() =>
+                    _actor.Handle(
+                        A<CommandMessage>.That.Matches(msg =>
+                            msg.AggregateRootType == typeof(AThingAggregateRoot) && msg.Body.Id == _command.Id),
+                        A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
-        
-        private static class Data
+
+        [Test]
+        public void Should_have_created_an_actor_proxy()
         {
-            public static readonly Guid RootId = Guid.NewGuid();
+            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(
+                    A<ActorId>.That.Matches(a => a.GetGuidId() == Data.RootId), A<string>.Ignored, A<string>.Ignored,
+                    A<string>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

@@ -16,8 +16,6 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         }
 
 
-
-        [DataMember]
-        public string Name { get; private set; }
+        [DataMember] public string Name { get; private set; }
     }
 }

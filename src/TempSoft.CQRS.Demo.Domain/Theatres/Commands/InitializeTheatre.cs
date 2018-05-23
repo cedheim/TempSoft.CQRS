@@ -5,7 +5,9 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Commands
 {
     public class InitializeTheatre : CommandBase
     {
-        private InitializeTheatre() { }
+        private InitializeTheatre()
+        {
+        }
 
         public InitializeTheatre(Guid aggregateRootId, string name)
         {
@@ -13,10 +15,8 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Commands
             Name = name;
         }
 
-        public Guid AggregateRootId { get; private set; }
+        public Guid AggregateRootId { get; }
 
-        public string Name { get; private set; }
-
-
+        public string Name { get; }
     }
 }

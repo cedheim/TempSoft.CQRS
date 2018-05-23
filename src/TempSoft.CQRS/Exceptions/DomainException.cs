@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace TempSoft.CQRS.Exceptions
 {
     [Serializable]
-    public class DomainException : System.Exception
+    public class DomainException : Exception
     {
         public DomainException()
         {
@@ -14,7 +14,7 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public DomainException(string message, System.Exception innerException) : base(message, innerException)
+        public DomainException(string message, Exception innerException) : base(message, innerException)
         {
         }
 

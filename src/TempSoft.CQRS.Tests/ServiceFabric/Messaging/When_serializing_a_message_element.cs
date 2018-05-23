@@ -39,8 +39,5 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Messaging
         {
             _output.Should().BeEquivalentTo(_input);
         }
-        
-
-
     }
 }

@@ -14,11 +14,13 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public InitializationEventMissingAggregateRootIdException(string message, Exception innerException) : base(message, innerException)
+        public InitializationEventMissingAggregateRootIdException(string message, Exception innerException) : base(
+            message, innerException)
         {
         }
 
-        protected InitializationEventMissingAggregateRootIdException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected InitializationEventMissingAggregateRootIdException(SerializationInfo info, StreamingContext context) :
+            base(info, context)
         {
         }
     }

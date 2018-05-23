@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Demo.Domain.Theatres.Commands;
 using TempSoft.CQRS.Demo.Domain.Theatres.Events;
@@ -10,7 +8,6 @@ using TempSoft.CQRS.Demo.Domain.Theatres.Exceptions;
 using TempSoft.CQRS.Demo.Domain.Theatres.Models;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Infrastructure;
 
 namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
 {
@@ -29,53 +26,6 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
         public IEnumerable<Slot> Slots => _slots.OrderBy(s => s.Order);
 
         public string Name { get; private set; }
-
-        [CommandHandler(typeof(InitializeTheatre))]
-        public void Initialize(Guid aggregateRootId, string name)
-        {
-            ApplyChange(new TheatreInitialized(aggregateRootId, name));
-        }
-
-        [EventHandler(typeof(TheatreInitialized))]
-        private void Apply(TheatreInitialized @event)
-        {
-            Name = @event.Name;
-            Id = @event.AggregateRootId;
-        }
-
-        [CommandHandler(typeof(AddAuditorium))]
-        public void AddAuditorium(Guid auditoriumId, string name)
-        {
-            if (_auditoriums.ContainsKey(auditoriumId))
-            {
-                throw new DuplicateAuditoriumAddedException($"Tried to add an auditorium with id {auditoriumId} which already exists.");
-            }
-
-            ApplyChange(new AuditoriumAdded(auditoriumId, name));
-        }
-
-        [CommandHandler(typeof(AddSlot))]
-        public void AddSlot(Guid slotId, string name, int order)
-        {
-            if(_slots.Any(s => s.Name == name))
-                throw new DuplicateSlotException($"Tried to add a slot with a name that already exists {name}");
-
-            ApplyChange(new SlotAdded(slotId, name, order));
-        }
-
-        [EventHandler(typeof(AuditoriumAdded))]
-        private void Apply(AuditoriumAdded @event)
-        {
-            _auditoriums.Add(@event.AuditoriumId, new Auditorium(this, @event.AuditoriumId, @event.Name));
-        }
-
-        [EventHandler(typeof(SlotAdded))]
-        private void Apply(SlotAdded @event)
-        {
-            var slot = new Slot(this, @event.SlotId, @event.Name, @event.Order);
-
-            _slots.Add(slot);
-        }
 
         public IAggregateRootReadModel GetReadModel()
         {
@@ -99,6 +49,52 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
                     Order = s.Order
                 }).ToArray()
             };
+        }
+
+        [CommandHandler(typeof(InitializeTheatre))]
+        public void Initialize(Guid aggregateRootId, string name)
+        {
+            ApplyChange(new TheatreInitialized(aggregateRootId, name));
+        }
+
+        [EventHandler(typeof(TheatreInitialized))]
+        private void Apply(TheatreInitialized @event)
+        {
+            Name = @event.Name;
+            Id = @event.AggregateRootId;
+        }
+
+        [CommandHandler(typeof(AddAuditorium))]
+        public void AddAuditorium(Guid auditoriumId, string name)
+        {
+            if (_auditoriums.ContainsKey(auditoriumId))
+                throw new DuplicateAuditoriumAddedException(
+                    $"Tried to add an auditorium with id {auditoriumId} which already exists.");
+
+            ApplyChange(new AuditoriumAdded(auditoriumId, name));
+        }
+
+        [CommandHandler(typeof(AddSlot))]
+        public void AddSlot(Guid slotId, string name, int order)
+        {
+            if (_slots.Any(s => s.Name == name))
+                throw new DuplicateSlotException($"Tried to add a slot with a name that already exists {name}");
+
+            ApplyChange(new SlotAdded(slotId, name, order));
+        }
+
+        [EventHandler(typeof(AuditoriumAdded))]
+        private void Apply(AuditoriumAdded @event)
+        {
+            _auditoriums.Add(@event.AuditoriumId, new Auditorium(this, @event.AuditoriumId, @event.Name));
+        }
+
+        [EventHandler(typeof(SlotAdded))]
+        private void Apply(SlotAdded @event)
+        {
+            var slot = new Slot(this, @event.SlotId, @event.Name, @event.Order);
+
+            _slots.Add(slot);
         }
     }
 }

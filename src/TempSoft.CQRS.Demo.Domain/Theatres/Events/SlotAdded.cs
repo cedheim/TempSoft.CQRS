@@ -5,7 +5,9 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Events
 {
     public class SlotAdded : EventBase
     {
-        private SlotAdded() { }
+        private SlotAdded()
+        {
+        }
 
         public SlotAdded(Guid slotId, string name, int order)
         {
@@ -14,8 +16,8 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Events
             Order = order;
         }
 
-        public Guid SlotId { get; private set; }
-        public string Name { get; private set; }
-        public int Order { get; private set; }
+        public Guid SlotId { get; }
+        public string Name { get; }
+        public int Order { get; }
     }
 }

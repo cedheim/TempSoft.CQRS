@@ -12,6 +12,8 @@ namespace TempSoft.CQRS.Demo.Common.Configuration
             Initialize(context);
         }
 
+        public string this[string key] => _internalDictionaryDictionary[key];
+
         private void Initialize(ICodePackageActivationContext context)
         {
             var sections = context.GetConfigurationPackageObject("Config")?.Settings?.Sections;
@@ -33,8 +35,5 @@ namespace TempSoft.CQRS.Demo.Common.Configuration
                 }
             }
         }
-
-        public string this[string key] => _internalDictionaryDictionary[key];
     }
 }
- 

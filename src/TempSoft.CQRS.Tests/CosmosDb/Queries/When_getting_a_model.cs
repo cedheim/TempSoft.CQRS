@@ -28,15 +28,18 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Queries
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _model = new AThingQueryModel() { A = Data.AValue, B = Data.BValue };
+            _model = new AThingQueryModel {A = Data.AValue, B = Data.BValue};
             _client = A.Fake<IDocumentClient>();
             _pager = A.Fake<ICosmosDbQueryPager>();
-            _database = new Database(){ Id = Data.DatabaseId };
+            _database = new Database {Id = Data.DatabaseId};
 
             var document = new Document();
-            document.LoadFrom(new JsonTextReader(new StringReader(Newtonsoft.Json.JsonConvert.SerializeObject(new QueryModelPayloadWrapper(Data.QueryModelId, _model)))));
+            document.LoadFrom(new JsonTextReader(
+                new StringReader(
+                    JsonConvert.SerializeObject(new QueryModelPayloadWrapper(Data.QueryModelId, _model)))));
 
-            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored)).Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
+            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored))
+                .Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
             A.CallTo(() => _client.CreateDatabaseAsync(A<Database>.Ignored, A<RequestOptions>.Ignored))
                 .Returns(new ResourceResponse<Database>(_database));
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
@@ -48,19 +51,6 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Queries
             _result = await _repository.Get<AThingQueryModel>(Data.QueryModelId, CancellationToken.None);
         }
 
-        [Test]
-        public void Should_have_read_the_document_from_the_database()
-        {
-            A.CallTo(() => _client.ReadDocumentAsync(A<Uri>.That.Matches(uri => uri == UriFactory.CreateDocumentUri(Data.DatabaseId, Data.Collectionid, Data.QueryModelId)), A<RequestOptions>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Test]
-        public void Should_have_returned_the_correct_result()
-        {
-            _result.Should().BeEquivalentTo(_model);
-        }
-
         private static class Data
         {
             public const string DatabaseId = "tempsoft";
@@ -70,6 +60,23 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Queries
 
             public const int AValue = 5;
             public const string BValue = "WOO";
+        }
+
+        [Test]
+        public void Should_have_read_the_document_from_the_database()
+        {
+            A.CallTo(() =>
+                    _client.ReadDocumentAsync(
+                        A<Uri>.That.Matches(uri =>
+                            uri == UriFactory.CreateDocumentUri(Data.DatabaseId, Data.Collectionid, Data.QueryModelId)),
+                        A<RequestOptions>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void Should_have_returned_the_correct_result()
+        {
+            _result.Should().BeEquivalentTo(_model);
         }
     }
 }

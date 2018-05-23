@@ -5,7 +5,9 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Events
 {
     public class MovieInitialized : EventBase, IInitializationEvent
     {
-        private MovieInitialized() { }
+        private MovieInitialized()
+        {
+        }
 
         public MovieInitialized(Guid aggregateRootId, string publicId, string title)
         {
@@ -14,8 +16,8 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Events
             Title = title;
         }
 
-        public string PublicId { get; private set; }
+        public string PublicId { get; }
 
-        public string Title { get; private set; }
+        public string Title { get; }
     }
 }

@@ -15,11 +15,13 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Exceptions
         {
         }
 
-        public EventStreamInitializationException(string message, Exception innerException) : base(message, innerException)
+        public EventStreamInitializationException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected EventStreamInitializationException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected EventStreamInitializationException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

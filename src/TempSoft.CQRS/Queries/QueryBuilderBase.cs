@@ -11,7 +11,8 @@ namespace TempSoft.CQRS.Queries
 {
     public abstract class QueryBuilderBase<T> : IQueryBuilder where T : QueryBuilderBase<T>
     {
-        private static readonly Dictionary<Type, Func<T, IEvent, CancellationToken, Task>> QueryBuilders = new Dictionary<Type, Func<T, IEvent, CancellationToken, Task>>();
+        private static readonly Dictionary<Type, Func<T, IEvent, CancellationToken, Task>> QueryBuilders =
+            new Dictionary<Type, Func<T, IEvent, CancellationToken, Task>>();
 
         static QueryBuilderBase()
         {
@@ -30,9 +31,8 @@ namespace TempSoft.CQRS.Queries
         public async Task Apply(IEvent @event, CancellationToken cancellationToken)
         {
             if (!QueryBuilders.TryGetValue(@event.GetType(), out var builder))
-            {
-                throw new MissingQueryBuilderHandlerException($"Missing query builder handler for event type {@event.GetType().Name} in {typeof(T).Name}");
-            }
+                throw new MissingQueryBuilderHandlerException(
+                    $"Missing query builder handler for event type {@event.GetType().Name} in {typeof(T).Name}");
 
             await builder((T) this, @event, cancellationToken);
         }
@@ -40,12 +40,11 @@ namespace TempSoft.CQRS.Queries
         private static void InitializeQueryBuilders()
         {
             foreach (var queryBuilder in typeof(T).GetMethodsForAttribute<QueryBuilderHandlerAttribute>())
+            foreach (var queryBuilderAttribute in queryBuilder
+                .GetCustomAttributes(typeof(QueryBuilderHandlerAttribute), true).Cast<QueryBuilderHandlerAttribute>())
             {
-                foreach (var queryBuilderAttribute in queryBuilder.GetCustomAttributes(typeof(QueryBuilderHandlerAttribute), true).Cast<QueryBuilderHandlerAttribute>())
-                {
-                    var caller = queryBuilder.GenerateAsyncHandler<T, IEvent>(queryBuilderAttribute.For);
-                    QueryBuilders.Add(queryBuilderAttribute.For, caller);
-                }
+                var caller = queryBuilder.GenerateAsyncHandler<T, IEvent>(queryBuilderAttribute.For);
+                QueryBuilders.Add(queryBuilderAttribute.For, caller);
             }
         }
     }

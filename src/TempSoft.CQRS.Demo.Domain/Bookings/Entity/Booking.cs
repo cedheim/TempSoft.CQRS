@@ -12,7 +12,6 @@ using TempSoft.CQRS.Demo.Domain.Theatres.Entities;
 using TempSoft.CQRS.Demo.Domain.Theatres.Models;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Infrastructure;
 
 namespace TempSoft.CQRS.Demo.Domain.Bookings.Entity
 {
@@ -32,7 +31,8 @@ namespace TempSoft.CQRS.Demo.Domain.Bookings.Entity
         public Guid MovieVersion { get; private set; }
 
         [CommandHandler(typeof(CreateBooking))]
-        public async Task Initialize(Guid aggregateRootId, Guid theatre, Guid auditorium, Guid slot, Guid movie, Guid movieVersion, CancellationToken cancellationToken)
+        public async Task Initialize(Guid aggregateRootId, Guid theatre, Guid auditorium, Guid slot, Guid movie,
+            Guid movieVersion, CancellationToken cancellationToken)
         {
             var movieModelTask = _router.GetReadModel<Movie, MovieReadModel>(movie, cancellationToken);
             var theatreModelTask = _router.GetReadModel<Theatre, TheatreReadModel>(theatre, cancellationToken);
@@ -42,22 +42,17 @@ namespace TempSoft.CQRS.Demo.Domain.Bookings.Entity
             var theatreModel = theatreModelTask.Result;
 
             var movieVersionModel = movieModel.Versions.FirstOrDefault(v => v.Id == movieVersion);
-            if (object.ReferenceEquals(movieVersionModel, default(VersionReadModel)))
-            {
-                throw new MovieVersionMissingException($"Could not find movie version {movieVersion} on movie {movie}.");
-            }
+            if (ReferenceEquals(movieVersionModel, default(VersionReadModel)))
+                throw new MovieVersionMissingException(
+                    $"Could not find movie version {movieVersion} on movie {movie}.");
 
             var auditoriumModel = theatreModel.Auditoriums.FirstOrDefault(a => a.Id == auditorium);
-            if (object.ReferenceEquals(auditoriumModel, default(AuditoriumReadModel)))
-            {
+            if (ReferenceEquals(auditoriumModel, default(AuditoriumReadModel)))
                 throw new AuditoriumMissingException($"Could not find auditorium {auditorium} for theatre {theatre}.");
-            }
 
             var slotModel = theatreModel.Slots.FirstOrDefault(s => s.Id == slot);
-            if (object.ReferenceEquals(slotModel, default(SlotReadModel)))
-            {
+            if (ReferenceEquals(slotModel, default(SlotReadModel)))
                 throw new SlotMissingException($"Could not find slot {slot} for theatre {theatre}.");
-            }
 
             ApplyChange(new BookingCreated(aggregateRootId, theatre, auditorium, slot, movie, movieVersion));
         }

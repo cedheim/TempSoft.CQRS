@@ -15,14 +15,15 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
         //protected const string AggregateRootTypeStateName = "_tempsoft_cqrs_root_type";
 
         protected readonly IActorProxyFactory ActorProxyFactory = A.Fake<IActorProxyFactory>();
-        protected readonly IServiceProxyFactory ServiceProxyFactory = A.Fake<IServiceProxyFactory>();
-        protected readonly IAggregateRootRepository AggregateRootRepository = A.Fake<IAggregateRootRepository>();
         protected readonly MockActorService<AggregateRootActor> ActorService;
+        protected readonly IAggregateRootRepository AggregateRootRepository = A.Fake<IAggregateRootRepository>();
+        protected readonly IServiceProxyFactory ServiceProxyFactory = A.Fake<IServiceProxyFactory>();
 
         protected AggregateRootActorTestBase()
         {
             ActorService = ServiceFabricFactories.CreateActorServiceForActorWithCustomStateManager<AggregateRootActor>(
-                (service, id) => new AggregateRootActor(service, id, _ => AggregateRootRepository, ActorProxyFactory, ServiceProxyFactory));
+                (service, id) => new AggregateRootActor(service, id, _ => AggregateRootRepository, ActorProxyFactory,
+                    ServiceProxyFactory));
         }
     }
 }

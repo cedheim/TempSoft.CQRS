@@ -1,12 +1,13 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace TempSoft.CQRS.CosmosDb.Commands
 {
     public class CommandRegistryWrapper
     {
-        private CommandRegistryWrapper() { }
+        private CommandRegistryWrapper()
+        {
+        }
 
         public CommandRegistryWrapper(Guid aggregateRootId, Guid commandId)
         {
@@ -14,12 +15,10 @@ namespace TempSoft.CQRS.CosmosDb.Commands
             AggregateRootId = aggregateRootId;
         }
 
-        [JsonProperty("id")]
-        public Guid Id { get; set; }
+        [JsonProperty("id")] public Guid Id { get; set; }
 
         public Guid AggregateRootId { get; set; }
 
-        [JsonProperty("_ts")]
-        public long Timestamp { get; set; }
+        [JsonProperty("_ts")] public long Timestamp { get; set; }
     }
 }

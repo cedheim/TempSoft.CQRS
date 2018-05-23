@@ -6,7 +6,7 @@ namespace TempSoft.CQRS.Infrastructure
     {
         private readonly TinyIoCContainer.MultiRegisterOptions _multiRegisterOptions;
 
-        internal MultiRegisterOptions(TinyIoC.TinyIoCContainer.MultiRegisterOptions multiRegisterOptions)
+        internal MultiRegisterOptions(TinyIoCContainer.MultiRegisterOptions multiRegisterOptions)
         {
             _multiRegisterOptions = multiRegisterOptions;
         }
@@ -20,6 +20,5 @@ namespace TempSoft.CQRS.Infrastructure
         {
             return new MultiRegisterOptions(_multiRegisterOptions.AsMultiInstance());
         }
-
     }
 }

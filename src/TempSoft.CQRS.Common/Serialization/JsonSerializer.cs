@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace TempSoft.CQRS.Common.Serialization
 {
@@ -6,12 +7,12 @@ namespace TempSoft.CQRS.Common.Serialization
     {
         public string Serialize(object o)
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(o);
+            return JsonConvert.SerializeObject(o);
         }
 
         public object Deserialize(string data, Type type)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject(data, type);
+            return JsonConvert.DeserializeObject(data, type);
         }
     }
 }

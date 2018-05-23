@@ -5,9 +5,12 @@ namespace TempSoft.CQRS.Demo.Domain.Bookings.Events
 {
     public class BookingCreated : InitializationEventBase
     {
-        private BookingCreated() { }
+        private BookingCreated()
+        {
+        }
 
-        public BookingCreated(Guid aggregateRootId, Guid theatre, Guid auditorium, Guid slot, Guid movie, Guid movieVersion)
+        public BookingCreated(Guid aggregateRootId, Guid theatre, Guid auditorium, Guid slot, Guid movie,
+            Guid movieVersion)
         {
             AggregateRootId = aggregateRootId;
             Theatre = theatre;
@@ -17,10 +20,10 @@ namespace TempSoft.CQRS.Demo.Domain.Bookings.Events
             MovieVersion = movieVersion;
         }
 
-        public Guid Theatre { get; private set; }
-        public Guid Auditorium { get; private set; }
-        public Guid Slot { get; private set; }
-        public Guid Movie { get; private set; }
-        public Guid MovieVersion { get; private set;  }
+        public Guid Theatre { get; }
+        public Guid Auditorium { get; }
+        public Guid Slot { get; }
+        public Guid Movie { get; }
+        public Guid MovieVersion { get; }
     }
 }

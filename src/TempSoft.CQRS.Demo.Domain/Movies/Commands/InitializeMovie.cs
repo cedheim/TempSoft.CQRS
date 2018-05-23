@@ -5,7 +5,9 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
 {
     public class InitializeMovie : CommandBase
     {
-        private InitializeMovie() { }
+        private InitializeMovie()
+        {
+        }
 
         public InitializeMovie(Guid aggregateRootId, string publicId, string title)
         {
@@ -14,8 +16,8 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
             Title = title;
         }
 
-        public Guid AggregateRootId { get; private set; }
-        public string PublicId { get; private set; }
-        public string Title { get; private set; }
+        public Guid AggregateRootId { get; }
+        public string PublicId { get; }
+        public string Title { get; }
     }
 }

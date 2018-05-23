@@ -3,16 +3,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
-using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Communication.Client;
 using NUnit.Framework;
-using TempSoft.CQRS.Common.Extensions;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Queries;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
-using TempSoft.CQRS.ServiceFabric.Interfaces.Queries;
 using TempSoft.CQRS.Tests.Mocks;
 
 namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
@@ -33,11 +29,11 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
             {
                 new CreatedAThing(Data.RootId) {Version = 1}
             };
-            
+
             var messages = _events.Select(e => new EventMessage(e)).ToArray();
 
             await Service.Publish(messages, CancellationToken.None);
-            
+
             var cancellationTokenSource = new CancellationTokenSource();
             cancellationTokenSource.CancelAfter(TimeSpan.FromMilliseconds(500));
 
@@ -50,17 +46,19 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
             }
         }
 
-        [Test]
-        public void Should_have_written_the_event_to_the_stream()
+
+        private static class Data
         {
-            A.CallTo(() => StreamService.Write(A<EventMessage>.That.Matches(msg => msg.Body == _events[0]), A<CancellationToken>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            public const string EventStreamName = "EventStream";
+            public static readonly Guid RootId = Guid.NewGuid();
         }
 
         [Test]
         public void Should_have_created_a_service_proxy()
         {
-            A.CallTo(() => ServiceProxyFactory.CreateServiceProxy<IEventStreamService>(A<Uri>.Ignored, A<ServicePartitionKey>.That.Matches(pk => pk.Value.ToString() == Data.EventStreamName), A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
+            A.CallTo(() => ServiceProxyFactory.CreateServiceProxy<IEventStreamService>(A<Uri>.Ignored,
+                    A<ServicePartitionKey>.That.Matches(pk => pk.Value.ToString() == Data.EventStreamName),
+                    A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -71,11 +69,12 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
-
-        private static class Data
+        [Test]
+        public void Should_have_written_the_event_to_the_stream()
         {
-            public const string EventStreamName = "EventStream";
-            public static readonly Guid RootId = Guid.NewGuid();
+            A.CallTo(() => StreamService.Write(A<EventMessage>.That.Matches(msg => msg.Body == _events[0]),
+                    A<CancellationToken>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

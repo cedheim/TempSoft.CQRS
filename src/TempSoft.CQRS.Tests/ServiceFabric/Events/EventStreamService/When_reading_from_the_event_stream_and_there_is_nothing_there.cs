@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Fabric;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeItEasy;
 using FluentAssertions;
-using Microsoft.ServiceFabric.Data.Collections;
 using NUnit.Framework;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.ServiceFabric.Events;
-using TempSoft.CQRS.Tests.Mocks;
 
 namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
 {
@@ -25,16 +20,18 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
         {
             _events = new IEvent[0];
 
-            A.CallTo(() => EventStore.List(A<EventStoreFilter>.Ignored,A<Func<IEvent, CancellationToken, Task>>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => EventStore.List(A<EventStoreFilter>.Ignored,
+                    A<Func<IEvent, CancellationToken, Task>>.Ignored, A<CancellationToken>.Ignored))
                 .Invokes(foc =>
                 {
                     var callback = foc.GetArgument<Func<IEvent, CancellationToken, Task>>(1);
                     var cancellationToken = foc.GetArgument<CancellationToken>(2);
-                    foreach (var e in _events)
-                    {
-                        callback(e, cancellationToken).Wait(cancellationToken);
-                    }
+                    foreach (var e in _events) callback(e, cancellationToken).Wait(cancellationToken);
                 });
+        }
+
+        private static class Data
+        {
         }
 
         [Test]
@@ -53,11 +50,6 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventStreamService
             eventMessage.Should().BeNull();
 
             stopwatch.Elapsed.Should().BeCloseTo(timeout, 100);
-        }
-
-        private static class Data
-        {
-
         }
     }
 }

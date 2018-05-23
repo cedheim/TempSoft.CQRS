@@ -11,9 +11,9 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Queries
     public abstract class QueryBuilderActorTestBase
     {
         protected readonly IActorProxyFactory ActorProxyFactory = A.Fake<IActorProxyFactory>();
-        protected readonly IServiceProxyFactory ServiceProxyFactory = A.Fake<IServiceProxyFactory>();
-        protected readonly IQueryBuilderRegistry Registry = A.Fake<IQueryBuilderRegistry>();
         protected readonly MockActorService<QueryBuilderActor> ActorService;
+        protected readonly IQueryBuilderRegistry Registry = A.Fake<IQueryBuilderRegistry>();
+        protected readonly IServiceProxyFactory ServiceProxyFactory = A.Fake<IServiceProxyFactory>();
 
         protected QueryBuilderActorTestBase()
         {

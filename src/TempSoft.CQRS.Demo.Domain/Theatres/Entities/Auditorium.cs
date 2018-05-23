@@ -1,15 +1,15 @@
 ﻿using System;
 using TempSoft.CQRS.Commands;
-using TempSoft.CQRS.Demo.Domain.Movies.Enums;
 using TempSoft.CQRS.Demo.Domain.Theatres.Commands;
 using TempSoft.CQRS.Demo.Domain.Theatres.Enums;
 using TempSoft.CQRS.Demo.Domain.Theatres.Events;
 using TempSoft.CQRS.Demo.Domain.Theatres.Exceptions;
+using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
 {
-    public class Auditorium : Theatre.Entity<Auditorium>
+    public class Auditorium : AggregateRoot<Theatre>.Entity<Auditorium>
     {
         public Auditorium(Theatre root, Guid id, string name)
             : base(root, id)
@@ -17,7 +17,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
             Name = name;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public bool Is3D { get; private set; }
 
@@ -31,7 +31,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
             switch (auditoriumProperty)
             {
                 case AuditoriumProperties.Is3D:
-                    if(Is3D)
+                    if (Is3D)
                         throw new AuditoriumPropertyException($"Auditorium already has property {auditoriumProperty}");
                     break;
                 case AuditoriumProperties.IsIMAX:
@@ -48,7 +48,7 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
 
             Root.ApplyChange(new AuditoriumPropertyAdded(Id, auditoriumProperty));
         }
-        
+
         [CommandHandler(typeof(RemoveAuditoriumProperty))]
         public void RemoveAuditoriumProperty(AuditoriumProperties auditoriumProperty)
         {
@@ -110,6 +110,5 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Entities
                     throw new ArgumentOutOfRangeException();
             }
         }
-
     }
 }

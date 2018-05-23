@@ -10,7 +10,6 @@ using TempSoft.CQRS.Common.Uri;
 using TempSoft.CQRS.CosmosDb.Commands;
 using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
-using TempSoft.CQRS.Demo.Actors;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.ServiceFabric.Domain;
 using TempSoft.CQRS.ServiceFabric.Events;
@@ -21,7 +20,7 @@ namespace TempSoft.CQRS.Demo.AggregateRoots
     internal static class Program
     {
         /// <summary>
-        /// This is the entry point of the service host process.
+        ///     This is the entry point of the service host process.
         /// </summary>
         private static void Main()
         {
@@ -36,30 +35,37 @@ namespace TempSoft.CQRS.Demo.AggregateRoots
                 var uriHelper = new UriHelper();
                 var eventBus = new ServiceFabricEventBus(serviceProxyFactory, uriHelper);
                 var configuration = GenerateConfiguration(FabricRuntime.GetActivationContext());
-                var eventStoreClient = new DocumentClient(new Uri(configuration["EventStore_EndpointUri"]), configuration["EventStore_PrimaryKey"]);
-                var commandRegistryClient = new DocumentClient(new Uri(configuration["CommandRegistry_EndpointUri"]), configuration["CommandRegistry_PrimaryKey"]);
+                var eventStoreClient = new DocumentClient(new Uri(configuration["EventStore_EndpointUri"]),
+                    configuration["EventStore_PrimaryKey"]);
+                var commandRegistryClient = new DocumentClient(new Uri(configuration["CommandRegistry_EndpointUri"]),
+                    configuration["CommandRegistry_PrimaryKey"]);
 
                 commandRegistryClient.OpenAsync().Wait();
                 eventStoreClient.OpenAsync().Wait();
 
-                uriHelper.RegisterUri<IEventBusService>(new Uri("fabric:/TempSoft.CQRS.Demo.Application/EventBusService"));
-                uriHelper.RegisterUri<IEventStreamService>(new Uri("fabric:/TempSoft.CQRS.Demo.Application/EventStreamService"));
+                uriHelper.RegisterUri<IEventBusService>(
+                    new Uri("fabric:/TempSoft.CQRS.Demo.Application/EventBusService"));
+                uriHelper.RegisterUri<IEventStreamService>(
+                    new Uri("fabric:/TempSoft.CQRS.Demo.Application/EventStreamService"));
 
-                var eventStore = new CosmosDbEventStore(eventStoreClient, new CosmosDbQueryPager(), configuration["EventStore_DatabaseId"], configuration["EventStore_CollectionId"]);
-                var commandRegistry = new CosmosDbCommandRegistry(commandRegistryClient, new CosmosDbQueryPager(), configuration["CommandRegistry_DatabaseId"], configuration["CommandRegistry_CollectionId"]);
+                var eventStore = new CosmosDbEventStore(eventStoreClient, new CosmosDbQueryPager(),
+                    configuration["EventStore_DatabaseId"], configuration["EventStore_CollectionId"]);
+                var commandRegistry = new CosmosDbCommandRegistry(commandRegistryClient, new CosmosDbQueryPager(),
+                    configuration["CommandRegistry_DatabaseId"], configuration["CommandRegistry_CollectionId"]);
 
 
-
-                ActorRuntime.RegisterActorAsync<AggregateRootActor> (
+                ActorRuntime.RegisterActorAsync<AggregateRootActor>(
                     (context, actorType) => new ActorService(
-                        context, 
-                        actorType, 
-                        (service, id) => new AggregateRootActor(service, id, actor => new AggregateRootRepository(eventStore, eventBus, commandRegistry), actorProxyFactory, serviceProxyFactory))
-                    ).GetAwaiter().GetResult();
+                        context,
+                        actorType,
+                        (service, id) => new AggregateRootActor(service, id,
+                            actor => new AggregateRootRepository(eventStore, eventBus, commandRegistry),
+                            actorProxyFactory, serviceProxyFactory))
+                ).GetAwaiter().GetResult();
 
                 Thread.Sleep(Timeout.Infinite);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 ActorEventSource.Current.ActorHostInitializationFailed(e.ToString());
                 throw;

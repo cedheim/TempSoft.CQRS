@@ -22,14 +22,15 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class EventBusService : StatefulService, IEventBusService
     {
-        private readonly IEventStreamRegistry _eventStreamRegistry;
-        private readonly IUriHelper _uriHelper;
-        private readonly IServiceProxyFactory _serviceProxyFactory;
-        private readonly IActorProxyFactory _actorProxyFactory;
-
         private const string EventQueueName = "_tempsoft_event_queue";
+        private readonly IActorProxyFactory _actorProxyFactory;
+        private readonly IEventStreamRegistry _eventStreamRegistry;
+        private readonly IServiceProxyFactory _serviceProxyFactory;
+        private readonly IUriHelper _uriHelper;
 
-        public EventBusService(StatefulServiceContext serviceContext, IEventStreamRegistry eventStreamRegistry, IUriHelper uriHelper, IServiceProxyFactory serviceProxyFactory, IActorProxyFactory actorProxyFactory) : base(serviceContext)
+        public EventBusService(StatefulServiceContext serviceContext, IEventStreamRegistry eventStreamRegistry,
+            IUriHelper uriHelper, IServiceProxyFactory serviceProxyFactory, IActorProxyFactory actorProxyFactory) :
+            base(serviceContext)
         {
             _eventStreamRegistry = eventStreamRegistry;
             _uriHelper = uriHelper;
@@ -37,12 +38,45 @@ namespace TempSoft.CQRS.ServiceFabric.Events
             _actorProxyFactory = actorProxyFactory;
         }
 
-        public EventBusService(StatefulServiceContext serviceContext, IReliableStateManagerReplica reliableStateManagerReplica, IEventStreamRegistry eventStreamRegistry, IUriHelper uriHelper, IServiceProxyFactory serviceProxyFactory, IActorProxyFactory actorProxyFactory) : base(serviceContext, reliableStateManagerReplica)
+        public EventBusService(StatefulServiceContext serviceContext,
+            IReliableStateManagerReplica reliableStateManagerReplica, IEventStreamRegistry eventStreamRegistry,
+            IUriHelper uriHelper, IServiceProxyFactory serviceProxyFactory, IActorProxyFactory actorProxyFactory) :
+            base(serviceContext, reliableStateManagerReplica)
         {
             _eventStreamRegistry = eventStreamRegistry;
             _uriHelper = uriHelper;
             _serviceProxyFactory = serviceProxyFactory;
             _actorProxyFactory = actorProxyFactory;
+        }
+
+        public async Task Publish(EventMessage[] events, CancellationToken cancellationToken)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var queue = await StateManager.GetOrAddAsync<IReliableQueue<EventMessage>>(EventQueueName);
+
+            while (true)
+                try
+                {
+                    using (var transaction = StateManager.CreateTransaction())
+                    {
+                        foreach (var eventMessage in events)
+                            await queue.EnqueueAsync(transaction, eventMessage, TimeSpan.FromMilliseconds(100),
+                                cancellationToken);
+
+                        await transaction.CommitAsync();
+                    }
+
+                    break;
+                }
+                catch (TimeoutException)
+                {
+                    await Task.Delay(100, CancellationToken.None);
+                }
+
+
+            stopwatch.Stop();
         }
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
@@ -50,12 +84,12 @@ namespace TempSoft.CQRS.ServiceFabric.Events
             var queue = await StateManager.GetOrAddAsync<IReliableQueue<EventMessage>>(EventQueueName);
 
             while (!cancellationToken.IsCancellationRequested)
-            {
                 try
                 {
                     using (var tx = StateManager.CreateTransaction())
                     {
-                        var conditionalEvent = await queue.TryDequeueAsync(tx, TimeSpan.FromMilliseconds(100), cancellationToken);
+                        var conditionalEvent =
+                            await queue.TryDequeueAsync(tx, TimeSpan.FromMilliseconds(100), cancellationToken);
                         if (!conditionalEvent.HasValue)
                         {
                             await Task.Delay(100, cancellationToken);
@@ -67,7 +101,9 @@ namespace TempSoft.CQRS.ServiceFabric.Events
                         var definitions = _eventStreamRegistry.GetEventStreamsByEvent(eventMessage.Body);
                         var writeTasks = definitions.Select(definition => Task.Run(async () =>
                         {
-                            var proxy = _serviceProxyFactory.CreateServiceProxy<IEventStreamService>(_uriHelper.GetUriForSerivce<IEventStreamService>(), new ServicePartitionKey(definition.Name));
+                            var proxy = _serviceProxyFactory.CreateServiceProxy<IEventStreamService>(
+                                _uriHelper.GetUriForSerivce<IEventStreamService>(),
+                                new ServicePartitionKey(definition.Name));
                             await proxy.Write(eventMessage, cancellationToken);
                         }, cancellationToken));
 
@@ -86,47 +122,12 @@ namespace TempSoft.CQRS.ServiceFabric.Events
                 }
                 catch (Exception e)
                 {
-
                 }
-            }
         }
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
             return this.CreateServiceRemotingReplicaListeners();
-        }
-        
-        public async Task Publish(EventMessage[] events, CancellationToken cancellationToken)
-        {
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            var queue = await StateManager.GetOrAddAsync<IReliableQueue<EventMessage>>(EventQueueName);
-
-            while (true)
-            {
-                try
-                {
-                    using (var transaction = this.StateManager.CreateTransaction())
-                    {
-                        foreach (var eventMessage in events)
-                        {
-                            await queue.EnqueueAsync(transaction, eventMessage, TimeSpan.FromMilliseconds(100), cancellationToken);
-                        }
-
-                        await transaction.CommitAsync();
-                    }
-
-                    break;
-                }
-                catch (TimeoutException)
-                {
-                    await Task.Delay(100, CancellationToken.None);
-                }
-            }
-
-
-            stopwatch.Stop();
         }
     }
 }

@@ -9,7 +9,10 @@ namespace TempSoft.CQRS.Tests.Mocks
 {
     public static class ServiceFabricFactories
     {
-        public static MockActorService<TActor> CreateActorServiceForActorWithCustomStateManager<TActor>(Func<ActorService, ActorId, ActorBase> actorFactory = null, IActorStateProvider actorStateProvider = null, StatefulServiceContext context = null, ActorServiceSettings settings = null, Func<ActorBase, IActorStateProvider, IActorStateManager> stateManagerFactory = null)
+        public static MockActorService<TActor> CreateActorServiceForActorWithCustomStateManager<TActor>(
+            Func<ActorService, ActorId, ActorBase> actorFactory = null, IActorStateProvider actorStateProvider = null,
+            StatefulServiceContext context = null, ActorServiceSettings settings = null,
+            Func<ActorBase, IActorStateProvider, IActorStateManager> stateManagerFactory = null)
             where TActor : Actor
         {
             stateManagerFactory = stateManagerFactory ?? ((actr, stateProvider) => new MockActorStateManager());
@@ -20,11 +23,13 @@ namespace TempSoft.CQRS.Tests.Mocks
             }
 
             context = context ?? MockStatefulServiceContextFactory.Default;
-            var svc = new MockActorService<TActor>(context, ActorTypeInformation.Get(typeof(TActor)), actorFactory, stateManagerFactory, actorStateProvider, settings);
+            var svc = new MockActorService<TActor>(context, ActorTypeInformation.Get(typeof(TActor)), actorFactory,
+                stateManagerFactory, actorStateProvider, settings);
             return svc;
         }
 
-        public static IActorStateManager CreateAFakeActorStateManager(IDictionary<string, object> existingState = default(IDictionary<string, object>))
+        public static IActorStateManager CreateAFakeActorStateManager(
+            IDictionary<string, object> existingState = default(IDictionary<string, object>))
         {
             return new InMemoryActorStateManager(existingState);
         }

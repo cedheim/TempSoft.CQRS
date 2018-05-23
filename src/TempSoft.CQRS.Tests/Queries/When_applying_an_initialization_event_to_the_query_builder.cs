@@ -25,17 +25,18 @@ namespace TempSoft.CQRS.Tests.Queries
             await _builder.Apply(_event, CancellationToken.None);
         }
 
+        private static class Data
+        {
+            public static readonly Guid RootId = Guid.NewGuid();
+        }
+
         [Test]
         public void Should_have_saved_the_query_model_in_the_repository()
         {
             var modelId = Data.RootId.ToString();
-            A.CallTo(() => _repository.Save(modelId, A<AThingQueryModel>.That.IsNotNull(), A<CancellationToken>.Ignored))
+            A.CallTo(
+                    () => _repository.Save(modelId, A<AThingQueryModel>.That.IsNotNull(), A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
-        }
-        
-        private static class Data
-        {
-            public static readonly Guid RootId = Guid.NewGuid();
         }
     }
 }

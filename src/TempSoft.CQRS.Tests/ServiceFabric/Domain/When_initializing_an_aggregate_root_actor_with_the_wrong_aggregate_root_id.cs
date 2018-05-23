@@ -35,11 +35,18 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
             _actor.Invoking(a => a.Handle(_message, CancellationToken.None).Wait()).Should()
                 .Throw<AggregateRootHasWrongIdException>();
         }
-        
+
+        private static class Data
+        {
+            public static readonly Guid ActorId = Guid.NewGuid();
+        }
+
         [Test]
         public void Should_have_gotten_the_root_from_the_repository()
         {
-            A.CallTo(() => AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId, A<CancellationToken>.Ignored))
+            A.CallTo(() =>
+                    AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId,
+                        A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -48,11 +55,6 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
         {
             A.CallTo(() => AggregateRootRepository.Save(A<AThingAggregateRoot>.Ignored, A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Never);
-        }
-
-        private static class Data
-        {
-            public static readonly Guid ActorId = Guid.NewGuid();
         }
     }
 }

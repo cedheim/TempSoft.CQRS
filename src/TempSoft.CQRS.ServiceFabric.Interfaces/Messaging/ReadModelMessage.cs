@@ -7,7 +7,8 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
     [DataContract]
     public class ReadModelMessage : GenericMessage
     {
-        public ReadModelMessage(IAggregateRootReadModel value, IEnumerable<KeyValuePair<string, object>> headers = null) : base(value, headers)
+        public ReadModelMessage(IAggregateRootReadModel value, IEnumerable<KeyValuePair<string, object>> headers = null)
+            : base(value, headers)
         {
         }
 
@@ -15,7 +16,7 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         {
         }
 
-        [IgnoreDataMember] public new IAggregateRootReadModel Body => (IAggregateRootReadModel)base.Body;
+        [IgnoreDataMember] public new IAggregateRootReadModel Body => (IAggregateRootReadModel) base.Body;
 
         public TReadModel GetReadModel<TReadModel>() where TReadModel : IAggregateRootReadModel
         {

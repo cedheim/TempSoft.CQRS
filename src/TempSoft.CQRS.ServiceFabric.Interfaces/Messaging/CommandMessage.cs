@@ -12,10 +12,10 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         [DataMember(Name = "AggregateRootType")]
         private string _aggregateRootType;
 
-        [IgnoreDataMember]
-        private Type _deserializedAggregateRootType;
+        [IgnoreDataMember] private Type _deserializedAggregateRootType;
 
-        public CommandMessage(Type aggregateRootType, ICommand command, IEnumerable<KeyValuePair<string, object>> headers = null) : base(command, headers)
+        public CommandMessage(Type aggregateRootType, ICommand command,
+            IEnumerable<KeyValuePair<string, object>> headers = null) : base(command, headers)
         {
             _aggregateRootType = aggregateRootType.ToFriendlyName();
         }
@@ -23,12 +23,16 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         private CommandMessage()
         {
         }
-        
+
         [IgnoreDataMember]
-        public Type AggregateRootType => _deserializedAggregateRootType ?? (_deserializedAggregateRootType = Type.GetType(_aggregateRootType));
+        public Type AggregateRootType => _deserializedAggregateRootType ??
+                                         (_deserializedAggregateRootType = Type.GetType(_aggregateRootType));
 
-        public new ICommand Body => (ICommand)base.Body;
+        public new ICommand Body => (ICommand) base.Body;
 
-        public TCommand GetCommand<TCommand>() => (TCommand) Body;
+        public TCommand GetCommand<TCommand>()
+        {
+            return (TCommand) Body;
+        }
     }
 }

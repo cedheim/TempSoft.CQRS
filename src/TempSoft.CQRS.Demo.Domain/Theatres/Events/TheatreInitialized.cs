@@ -5,7 +5,9 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Events
 {
     public class TheatreInitialized : EventBase, IInitializationEvent
     {
-        private TheatreInitialized() { }
+        private TheatreInitialized()
+        {
+        }
 
         public TheatreInitialized(Guid aggregateRootId, string name)
         {
@@ -13,6 +15,6 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Events
             Name = name;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
     }
 }

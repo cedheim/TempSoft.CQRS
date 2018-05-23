@@ -7,7 +7,6 @@ using Microsoft.Azure.Documents.Linq;
 
 namespace TempSoft.CQRS.Tests.Mocks
 {
-
     public class MockDocumentQuery<T> : IDocumentQuery<T>
     {
         private T[] _elements;
@@ -26,17 +25,13 @@ namespace TempSoft.CQRS.Tests.Mocks
         public Task<FeedResponse<TResult>> ExecuteNextAsync<TResult>(CancellationToken token = new CancellationToken())
         {
             HasMoreResults = false;
-            return Task.FromResult(new FeedResponse<TResult>(_elements.Cast<TResult>())
-            {
-            });
+            return Task.FromResult(new FeedResponse<TResult>(_elements.Cast<TResult>()));
         }
 
         public Task<FeedResponse<dynamic>> ExecuteNextAsync(CancellationToken token = new CancellationToken())
         {
             HasMoreResults = false;
-            return Task.FromResult(new FeedResponse<dynamic>(_elements.Cast<dynamic>())
-            {
-            });
+            return Task.FromResult(new FeedResponse<dynamic>(_elements.Cast<dynamic>()));
         }
 
         public bool HasMoreResults { get; private set; }

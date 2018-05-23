@@ -24,11 +24,12 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Queries
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _model = new AThingQueryModel() {A = Data.AValue, B = Data.BValue};
+            _model = new AThingQueryModel {A = Data.AValue, B = Data.BValue};
             _client = A.Fake<IDocumentClient>();
             _pager = A.Fake<ICosmosDbQueryPager>();
-            _database = new Database(){ Id = Data.DatabaseId };
-            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored)).Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
+            _database = new Database {Id = Data.DatabaseId};
+            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored))
+                .Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
             A.CallTo(() => _client.CreateDatabaseAsync(A<Database>.Ignored, A<RequestOptions>.Ignored))
                 .Returns(new ResourceResponse<Database>(_database));
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
@@ -37,13 +38,6 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Queries
             _repository = new CosmosDbQueryModelRepository(_client, _pager, Data.DatabaseId, Data.Collectionid);
 
             await _repository.Save(Data.QueryModelId, _model, CancellationToken.None);
-        }
-
-        [Test]
-        public void Should_have_upserted_the_document()
-        {
-            A.CallTo(() => _client.UpsertDocumentAsync(A<Uri>.That.Matches(uri => uri == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)), A<object>.That.Matches(o => ((QueryModelPayloadWrapper)o).Id == Data.QueryModelId), A<RequestOptions>.Ignored, A<bool>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
 
@@ -56,6 +50,17 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Queries
 
             public const int AValue = 5;
             public const string BValue = "WOO";
+        }
+
+        [Test]
+        public void Should_have_upserted_the_document()
+        {
+            A.CallTo(() => _client.UpsertDocumentAsync(
+                    A<Uri>.That.Matches(uri =>
+                        uri == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)),
+                    A<object>.That.Matches(o => ((QueryModelPayloadWrapper) o).Id == Data.QueryModelId),
+                    A<RequestOptions>.Ignored, A<bool>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

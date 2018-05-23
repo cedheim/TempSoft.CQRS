@@ -19,7 +19,7 @@ namespace TempSoft.CQRS.Tests.Mocks
             var memberExpr = propertyExpression.Body as MemberExpression;
             if (memberExpr == null)
                 throw new ArgumentException("propertyExpression should represent access to a member");
-            string memberName = memberExpr.Member.Name;
+            var memberName = memberExpr.Member.Name;
 
             var propertyInfo = that.GetType()
                 .GetProperty(memberName,
@@ -37,42 +37,39 @@ namespace TempSoft.CQRS.Tests.Mocks
 
             while (type != null)
             {
-                var properties = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                var properties =
+                    type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 var property = properties.FirstOrDefault(p => p.Name == propertyName);
 
                 if (property != null)
                 {
                     var method = property.GetMethod;
-                    return (TProperty)method.Invoke(that, new object[0]);
+                    return (TProperty) method.Invoke(that, new object[0]);
                 }
 
                 var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                 var field = fields.FirstOrDefault(p => p.Name == propertyName);
-                if (field != null)
-                {
-                    return (TProperty)field.GetValue(that);
-                }
+                if (field != null) return (TProperty) field.GetValue(that);
 
                 type = type.BaseType;
             }
 
             return default(TProperty);
         }
-        
+
         public static object CallPrivateMethod(this object that, string methodName, params object[] args)
         {
-            var methodInfo = that.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-            if (methodInfo == null) throw new ArgumentException($"Method {methodName} does not exist on {that.GetType().Name}");
+            var methodInfo = that.GetType().GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (methodInfo == null)
+                throw new ArgumentException($"Method {methodName} does not exist on {that.GetType().Name}");
 
             return methodInfo.Invoke(that, args);
         }
 
         public static T Clone<T>(this T that)
         {
-            if (object.ReferenceEquals(that, default(T)))
-            {
-                return default(T);
-            }
+            if (ReferenceEquals(that, default(T))) return default(T);
 
             var type = that.GetType();
             var serializer = new DataContractSerializer(type);
@@ -82,7 +79,7 @@ namespace TempSoft.CQRS.Tests.Mocks
 
                 stream.Seek(0, SeekOrigin.Begin);
 
-                return (T)serializer.ReadObject(stream);
+                return (T) serializer.ReadObject(stream);
             }
         }
     }

@@ -9,7 +9,7 @@ using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Tests.Mocks;
 
-namespace TempSoft.CQRS.Tests.CosmosDb.Events
+namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
 {
     [TestFixture]
     public class When_storing_an_event
@@ -26,8 +26,9 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
             _event = new ChangedAValue(Data.AValue) {AggregateRootId = Data.AggregateRootId};
             _client = A.Fake<IDocumentClient>();
             _pager = A.Fake<ICosmosDbQueryPager>();
-            _database = new Database(){ Id = Data.DatabaseId };
-            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored)).Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
+            _database = new Database {Id = Data.DatabaseId};
+            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored))
+                .Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
             A.CallTo(() => _client.CreateDatabaseAsync(A<Database>.Ignored, A<RequestOptions>.Ignored))
                 .Returns(new ResourceResponse<Database>(_database));
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
@@ -35,13 +36,6 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
 
             _repository = new CosmosDbEventStore(_client, _pager, Data.DatabaseId, Data.Collectionid);
             await _repository.Save(new[] {_event});
-        }
-
-        [Test]
-        public void Should_have_upserted_the_event()
-        {
-            A.CallTo(() => _client.UpsertDocumentAsync(A<Uri>.That.Matches(u => u == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)), A<object>.That.Matches(o => ((EventPayloadWrapper)o).Id == _event.Id), A<RequestOptions>.Ignored, A<bool>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private static class Data
@@ -52,6 +46,17 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events
             public const int AValue = 5;
 
             public static readonly Guid AggregateRootId = Guid.NewGuid();
+        }
+
+        [Test]
+        public void Should_have_upserted_the_event()
+        {
+            A.CallTo(() => _client.UpsertDocumentAsync(
+                    A<Uri>.That.Matches(u =>
+                        u == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)),
+                    A<object>.That.Matches(o => ((EventPayloadWrapper) o).Id == _event.Id), A<RequestOptions>.Ignored,
+                    A<bool>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

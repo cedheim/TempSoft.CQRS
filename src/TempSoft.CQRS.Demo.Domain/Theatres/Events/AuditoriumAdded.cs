@@ -10,7 +10,8 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Events
             AuditoriumId = auditoriumId;
             Name = name;
         }
-        public Guid AuditoriumId { get; private set; }
-        public string Name { get; private set; }
+
+        public Guid AuditoriumId { get; }
+        public string Name { get; }
     }
 }

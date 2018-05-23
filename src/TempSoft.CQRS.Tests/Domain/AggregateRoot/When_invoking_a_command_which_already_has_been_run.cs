@@ -29,11 +29,11 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _events = _root.Commit().Events;
         }
 
-        [Test]
-        public void Should_have_updated_the_values()
+        private static class Data
         {
-            _root.A.Should().Be(Data.AValue);
-            _root.B.Should().Be(Data.BValue);
+            public const int AValue = 5;
+            public const string BValue = "FLEUF";
+            public static readonly Guid RootId = Guid.NewGuid();
         }
 
         [Test]
@@ -43,20 +43,18 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _events.Should().ContainSingle(e => e is ChangedBValue);
         }
 
+        [Test]
+        public void Should_have_updated_the_values()
+        {
+            _root.A.Should().Be(Data.AValue);
+            _root.B.Should().Be(Data.BValue);
+        }
+
 
         [Test]
         public void Should_have_updated_version()
         {
             _root.Version.Should().Be(3);
         }
-
-        private static class Data
-        {
-            public static readonly Guid RootId = Guid.NewGuid();
-            public const int AValue = 5;
-            public const string BValue = "FLEUF";
-        }
-
-
     }
 }

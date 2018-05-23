@@ -2,16 +2,15 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Newtonsoft.Json.Linq;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
-using TempSoft.CQRS.CosmosDb.Queries;
 using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.CosmosDb.Events
 {
     public class CosmosDbEventStreamStateManager : RepositoryBase, IEventStreamStateManager
     {
-        public CosmosDbEventStreamStateManager(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId, string collectionId, int initialThroughput = 1000)
+        public CosmosDbEventStreamStateManager(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId,
+            string collectionId, int initialThroughput = 1000)
             : base(client, pager, databaseId, collectionId, initialThroughput)
         {
         }
@@ -63,6 +62,5 @@ namespace TempSoft.CQRS.CosmosDb.Events
         {
             await Client.UpsertDocumentAsync(Uri, state);
         }
-
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Events;
@@ -22,18 +20,6 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
 
         public IEnumerable<Version> Versions => _versions;
 
-        [CommandHandler(typeof(InitializeMovie))]
-        public void Initialize(Guid aggregateRootId, string publicId, string title)
-        {
-            ApplyChange(new MovieInitialized(aggregateRootId, publicId, title));
-        }
-
-        [CommandHandler(typeof(AddMovieVersion))]
-        public void AddMovieVersion(Guid versionId, string name)
-        {
-            ApplyChange(new AddedMovieVersion(versionId, name));
-        }
-
         public IAggregateRootReadModel GetReadModel()
         {
             return new MovieReadModel
@@ -51,6 +37,18 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
                     HasTHX = v.HasTHX
                 }).ToArray()
             };
+        }
+
+        [CommandHandler(typeof(InitializeMovie))]
+        public void Initialize(Guid aggregateRootId, string publicId, string title)
+        {
+            ApplyChange(new MovieInitialized(aggregateRootId, publicId, title));
+        }
+
+        [CommandHandler(typeof(AddMovieVersion))]
+        public void AddMovieVersion(Guid versionId, string name)
+        {
+            ApplyChange(new AddedMovieVersion(versionId, name));
         }
 
         [EventHandler(typeof(MovieInitialized))]

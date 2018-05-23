@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Linq;
 using System.Reflection;
 using TinyIoC;
 
@@ -12,12 +10,12 @@ namespace TempSoft.CQRS.Infrastructure
         private static readonly TinyIoCContainer _container = new TinyIoCContainer();
 
         public static void AutoRegister()
-        {  
+        {
             _container.AutoRegister();
         }
 
         public static void AutoRegister(Func<Type, bool> registrationPredicate)
-        {  
+        {
             _container.AutoRegister(registrationPredicate);
         }
 
@@ -39,7 +37,6 @@ namespace TempSoft.CQRS.Infrastructure
         public static RegisterOptions Register(Type registerType, string name)
         {
             return new RegisterOptions(_container.Register(registerType, name));
-
         }
 
         public static RegisterOptions Register(Type registerType, Type registerImplementation)
@@ -67,7 +64,8 @@ namespace TempSoft.CQRS.Infrastructure
             return new RegisterOptions(_container.Register(registerType, registerImplementation, instance));
         }
 
-        public static RegisterOptions Register(Type registerType, Type registerImplementation, object instance, string name)
+        public static RegisterOptions Register(Type registerType, Type registerImplementation, object instance,
+            string name)
         {
             return new RegisterOptions(_container.Register(registerType, registerImplementation, instance, name));
         }
@@ -76,7 +74,7 @@ namespace TempSoft.CQRS.Infrastructure
         {
             return new RegisterOptions(_container.Register(registerType, (conctainer, overloads) => factory()));
         }
-        
+
         public static RegisterOptions Register(Type registerType, Func<object> factory, string name)
         {
             return new RegisterOptions(_container.Register(registerType, (conctainer, overloads) => factory(), name));
@@ -91,13 +89,13 @@ namespace TempSoft.CQRS.Infrastructure
         public static RegisterOptions Register<RegisterType>(Func<RegisterType> factory)
             where RegisterType : class
         {
-            return new RegisterOptions(_container.Register<RegisterType>((conctainer, overloads) => factory()));
+            return new RegisterOptions(_container.Register((conctainer, overloads) => factory()));
         }
 
         public static RegisterOptions Register<RegisterType>(Func<RegisterType> factory, string name)
             where RegisterType : class
         {
-            return new RegisterOptions(_container.Register<RegisterType>((conctainer, overloads) => factory(), name));
+            return new RegisterOptions(_container.Register((conctainer, overloads) => factory(), name));
         }
 
 
@@ -111,7 +109,6 @@ namespace TempSoft.CQRS.Infrastructure
             where RegisterType : class
             where RegisterImplementation : class, RegisterType
         {
-
             return new RegisterOptions(_container.Register<RegisterType, RegisterImplementation>());
         }
 
@@ -123,15 +120,15 @@ namespace TempSoft.CQRS.Infrastructure
         }
 
         public static RegisterOptions Register<RegisterType>(RegisterType instance)
-           where RegisterType : class
+            where RegisterType : class
         {
-            return new RegisterOptions(_container.Register<RegisterType>(instance));
+            return new RegisterOptions(_container.Register(instance));
         }
 
         public static RegisterOptions Register<RegisterType>(RegisterType instance, string name)
             where RegisterType : class
         {
-            return new RegisterOptions(_container.Register<RegisterType>(instance, name));
+            return new RegisterOptions(_container.Register(instance, name));
         }
 
         public static RegisterOptions Register<RegisterType, RegisterImplementation>(RegisterImplementation instance)
@@ -141,11 +138,11 @@ namespace TempSoft.CQRS.Infrastructure
             return new RegisterOptions(_container.Register<RegisterType, RegisterImplementation>(instance));
         }
 
-        public static RegisterOptions Register<RegisterType, RegisterImplementation>(RegisterImplementation instance, string name)
+        public static RegisterOptions Register<RegisterType, RegisterImplementation>(RegisterImplementation instance,
+            string name)
             where RegisterType : class
             where RegisterImplementation : class, RegisterType
         {
-
             return new RegisterOptions(_container.Register<RegisterType, RegisterImplementation>(instance, name));
         }
 
@@ -154,7 +151,8 @@ namespace TempSoft.CQRS.Infrastructure
             return new MultiRegisterOptions(_container.RegisterMultiple<RegisterType>(implementationTypes));
         }
 
-        public static MultiRegisterOptions RegisterMultiple(Type registrationType, IEnumerable<Type> implementationTypes)
+        public static MultiRegisterOptions RegisterMultiple(Type registrationType,
+            IEnumerable<Type> implementationTypes)
         {
             return new MultiRegisterOptions(_container.RegisterMultiple(registrationType, implementationTypes));
         }
@@ -168,12 +166,12 @@ namespace TempSoft.CQRS.Infrastructure
         {
             return _container.Resolve(resolveType, name);
         }
-        
+
         public static ResolveType Resolve<ResolveType>() where ResolveType : class
         {
             return _container.Resolve<ResolveType>();
         }
-        
+
         public static ResolveType Resolve<ResolveType>(string name)
             where ResolveType : class
         {

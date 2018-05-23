@@ -28,27 +28,29 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
 
             A.CallTo(() => AggregateRootRepository.Get(A<Type>.Ignored, A<Guid>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(_root);
-            
+
             _actorId = new ActorId(Data.ActorId);
             _actor = ActorService.Activate(_actorId);
 
-            await _actor.Handle(new CommandMessage(typeof(AThingAggregateRoot), new DoSomething(Data.AValue, Data.BValue)), CancellationToken.None);
+            await _actor.Handle(
+                new CommandMessage(typeof(AThingAggregateRoot), new DoSomething(Data.AValue, Data.BValue)),
+                CancellationToken.None);
         }
 
-        [Test]
-        public void Should_have_updated_the_root()
+        private static class Data
         {
-            _root.Should().NotBeNull();
-            _root.Id.Should().Be(Data.ActorId);
-            _root.A.Should().Be(Data.AValue);
-            _root.B.Should().Be(Data.BValue);
+            public const int AValue = 5;
+            public const string BValue = "TEST";
+            public static readonly Guid ActorId = Guid.NewGuid();
         }
 
 
         [Test]
         public void Should_have_gotten_the_root_from_the_repository()
         {
-            A.CallTo(() => AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId, A<CancellationToken>.Ignored))
+            A.CallTo(() =>
+                    AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId,
+                        A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -59,11 +61,13 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        private static class Data
+        [Test]
+        public void Should_have_updated_the_root()
         {
-            public static readonly Guid ActorId = Guid.NewGuid();
-            public const int AValue = 5;
-            public const string BValue = "TEST";
+            _root.Should().NotBeNull();
+            _root.Id.Should().Be(Data.ActorId);
+            _root.A.Should().Be(Data.AValue);
+            _root.B.Should().Be(Data.BValue);
         }
     }
 }

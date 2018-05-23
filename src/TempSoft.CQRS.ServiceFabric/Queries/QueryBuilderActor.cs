@@ -16,7 +16,9 @@ namespace TempSoft.CQRS.ServiceFabric.Queries
         private readonly IQueryBuilderRegistry _registry;
         private IQueryBuilder _builder;
 
-        public QueryBuilderActor(ActorService actorService, ActorId actorId, IQueryBuilderRegistry registry, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
+        public QueryBuilderActor(ActorService actorService, ActorId actorId, IQueryBuilderRegistry registry,
+            IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService,
+            actorId)
         {
             ActorProxyFactory = actorProxyFactory;
             ServiceProxyFactory = serviceProxyFactory;
@@ -26,7 +28,7 @@ namespace TempSoft.CQRS.ServiceFabric.Queries
 
         public IActorProxyFactory ActorProxyFactory { get; }
         public IServiceProxyFactory ServiceProxyFactory { get; }
-        
+
         public async Task Apply(EventMessage message, CancellationToken cancellationToken)
         {
             var builder = GetQueryBuilder();

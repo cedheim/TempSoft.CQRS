@@ -4,18 +4,19 @@ using TempSoft.CQRS.Demo.Domain.Movies.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Enums;
 using TempSoft.CQRS.Demo.Domain.Movies.Events;
 using TempSoft.CQRS.Demo.Domain.Movies.Exceptions;
+using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
 {
-    public class Version : Movie.Entity<Version>
+    public class Version : AggregateRoot<Movie>.Entity<Version>
     {
         public Version(Movie root, Guid id, string name) : base(root, id)
         {
             Name = name;
         }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
         public bool Has3D { get; private set; }
 
@@ -29,15 +30,15 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
             switch (movieProperty)
             {
                 case MovieProperties.Has3D:
-                    if(Has3D)
+                    if (Has3D)
                         throw new MoviePropertyException($"Trying to add duplicate movie property {movieProperty}");
                     break;
                 case MovieProperties.HasIMAX:
-                    if(HasIMAX)
+                    if (HasIMAX)
                         throw new MoviePropertyException($"Trying to add duplicate movie property {movieProperty}");
                     break;
                 case MovieProperties.HasTHX:
-                    if(HasTHX)
+                    if (HasTHX)
                         throw new MoviePropertyException($"Trying to add duplicate movie property {movieProperty}");
                     break;
                 default:
@@ -89,7 +90,7 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entity
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         [EventHandler(typeof(RemovedMovieProperty))]
         public void RemovedMovieProperty(RemovedMovieProperty @event)
         {

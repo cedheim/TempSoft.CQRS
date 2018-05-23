@@ -33,13 +33,23 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.ServiceFabricEventBus
             _uriHelper = A.Fake<IUriHelper>();
 
             A.CallTo(() => _uriHelper.GetUriForSerivce<IEventBusService>()).Returns(Data.ServiceUri);
-            A.CallTo(() => _serviceProxyFactory.CreateServiceProxy<IEventBusService>(A<Uri>.Ignored, A<ServicePartitionKey>.Ignored, A<TargetReplicaSelector>.Ignored, A<string>.Ignored)).Returns(_eventBusService);
-            
+            A.CallTo(() => _serviceProxyFactory.CreateServiceProxy<IEventBusService>(A<Uri>.Ignored,
+                    A<ServicePartitionKey>.Ignored, A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
+                .Returns(_eventBusService);
+
             _eventBus = new CQRS.ServiceFabric.Events.ServiceFabricEventBus(_serviceProxyFactory, _uriHelper);
 
             _event = new ChangedAValue(5) {AggregateRootId = Data.RootId, Version = 5};
 
-            await _eventBus.Publish(new [] { _event }, CancellationToken.None);
+            await _eventBus.Publish(new[] {_event}, CancellationToken.None);
+        }
+
+
+        private static class Data
+        {
+            public static readonly Guid RootId = Guid.NewGuid();
+            public static readonly long Hash = RootId.GetHashCode64();
+            public static readonly Uri ServiceUri = new Uri("fabric:/Application/EventBusService");
         }
 
         [Test]
@@ -52,24 +62,21 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.ServiceFabricEventBus
         [Test]
         public void Should_have_created_a_service_proxy()
         {
-            A.CallTo(() => _serviceProxyFactory.CreateServiceProxy<IEventBusService>(A<Uri>.That.Matches(uri => uri == Data.ServiceUri), A<ServicePartitionKey>.That.Matches(spk => spk.Kind == ServicePartitionKind.Int64Range && ((long)spk.Value) == Data.Hash), A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
+            A.CallTo(() => _serviceProxyFactory.CreateServiceProxy<IEventBusService>(
+                    A<Uri>.That.Matches(uri => uri == Data.ServiceUri),
+                    A<ServicePartitionKey>.That.Matches(spk =>
+                        spk.Kind == ServicePartitionKind.Int64Range && (long) spk.Value == Data.Hash),
+                    A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
         public void Should_have_published_the_events()
         {
-            A.CallTo(() => _eventBusService.Publish(A<EventMessage[]>.That.Matches(es => es.Any(e => e.Body.Id == _event.Id)), A<CancellationToken>.Ignored))
+            A.CallTo(() =>
+                    _eventBusService.Publish(A<EventMessage[]>.That.Matches(es => es.Any(e => e.Body.Id == _event.Id)),
+                        A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
-
-
-        private static class Data
-        {
-            public static readonly Guid RootId = Guid.NewGuid();
-            public static readonly long Hash = RootId.GetHashCode64();
-            public static readonly Uri ServiceUri = new Uri("fabric:/Application/EventBusService");
-        }
-
     }
 }

@@ -25,9 +25,10 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
         {
             _client = A.Fake<IDocumentClient>();
             _pager = A.Fake<ICosmosDbQueryPager>();
-            _database = new Database(){ Id = Data.DatabaseId };
+            _database = new Database {Id = Data.DatabaseId};
 
-            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored)).Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
+            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored))
+                .Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
             A.CallTo(() => _client.CreateDatabaseAsync(A<Database>.Ignored, A<RequestOptions>.Ignored))
                 .Returns(new ResourceResponse<Database>(_database));
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
@@ -39,13 +40,6 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
             await _repository.SetStatusForStream(Data.EventStreamName, EventStreamStatus.Initialized);
         }
 
-        [Test]
-        public void Should_have_upserted_a_document()
-        {
-            A.CallTo(() => _client.UpsertDocumentAsync(UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid), A<object>.That.Matches(o => ((CQRS.CosmosDb.Events.EventStreamState)o).Id == Data.EventStreamName && ((CQRS.CosmosDb.Events.EventStreamState)o).Status == EventStreamStatus.Initialized), A<RequestOptions>.Ignored, A<bool>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
         private static class Data
         {
             public const string DatabaseId = "tempsoft";
@@ -53,6 +47,18 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStreamState
             public const string DatabaseLink = "database";
 
             public const string EventStreamName = "EVENT STREAM";
+        }
+
+        [Test]
+        public void Should_have_upserted_a_document()
+        {
+            A.CallTo(() => _client.UpsertDocumentAsync(
+                    UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid),
+                    A<object>.That.Matches(o =>
+                        ((CQRS.CosmosDb.Events.EventStreamState) o).Id == Data.EventStreamName &&
+                        ((CQRS.CosmosDb.Events.EventStreamState) o).Status == EventStreamStatus.Initialized),
+                    A<RequestOptions>.Ignored, A<bool>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

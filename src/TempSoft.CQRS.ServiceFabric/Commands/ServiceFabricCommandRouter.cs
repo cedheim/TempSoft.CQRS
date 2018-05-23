@@ -18,15 +18,18 @@ namespace TempSoft.CQRS.ServiceFabric.Commands
         {
             _actorProxyFactory = actorProxyFactory;
         }
-        
-        public async Task Handle<TAggregate>(Guid id, ICommand command, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
+
+        public async Task Handle<TAggregate>(Guid id, ICommand command,
+            CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
         {
             var actor = _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(new ActorId(id));
 
             await actor.Handle(new CommandMessage(typeof(TAggregate), command), cancellationToken);
         }
 
-        public async Task<TReadModel> GetReadModel<TAggregate, TReadModel>(Guid id, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot where TReadModel : IAggregateRootReadModel
+        public async Task<TReadModel> GetReadModel<TAggregate, TReadModel>(Guid id,
+            CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
+            where TReadModel : IAggregateRootReadModel
         {
             var actor = _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(new ActorId(id));
 

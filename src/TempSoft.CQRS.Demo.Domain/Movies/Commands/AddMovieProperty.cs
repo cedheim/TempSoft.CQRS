@@ -1,13 +1,14 @@
 ﻿using System;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Enums;
-using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
 {
     public class AddMovieProperty : EntityCommandBase
     {
-        private AddMovieProperty() { }
+        private AddMovieProperty()
+        {
+        }
 
         public AddMovieProperty(Guid entityId, MovieProperties movieProperty)
         {
@@ -15,6 +16,6 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
             EntityId = entityId;
         }
 
-        public MovieProperties MovieProperty { get; private set; }
+        public MovieProperties MovieProperty { get; }
     }
 }

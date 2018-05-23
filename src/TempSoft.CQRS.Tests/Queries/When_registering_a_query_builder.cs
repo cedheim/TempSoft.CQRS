@@ -22,21 +22,21 @@ namespace TempSoft.CQRS.Tests.Queries
         }
 
         [Test]
-        public void Should_include_the_query_builder_when_listing()
-        {
-            var listingA = _registry.ListQueryBuildersFor(typeof(ChangedAValue)).ToArray();
-            listingA.Should().Contain(b => object.ReferenceEquals(_builder, b));
-
-            var listingB = _registry.ListQueryBuildersFor(typeof(ChangedBValue)).ToArray();
-            listingB.Should().Contain(b => object.ReferenceEquals(_builder, b));
-        }
-
-        [Test]
         public void Should_be_able_to_get_the_query_builder_by_name()
         {
             var registeredBuilder = _registry.GetQueryBuilderByType(typeof(AThingQueryBuilder));
 
             registeredBuilder.Should().BeSameAs(_builder);
+        }
+
+        [Test]
+        public void Should_include_the_query_builder_when_listing()
+        {
+            var listingA = _registry.ListQueryBuildersFor(typeof(ChangedAValue)).ToArray();
+            listingA.Should().Contain(b => ReferenceEquals(_builder, b));
+
+            var listingB = _registry.ListQueryBuildersFor(typeof(ChangedBValue)).ToArray();
+            listingB.Should().Contain(b => ReferenceEquals(_builder, b));
         }
     }
 }

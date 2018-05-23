@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using TempSoft.CQRS.Common.Extensions;
-using TempSoft.CQRS.CosmosDb.Excpetions;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Events;
 
@@ -14,15 +13,19 @@ namespace TempSoft.CQRS.CosmosDb.Events
 {
     public class CosmosDbEventStore : RepositoryBase, IEventStore
     {
-        public CosmosDbEventStore(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId, string collectionId, int initialThroughput = 1000)
+        public CosmosDbEventStore(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId,
+            string collectionId, int initialThroughput = 1000)
             : base(client, pager, databaseId, collectionId, initialThroughput)
         {
         }
 
+        public override IEnumerable<string> PartitionKeyPaths => new[] {"/AggregateRootId"};
 
-        public async Task<IEnumerable<IEvent>> Get(Guid id, int fromVersion = default(int), CancellationToken cancellationToken = default(CancellationToken))
+
+        public async Task<IEnumerable<IEvent>> Get(Guid id, int fromVersion = default(int),
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            var query = Client.CreateDocumentQuery<EventPayloadWrapper>(Uri, new FeedOptions()
+            var query = Client.CreateDocumentQuery<EventPayloadWrapper>(Uri, new FeedOptions
                 {
                     PartitionKey = new PartitionKey(id.ToString()),
                     EnableCrossPartitionQuery = false,
@@ -43,49 +46,40 @@ namespace TempSoft.CQRS.CosmosDb.Events
             return events.OrderBy(e => e.Version);
         }
 
-        public async Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task Save(IEnumerable<IEvent> events,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var wrappers = events.Select(e => new EventPayloadWrapper(e)).ToArray();
-            var tasks = wrappers.Select(wrapper => Client.UpsertDocumentAsync(Uri, wrapper, new RequestOptions{ PartitionKey = new PartitionKey(wrapper.AggregateRootId.ToString()) }));
+            var tasks = wrappers.Select(wrapper => Client.UpsertDocumentAsync(Uri, wrapper,
+                new RequestOptions {PartitionKey = new PartitionKey(wrapper.AggregateRootId.ToString())}));
             await Task.WhenAll(tasks);
         }
 
-        public async Task List(EventStoreFilter filter, Func<IEvent, CancellationToken, Task> callback, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task List(EventStoreFilter filter, Func<IEvent, CancellationToken, Task> callback,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             FeedOptions feedOptions;
             if (filter.AggregateRootId.HasValue)
-            {
                 feedOptions = new FeedOptions
                 {
                     PartitionKey = new PartitionKey(filter.AggregateRootId.Value.ToString()),
                     EnableCrossPartitionQuery = false
                 };
-            }
             else
-            {
                 feedOptions = new FeedOptions
                 {
                     EnableCrossPartitionQuery = true,
                     MaxDegreeOfParallelism = -1
                 };
-            }
 
             IQueryable<EventPayloadWrapper> query = Client.CreateDocumentQuery<EventPayloadWrapper>(Uri, feedOptions);
 
             if (filter.AggregateRootId.HasValue)
-            {
                 query = query.Where(e => e.AggregateRootId == filter.AggregateRootId.Value);
-            }
 
-            if (filter.EventTypes?.Length > 0)
-            {
-                query = query.Where(e => filter.EventTypes.Contains(e.PayloadType));
-            }
+            if (filter.EventTypes?.Length > 0) query = query.Where(e => filter.EventTypes.Contains(e.PayloadType));
 
-            if (filter.EventGroups?.Length > 0)
-            {
-                query = query.Where(e => filter.EventGroups.Contains(e.EventGroup));
-            }
+            if (filter.EventGroups?.Length > 0) query = query.Where(e => filter.EventGroups.Contains(e.EventGroup));
 
             if (filter.From.HasValue)
             {
@@ -97,15 +91,11 @@ namespace TempSoft.CQRS.CosmosDb.Events
 
             while (pagedQuery.HasMoreResults && !cancellationToken.IsCancellationRequested)
             {
-                var next = (await pagedQuery.ExecuteNextAsync<EventPayloadWrapper>(cancellationToken)).OrderBy(w => w.Version);
+                var next =
+                    (await pagedQuery.ExecuteNextAsync<EventPayloadWrapper>(cancellationToken)).OrderBy(w => w.Version);
 
-                foreach (var wrapper in next)
-                {
-                    await callback(wrapper.GetEvent(), cancellationToken);
-                }
+                foreach (var wrapper in next) await callback(wrapper.GetEvent(), cancellationToken);
             }
         }
-
-        public override IEnumerable<string> PartitionKeyPaths => new[] {"/AggregateRootId"};
     }
 }

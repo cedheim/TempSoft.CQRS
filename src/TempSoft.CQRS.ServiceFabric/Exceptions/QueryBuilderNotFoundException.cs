@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace TempSoft.CQRS.ServiceFabric.Exceptions
 {
     [Serializable]
-    public class QueryBuilderNotFoundException : System.Exception
+    public class QueryBuilderNotFoundException : Exception
     {
         public QueryBuilderNotFoundException()
         {
@@ -14,7 +14,7 @@ namespace TempSoft.CQRS.ServiceFabric.Exceptions
         {
         }
 
-        public QueryBuilderNotFoundException(string message, System.Exception innerException) : base(message, innerException)
+        public QueryBuilderNotFoundException(string message, Exception innerException) : base(message, innerException)
         {
         }
 

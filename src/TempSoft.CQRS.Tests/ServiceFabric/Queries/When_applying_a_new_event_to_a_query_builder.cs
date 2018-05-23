@@ -35,11 +35,9 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Queries
             await _actor.Apply(new EventMessage(_event), CancellationToken.None);
         }
 
-        [Test]
-        public void Should_have_tried_to_get_the_query_builder()
+        private static class Data
         {
-            A.CallTo(() => Registry.GetQueryBuilderByType(A<Type>.That.Matches(t => t == typeof(AThingQueryBuilder))))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            public static readonly string QueryBuilderFriendlyName = typeof(AThingQueryBuilder).ToFriendlyName();
         }
 
         [Test]
@@ -49,9 +47,11 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Queries
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
-        private static class Data
+        [Test]
+        public void Should_have_tried_to_get_the_query_builder()
         {
-            public static readonly string QueryBuilderFriendlyName = typeof(AThingQueryBuilder).ToFriendlyName();
+            A.CallTo(() => Registry.GetQueryBuilderByType(A<Type>.That.Matches(t => t == typeof(AThingQueryBuilder))))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

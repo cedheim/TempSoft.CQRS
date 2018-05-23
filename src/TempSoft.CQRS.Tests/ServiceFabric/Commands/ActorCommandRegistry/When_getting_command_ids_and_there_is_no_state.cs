@@ -25,11 +25,9 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
             _commandIds = (await _registry.Get(Data.ActorId, CancellationToken.None)).ToArray();
         }
 
-        [Test]
-        public void Should_have_tried_to_get_the_state()
+        private static class Data
         {
-            A.CallTo(() => _stateManager.TryGetStateAsync<Guid[]>(A<string>.That.IsNotNull(), A<CancellationToken>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+            public static readonly Guid ActorId = Guid.NewGuid();
         }
 
         [Test]
@@ -39,10 +37,12 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Commands.ActorCommandRegistry
             _commandIds.Should().BeEmpty();
         }
 
-        private static class Data
+        [Test]
+        public void Should_have_tried_to_get_the_state()
         {
-            public static readonly Guid ActorId = Guid.NewGuid();
+            A.CallTo(() =>
+                    _stateManager.TryGetStateAsync<Guid[]>(A<string>.That.IsNotNull(), A<CancellationToken>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
-
     }
 }

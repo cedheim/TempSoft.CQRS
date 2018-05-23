@@ -14,11 +14,13 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public DuplicateEventStreamDefinitionException(string message, Exception innerException) : base(message, innerException)
+        public DuplicateEventStreamDefinitionException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected DuplicateEventStreamDefinitionException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected DuplicateEventStreamDefinitionException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

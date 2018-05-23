@@ -15,7 +15,8 @@ namespace TempSoft.CQRS.ServiceFabric.Tools
             _client = client;
         }
 
-        public Task<ServicePartitionList> GetPartitionAsync(Guid partitionId, TimeSpan timeout, CancellationToken cancellationToken)
+        public Task<ServicePartitionList> GetPartitionAsync(Guid partitionId, TimeSpan timeout,
+            CancellationToken cancellationToken)
         {
             return _client.GetPartitionAsync(partitionId, timeout, cancellationToken);
         }

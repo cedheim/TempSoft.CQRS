@@ -18,7 +18,8 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Messaging
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _input = new GenericMessage("HelloWorld", headers: new[] { new KeyValuePair<string, object>("Header1", "AnotherWorld") });
+            _input = new GenericMessage("HelloWorld",
+                new[] {new KeyValuePair<string, object>("Header1", "AnotherWorld")});
             var serializer = new DataContractSerializer(typeof(GenericMessage));
 
             using (var stream = new MemoryStream())

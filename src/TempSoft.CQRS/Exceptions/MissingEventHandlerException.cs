@@ -14,7 +14,7 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public MissingEventHandlerException(string message, System.Exception innerException) : base(message, innerException)
+        public MissingEventHandlerException(string message, Exception innerException) : base(message, innerException)
         {
         }
 

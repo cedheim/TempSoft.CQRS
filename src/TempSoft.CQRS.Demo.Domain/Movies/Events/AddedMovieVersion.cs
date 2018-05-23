@@ -1,12 +1,13 @@
 ﻿using System;
-using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.Demo.Domain.Movies.Events
 {
     public class AddedMovieVersion : EventBase
     {
-        private AddedMovieVersion() { }
+        private AddedMovieVersion()
+        {
+        }
 
         public AddedMovieVersion(Guid versionId, string name)
         {
@@ -14,9 +15,8 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Events
             Name = name;
         }
 
-        public Guid VersionId { get; private set; }
+        public Guid VersionId { get; }
 
-        public string Name { get; private set; }
-
+        public string Name { get; }
     }
 }

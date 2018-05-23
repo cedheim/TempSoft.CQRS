@@ -7,7 +7,7 @@ namespace TempSoft.CQRS.Events
 {
     public class EventStreamRegistry : IEventStreamRegistry, IEnumerable<EventStreamDefinition>
     {
-        private HashSet<EventStreamDefinition> _definitions;
+        private readonly HashSet<EventStreamDefinition> _definitions;
 
         public EventStreamRegistry()
         {
@@ -19,12 +19,22 @@ namespace TempSoft.CQRS.Events
             _definitions = new HashSet<EventStreamDefinition>(definitions);
         }
 
+
+        public IEnumerator<EventStreamDefinition> GetEnumerator()
+        {
+            return _definitions.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
         public void RegisterEventStream(EventStreamDefinition definition)
         {
             if (!_definitions.Add(definition))
-            {
-                throw new DuplicateEventStreamDefinitionException($"Unable to add definition {definition.Name}, it already exists.");
-            }
+                throw new DuplicateEventStreamDefinitionException(
+                    $"Unable to add definition {definition.Name}, it already exists.");
         }
 
         public IEnumerable<EventStreamDefinition> GetEventStreamsByEvent(IEvent @event)
@@ -35,17 +45,6 @@ namespace TempSoft.CQRS.Events
         public EventStreamDefinition GetEventStreamByName(string name)
         {
             return _definitions.FirstOrDefault(def => def.Name == name);
-        }
-
-
-        public IEnumerator<EventStreamDefinition> GetEnumerator()
-        {
-            return _definitions.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

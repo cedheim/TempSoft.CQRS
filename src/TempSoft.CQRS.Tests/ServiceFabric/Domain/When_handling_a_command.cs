@@ -31,23 +31,25 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
 
             _actorId = new ActorId(Data.ActorId);
             _actor = ActorService.Activate(_actorId);
-            
+
             _command = new DoSomething(Data.AValue, Data.BValue);
-            
+
             await _actor.Handle(new CommandMessage(typeof(AThingAggregateRoot), _command), CancellationToken.None);
         }
 
-        [Test]
-        public void Should_have_set_the_values()
+        private static class Data
         {
-            _root.A.Should().Be(Data.AValue);
-            _root.B.Should().Be(Data.BValue);
+            public const int AValue = 5;
+            public const string BValue = "TEST";
+            public static readonly Guid ActorId = Guid.NewGuid();
         }
-        
+
         [Test]
         public void Should_have_gotten_the_root_from_the_repository()
         {
-            A.CallTo(() => AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId, A<CancellationToken>.Ignored))
+            A.CallTo(() =>
+                    AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId,
+                        A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -57,12 +59,12 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Domain
             A.CallTo(() => AggregateRootRepository.Save(_root, A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
-        
-        private static class Data
+
+        [Test]
+        public void Should_have_set_the_values()
         {
-            public static readonly Guid ActorId = Guid.NewGuid();
-            public const int AValue = 5;
-            public const string BValue = "TEST";
+            _root.A.Should().Be(Data.AValue);
+            _root.B.Should().Be(Data.BValue);
         }
     }
 }

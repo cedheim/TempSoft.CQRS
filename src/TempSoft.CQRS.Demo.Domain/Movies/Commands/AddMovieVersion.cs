@@ -15,8 +15,8 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
             Name = name;
         }
 
-        public Guid VersionId { get; private set; }
+        public Guid VersionId { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
     }
 }

@@ -14,11 +14,13 @@ namespace TempSoft.CQRS.Demo.Domain.Theatres.Exceptions
         {
         }
 
-        public DuplicateAuditoriumAddedException(string message, Exception innerException) : base(message, innerException)
+        public DuplicateAuditoriumAddedException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected DuplicateAuditoriumAddedException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected DuplicateAuditoriumAddedException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

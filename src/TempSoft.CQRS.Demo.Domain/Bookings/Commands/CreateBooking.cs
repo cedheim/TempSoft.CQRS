@@ -5,9 +5,12 @@ namespace TempSoft.CQRS.Demo.Domain.Bookings.Commands
 {
     public class CreateBooking : CommandBase
     {
-        private CreateBooking() { }
+        private CreateBooking()
+        {
+        }
 
-        public CreateBooking(Guid aggregateRootId, Guid theatre, Guid auditorium, Guid slot, Guid movie, Guid movieVersion)
+        public CreateBooking(Guid aggregateRootId, Guid theatre, Guid auditorium, Guid slot, Guid movie,
+            Guid movieVersion)
         {
             AggregateRootId = aggregateRootId;
             Theatre = theatre;
@@ -16,11 +19,12 @@ namespace TempSoft.CQRS.Demo.Domain.Bookings.Commands
             Movie = movie;
             MovieVersion = movieVersion;
         }
-        public Guid AggregateRootId { get; private set; }
-        public Guid Theatre { get; private set; }
-        public Guid Auditorium { get; private set; }
-        public Guid Slot { get; private set; }
-        public Guid Movie { get; private set; }
-        public Guid MovieVersion { get; private set; }
+
+        public Guid AggregateRootId { get; }
+        public Guid Theatre { get; }
+        public Guid Auditorium { get; }
+        public Guid Slot { get; }
+        public Guid Movie { get; }
+        public Guid MovieVersion { get; }
     }
 }

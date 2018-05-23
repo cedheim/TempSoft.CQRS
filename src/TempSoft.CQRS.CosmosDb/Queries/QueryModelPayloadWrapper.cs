@@ -9,7 +9,9 @@ namespace TempSoft.CQRS.CosmosDb.Queries
     public class QueryModelPayloadWrapper
     {
         [JsonConstructor]
-        private QueryModelPayloadWrapper() { }
+        private QueryModelPayloadWrapper()
+        {
+        }
 
         public QueryModelPayloadWrapper(string id, object o)
         {
@@ -18,8 +20,7 @@ namespace TempSoft.CQRS.CosmosDb.Queries
             PayloadType = o.GetType().ToFriendlyName();
         }
 
-        [JsonProperty("id")]
-        public string Id { get; set; }
+        [JsonProperty("id")] public string Id { get; set; }
 
         public JObject Payload { get; set; }
 
@@ -28,7 +29,7 @@ namespace TempSoft.CQRS.CosmosDb.Queries
         public T GetPayload<T>()
         {
             var type = Type.GetType(PayloadType);
-            return (T)Payload.ToObject(type);
+            return (T) Payload.ToObject(type);
         }
 
         public static explicit operator QueryModelPayloadWrapper(Document document)

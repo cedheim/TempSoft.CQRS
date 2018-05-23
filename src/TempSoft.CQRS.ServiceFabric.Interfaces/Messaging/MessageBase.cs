@@ -8,37 +8,32 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
     [DataContract]
     public abstract class MessageBase
     {
-        [DataMember(Name = "Headers")]
-        private List<MessageHeader> _headers;
-        
+        [DataMember(Name = "Headers")] private List<MessageHeader> _headers;
+
         protected MessageBase()
         {
         }
 
-        protected MessageBase(IEnumerable<KeyValuePair<string, object>> headers = default(IEnumerable<KeyValuePair<string, object>>))
+        protected MessageBase(
+            IEnumerable<KeyValuePair<string, object>> headers = default(IEnumerable<KeyValuePair<string, object>>))
         {
             _headers = new List<MessageHeader>();
 
             Id = Guid.NewGuid();
 
-            if (!object.ReferenceEquals(headers, default(IEnumerable<KeyValuePair<string, object>>)))
-            {
+            if (!ReferenceEquals(headers, default(IEnumerable<KeyValuePair<string, object>>)))
                 foreach (var kvp in headers)
-                {
                     SetHeader(kvp.Key, kvp.Value);
-                }
-            }
         }
 
         [DataMember] public Guid Id { get; private set; }
 
+        [IgnoreDataMember] public IEnumerable<string> HeaderNames => _headers.Select(header => header.Name);
+
         public void SetHeader(string name, object value)
         {
             var existingHeader = _headers.FirstOrDefault(h => h.Name == name);
-            if (!object.ReferenceEquals(existingHeader, default(MessageHeader)))
-            {
-                _headers.Remove(existingHeader);
-            }
+            if (!ReferenceEquals(existingHeader, default(MessageHeader))) _headers.Remove(existingHeader);
 
 
             _headers.Add(new MessageHeader(name, value));
@@ -47,10 +42,8 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         public void DeleteHeader(string name)
         {
             var header = _headers.FirstOrDefault(h => h.Name == name);
-            if (object.ReferenceEquals(header, default(MessageHeader)))
-            {
+            if (ReferenceEquals(header, default(MessageHeader)))
                 throw new ArgumentException($"Header with name \"{name}\" already exists", nameof(name));
-            }
 
             _headers.Remove(header);
         }
@@ -58,7 +51,7 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         public bool TryGetHeader(string name, out object value)
         {
             var header = _headers.FirstOrDefault(h => h.Name == name);
-            if (object.ReferenceEquals(header, default(MessageHeader)))
+            if (ReferenceEquals(header, default(MessageHeader)))
             {
                 value = default(object);
                 return false;
@@ -68,7 +61,5 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
             value = header.Body;
             return true;
         }
-
-        [IgnoreDataMember] public IEnumerable<string> HeaderNames => _headers.Select(header => header.Name);
     }
 }

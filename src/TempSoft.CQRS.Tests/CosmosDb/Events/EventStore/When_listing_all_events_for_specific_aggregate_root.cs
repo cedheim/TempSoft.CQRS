@@ -28,22 +28,25 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _event1 = new ChangedAValue(Data.AValue){ AggregateRootId = Data.AggregateRootId1 };
-            _event2 = new ChangedAValue(Data.AValue) { AggregateRootId = Data.AggregateRootId2 };
+            _event1 = new ChangedAValue(Data.AValue) {AggregateRootId = Data.AggregateRootId1};
+            _event2 = new ChangedAValue(Data.AValue) {AggregateRootId = Data.AggregateRootId2};
             _events = new List<IEvent>();
 
             _client = A.Fake<IDocumentClient>();
             _pager = A.Fake<ICosmosDbQueryPager>();
-            _database = new Database(){ Id = Data.DatabaseId };
-            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored)).Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
+            _database = new Database {Id = Data.DatabaseId};
+            A.CallTo(() => _client.CreateDatabaseQuery(A<FeedOptions>.Ignored))
+                .Returns(Enumerable.Empty<Database>().AsQueryable().OrderBy(db => db.Id));
             A.CallTo(() => _client.CreateDatabaseAsync(A<Database>.Ignored, A<RequestOptions>.Ignored))
                 .Returns(new ResourceResponse<Database>(_database));
             A.CallTo(() => _client.ReadDocumentCollectionFeedAsync(A<string>.Ignored, A<FeedOptions>.Ignored))
                 .Returns(new FeedResponse<DocumentCollection>(Enumerable.Empty<DocumentCollection>()));
             A.CallTo(() => _pager.CreatePagedQuery(A<IQueryable<EventPayloadWrapper>>.Ignored))
-                .ReturnsLazily(foc => new MockDocumentQuery<EventPayloadWrapper>(foc.GetArgument<IQueryable<EventPayloadWrapper>>(0)));
+                .ReturnsLazily(foc =>
+                    new MockDocumentQuery<EventPayloadWrapper>(foc.GetArgument<IQueryable<EventPayloadWrapper>>(0)));
             A.CallTo(() => _client.CreateDocumentQuery<EventPayloadWrapper>(A<Uri>.Ignored, A<FeedOptions>.Ignored))
-                .Returns(new[] { new EventPayloadWrapper(_event1), new EventPayloadWrapper(_event2) }.AsQueryable().OrderBy(e => e.Version));
+                .Returns(new[] {new EventPayloadWrapper(_event1), new EventPayloadWrapper(_event2)}.AsQueryable()
+                    .OrderBy(e => e.Version));
 
             var filter = new EventStoreFilter
             {
@@ -52,31 +55,6 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
 
             _repository = new CosmosDbEventStore(_client, _pager, Data.DatabaseId, Data.Collectionid);
             await _repository.List(filter, (e, c) => Task.Run(() => _events.Add(e), c));
-        }
-
-        [Test]
-        public void Should_have_called_the_client()
-        {
-            A.CallTo(() => _client.CreateDocumentQuery<EventPayloadWrapper>(A<Uri>.That.Matches(e => e == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)), A<FeedOptions>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Test]
-        public void Should_have_used_a_parition_key()
-        {
-            var pk = new PartitionKey(Data.AggregateRootId1.ToString());
-            A.CallTo(() => _client.CreateDocumentQuery<EventPayloadWrapper>(A<Uri>.Ignored, A<FeedOptions>.That.Matches(fo => fo.PartitionKey.Equals(pk) && !fo.EnableCrossPartitionQuery)))
-                .MustHaveHappened(Repeated.Exactly.Once);
-
-        }
-
-        [Test]
-        public void Should_have_returned_the_correct_event()
-        {
-            _events.Should().HaveCount(1);
-            var @event = _events.FirstOrDefault();
-
-            @event.Should().BeEquivalentTo(_event1);
         }
 
         private static class Data
@@ -91,6 +69,34 @@ namespace TempSoft.CQRS.Tests.CosmosDb.Events.EventStore
 
             public static readonly Guid AggregateRootId1 = Guid.NewGuid();
             public static readonly Guid AggregateRootId2 = Guid.NewGuid();
+        }
+
+        [Test]
+        public void Should_have_called_the_client()
+        {
+            A.CallTo(() => _client.CreateDocumentQuery<EventPayloadWrapper>(
+                    A<Uri>.That.Matches(e =>
+                        e == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)),
+                    A<FeedOptions>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Test]
+        public void Should_have_returned_the_correct_event()
+        {
+            _events.Should().HaveCount(1);
+            var @event = _events.FirstOrDefault();
+
+            @event.Should().BeEquivalentTo(_event1);
+        }
+
+        [Test]
+        public void Should_have_used_a_parition_key()
+        {
+            var pk = new PartitionKey(Data.AggregateRootId1.ToString());
+            A.CallTo(() => _client.CreateDocumentQuery<EventPayloadWrapper>(A<Uri>.Ignored,
+                    A<FeedOptions>.That.Matches(fo => fo.PartitionKey.Equals(pk) && !fo.EnableCrossPartitionQuery)))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }
