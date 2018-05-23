@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Infrastructure;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Infrastructure
 {

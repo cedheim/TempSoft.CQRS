@@ -7,7 +7,7 @@ using NUnit.Framework;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.Repository
 {

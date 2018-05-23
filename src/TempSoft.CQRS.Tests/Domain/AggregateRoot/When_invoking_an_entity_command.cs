@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Domain;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
 {

@@ -9,19 +9,18 @@
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="4.6.0" />
     <PackageReference Include="FluentAssertions" Version="5.3.0" />
-    <PackageReference Include="Microsoft.Azure.DocumentDB" Version="1.22.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="NUnit" Version="3.10.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
     <PackageReference Include="ServiceFabric.Mocks" Version="3.3.4" />
   </ItemGroup>
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Mocks\TempSoft.CQRS.Mocks.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric\TempSoft.CQRS.ServiceFabric.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>
+
 
 </Project>
