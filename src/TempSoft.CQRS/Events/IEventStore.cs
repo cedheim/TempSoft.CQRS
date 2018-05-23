@@ -12,8 +12,7 @@ namespace TempSoft.CQRS.Events
 
         Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task List(EventStoreFilter filter, Func<IEvent, CancellationToken, Task> callback,
-            CancellationToken cancellationToken = default(CancellationToken));
+        Task List(EventStoreFilter filter, Func<IEvent, CancellationToken, Task> callback, CancellationToken cancellationToken = default(CancellationToken));
     }
 
     public class EventStoreFilter
