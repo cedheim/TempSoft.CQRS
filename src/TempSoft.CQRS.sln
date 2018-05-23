@@ -15,13 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Common", "Tem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.CosmosDb", "TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj", "{EDC991A8-3BD2-4AE0-BF75-26ECDEDA20A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.CosmosDb.Tests", "TempSoft.CQRS.CosmosDb.Tests\TempSoft.CQRS.CosmosDb.Tests.csproj", "{B9234A1C-E66C-4D65-B17E-99EA6098A103}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.CosmosDb.Tests", "TempSoft.CQRS.CosmosDb.Tests\TempSoft.CQRS.CosmosDb.Tests.csproj", "{B9234A1C-E66C-4D65-B17E-99EA6098A103}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F0159B6F-7A6C-4677-AB97-85BADC2983A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Mocks", "TempSoft.CQRS.Mocks\TempSoft.CQRS.Mocks.csproj", "{4A5DF47E-241B-4536-82A9-36653606FA60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Mocks", "TempSoft.CQRS.Mocks\TempSoft.CQRS.Mocks.csproj", "{4A5DF47E-241B-4536-82A9-36653606FA60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.ServiceFabric.Tests", "TempSoft.CQRS.ServiceFabric.Tests\TempSoft.CQRS.ServiceFabric.Tests.csproj", "{49D38B1A-CF5E-4748-8D96-E21455C67BA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.ServiceFabric.Tests", "TempSoft.CQRS.ServiceFabric.Tests\TempSoft.CQRS.ServiceFabric.Tests.csproj", "{49D38B1A-CF5E-4748-8D96-E21455C67BA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,14 +39,14 @@ Global
 		{C6F93876-6AE5-4993-8472-F31652E8E5B0}.Release|Any CPU.Build.0 = Release|any cpu
 		{C6F93876-6AE5-4993-8472-F31652E8E5B0}.Release|x64.ActiveCfg = Release|any cpu
 		{C6F93876-6AE5-4993-8472-F31652E8E5B0}.Release|x64.Build.0 = Release|any cpu
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|Any CPU.Build.0 = Debug|x64
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|x64.ActiveCfg = Debug|x64
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|x64.Build.0 = Debug|x64
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|Any CPU.ActiveCfg = Release|x64
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|Any CPU.Build.0 = Release|x64
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|x64.ActiveCfg = Release|x64
-		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|x64.Build.0 = Release|x64
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Debug|x64.Build.0 = Debug|Any CPU
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|x64.ActiveCfg = Release|Any CPU
+		{8B6DE633-07A9-4CC4-B11B-118894B07A1C}.Release|x64.Build.0 = Release|Any CPU
 		{9AA47D1C-7ECA-47D6-8290-998C552C99F5}.Debug|Any CPU.ActiveCfg = Debug|x64
 		{9AA47D1C-7ECA-47D6-8290-998C552C99F5}.Debug|Any CPU.Build.0 = Debug|x64
 		{9AA47D1C-7ECA-47D6-8290-998C552C99F5}.Debug|x64.ActiveCfg = Debug|x64
@@ -96,9 +96,11 @@ Global
 		{4A5DF47E-241B-4536-82A9-36653606FA60}.Release|x64.ActiveCfg = Release|Any CPU
 		{4A5DF47E-241B-4536-82A9-36653606FA60}.Release|x64.Build.0 = Release|Any CPU
 		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Debug|Any CPU.Build.0 = Debug|x64
 		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Debug|x64.ActiveCfg = Debug|x64
 		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Debug|x64.Build.0 = Debug|x64
 		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Release|Any CPU.ActiveCfg = Release|x64
+		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Release|Any CPU.Build.0 = Release|x64
 		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Release|x64.ActiveCfg = Release|x64
 		{49D38B1A-CF5E-4748-8D96-E21455C67BA3}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
