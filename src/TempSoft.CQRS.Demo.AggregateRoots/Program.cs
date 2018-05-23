@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Fabric;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
@@ -12,12 +10,13 @@ using TempSoft.CQRS.Common.Uri;
 using TempSoft.CQRS.CosmosDb.Commands;
 using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
+using TempSoft.CQRS.Demo.Actors;
 using TempSoft.CQRS.Domain;
-using TempSoft.CQRS.ServiceFabric.Commands;
 using TempSoft.CQRS.ServiceFabric.Domain;
 using TempSoft.CQRS.ServiceFabric.Events;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
 
-namespace TempSoft.CQRS.Demo.Actors
+namespace TempSoft.CQRS.Demo.AggregateRoots
 {
     internal static class Program
     {
@@ -43,8 +42,13 @@ namespace TempSoft.CQRS.Demo.Actors
                 commandRegistryClient.OpenAsync().Wait();
                 eventStoreClient.OpenAsync().Wait();
 
+                uriHelper.RegisterUri<IEventBusService>(new Uri("fabric:/TempSoft.CQRS.Demo.Application/EventBusService"));
+                uriHelper.RegisterUri<IEventStreamService>(new Uri("fabric:/TempSoft.CQRS.Demo.Application/EventStreamService"));
+
                 var eventStore = new CosmosDbEventStore(eventStoreClient, new CosmosDbQueryPager(), configuration["EventStore_DatabaseId"], configuration["EventStore_CollectionId"]);
                 var commandRegistry = new CosmosDbCommandRegistry(commandRegistryClient, new CosmosDbQueryPager(), configuration["CommandRegistry_DatabaseId"], configuration["CommandRegistry_CollectionId"]);
+
+
 
                 ActorRuntime.RegisterActorAsync<AggregateRootActor> (
                     (context, actorType) => new ActorService(

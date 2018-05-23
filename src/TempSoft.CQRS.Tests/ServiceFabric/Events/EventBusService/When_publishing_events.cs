@@ -67,7 +67,7 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
         [Test]
         public void Should_have_generated_the_uri_for_the_service()
         {
-            A.CallTo(() => UriBuilder.Build(nameof(CQRS.ServiceFabric.Events.EventStreamService)))
+            A.CallTo(() => UriHelper.GetUriForSerivce<IEventStreamService>())
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

@@ -4,6 +4,8 @@
     <Parameter Name="EventHubService_MinReplicaSetSize" DefaultValue="3" />
     <Parameter Name="EventHubService_PartitionCount" DefaultValue="1" />
     <Parameter Name="EventHubService_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="EventStreamService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="EventStreamService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="ApiService_InstanceCount" DefaultValue="-1" />
     <Parameter Name="AggregateRootActorService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="AggregateRootActorService_MinReplicaSetSize" DefaultValue="1" />
@@ -47,7 +49,7 @@
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="TempSoft.CQRS.Demo.ApiPkg" ServiceManifestVersion="1.0.0" />
-    <ConfigOverrides/>
+    <ConfigOverrides />
   </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="TempSoft.CQRS.Demo.AggregateRootsPkg" ServiceManifestVersion="1.0.0" />
@@ -74,6 +76,13 @@
     <Service Name="EventHubService" ServicePackageActivationMode="ExclusiveProcess">
       <StatefulService ServiceTypeName="EventHubServiceType" TargetReplicaSetSize="[EventHubService_TargetReplicaSetSize]" MinReplicaSetSize="[EventHubService_MinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[EventHubService_PartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
+      </StatefulService>
+    </Service>
+    <Service Name="EventStreamService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatefulService ServiceTypeName="EventStreamServiceType" TargetReplicaSetSize="[EventStreamService_TargetReplicaSetSize]" MinReplicaSetSize="[EventStreamService_MinReplicaSetSize]">
+        <NamedPartition>
+          <Partition Name="TestStream" />
+        </NamedPartition>
       </StatefulService>
     </Service>
     <Service Name="ApiService" ServicePackageActivationMode="ExclusiveProcess">

@@ -5,6 +5,7 @@ using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Communication.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using ServiceFabric.Mocks;
+using TempSoft.CQRS.Common.Uri;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Queries;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
@@ -20,8 +21,7 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
         protected readonly IEventBusService Service;
         protected readonly IEventStreamRegistry Registry = A.Fake<IEventStreamRegistry>();
         protected readonly IEventStreamService StreamService = A.Fake<IEventStreamService>();
-        protected readonly IApplicationUriBuilder UriBuilder = A.Fake<IApplicationUriBuilder>();
-        protected readonly IServiceUriBuilder ServiceUriBuilder = A.Fake<IServiceUriBuilder>();
+        protected readonly IUriHelper UriHelper = A.Fake<IUriHelper>();
 
         protected EventBusServiceTestBase()
         {
@@ -30,12 +30,10 @@ namespace TempSoft.CQRS.Tests.ServiceFabric.Events.EventBusService
 
             A.CallTo(() => ServiceProxyFactory.CreateServiceProxy<IEventStreamService>(A<Uri>.Ignored, A<ServicePartitionKey>.Ignored, A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
                 .Returns(StreamService);
-            A.CallTo(() => UriBuilder.Build(A<string>.Ignored))
-                .Returns(ServiceUriBuilder);
-            A.CallTo(() => ServiceUriBuilder.ToUri())
+            A.CallTo(() => UriHelper.GetUriForSerivce<IEventStreamService>())
                 .Returns(new Uri(Data.Uri));
 
-            Service = new CQRS.ServiceFabric.Events.EventBusService(context, stateManager, Registry, UriBuilder, ServiceProxyFactory, ActorProxyFactory);
+            Service = new CQRS.ServiceFabric.Events.EventBusService(context, stateManager, Registry, UriHelper, ServiceProxyFactory, ActorProxyFactory);
         }
 
         private static class Data
