@@ -7,6 +7,7 @@ using NUnit.Framework;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Infrastructure;
 using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.Repository
@@ -17,6 +18,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
         private IEventStore _eventStore;
         private IEventBus _eventBus;
         private ICommandRegistry _commandRegistry;
+        private IServiceProvider _serviceProvider;
         private AggregateRootRepository _aggregateRootRepository;
         private AThingAggregateRoot _root;
 
@@ -26,8 +28,9 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
             _eventStore = A.Fake<IEventStore>();
             _eventBus = A.Fake<IEventBus>();
             _commandRegistry = A.Fake<ICommandRegistry>();
+            _serviceProvider = new ServicesLocator();
 
-            _aggregateRootRepository = new AggregateRootRepository(_eventStore, _eventBus, _commandRegistry);
+            _aggregateRootRepository = new AggregateRootRepository(_eventStore, _eventBus, _commandRegistry, _serviceProvider);
             _root = await _aggregateRootRepository.Get<AThingAggregateRoot>(Data.AggregateRootId,
                 CancellationToken.None);
         }

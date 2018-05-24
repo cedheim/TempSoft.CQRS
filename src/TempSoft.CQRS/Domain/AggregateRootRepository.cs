@@ -12,14 +12,16 @@ namespace TempSoft.CQRS.Domain
     public class AggregateRootRepository : IAggregateRootRepository
     {
         private readonly ICommandRegistry _commandRegistry;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IEventBus _eventBus;
         private readonly IEventStore _eventStore;
 
-        public AggregateRootRepository(IEventStore eventStore, IEventBus eventBus, ICommandRegistry commandRegistry)
+        public AggregateRootRepository(IEventStore eventStore, IEventBus eventBus, ICommandRegistry commandRegistry, IServiceProvider serviceProvider)
         {
             _eventStore = eventStore;
             _eventBus = eventBus;
             _commandRegistry = commandRegistry;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<IAggregateRoot> Get(Type type, Guid id,
@@ -58,7 +60,7 @@ namespace TempSoft.CQRS.Domain
 
         private IAggregateRoot Activate(Type type)
         {
-            return (IAggregateRoot) Services.Resolve(type);
+            return (IAggregateRoot) _serviceProvider.GetService(type);
         }
     }
 }

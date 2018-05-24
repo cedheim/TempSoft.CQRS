@@ -11,7 +11,7 @@ namespace TempSoft.CQRS.Commands
             CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot;
 
         Task<TReadModel> GetReadModel<TAggregate, TReadModel>(Guid id,
-            CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
+            CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRootWithReadModel
             where TReadModel : IAggregateRootReadModel;
     }
 }

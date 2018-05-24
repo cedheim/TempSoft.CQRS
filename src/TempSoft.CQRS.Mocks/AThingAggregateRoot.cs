@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Projectors;
 
 namespace TempSoft.CQRS.Mocks
 {
@@ -252,5 +253,15 @@ namespace TempSoft.CQRS.Mocks
         public StuffReadModel[] Stuff { get; set; }
         public Guid Id { get; set; }
         public int Version { get; set; }
+    }
+
+    public class AThingProjector : IProjector
+    {
+        public Task Project(IEvent @event, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string ProjectorId { get; set; }
     }
 }

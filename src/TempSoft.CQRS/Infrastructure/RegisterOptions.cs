@@ -2,7 +2,7 @@
 
 namespace TempSoft.CQRS.Infrastructure
 {
-    public class RegisterOptions
+    public class RegisterOptions : IRegisterOptions
     {
         private readonly TinyIoCContainer.RegisterOptions _registerOptions;
 
@@ -11,22 +11,22 @@ namespace TempSoft.CQRS.Infrastructure
             _registerOptions = registerOptions;
         }
 
-        public RegisterOptions AsSingleton()
+        public IRegisterOptions AsSingleton()
         {
             return new RegisterOptions(_registerOptions.AsSingleton());
         }
 
-        public RegisterOptions AsMultiInstance()
+        public IRegisterOptions AsMultiInstance()
         {
             return new RegisterOptions(_registerOptions.AsMultiInstance());
         }
 
-        public RegisterOptions WithWeakReference()
+        public IRegisterOptions WithWeakReference()
         {
             return new RegisterOptions(_registerOptions.WithWeakReference());
         }
 
-        public RegisterOptions WithStrongReference()
+        public IRegisterOptions WithStrongReference()
         {
             return new RegisterOptions(_registerOptions.WithStrongReference());
         }

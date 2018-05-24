@@ -15,7 +15,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         public void Should_be_able_to_generate_an_identifier_that_is_a_constant()
         {
             var @event = new ChangedAValue(5);
-            var definition = new ProjectorDefinition("Constant", Enumerable.Empty<Type>(), Enumerable.Empty<string>());
+            var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "Constant", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
             definition.GenerateIdentifierFor(@event).Should().Be("Constant");
         }
@@ -24,7 +24,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         public void Should_be_able_to_generate_an_identifier_based_on_a_field()
         {
             var @event = new ChangedAValue(5);
-            var definition = new ProjectorDefinition("{A}", Enumerable.Empty<Type>(), Enumerable.Empty<string>());
+            var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "{A}", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
             definition.GenerateIdentifierFor(@event).Should().Be("5");
         }
@@ -35,7 +35,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         {
             var rootId = Guid.NewGuid();
             var @event = new ChangedAValue(5) { AggregateRootId = rootId };
-            var definition = new ProjectorDefinition("{AggregateRootId}", Enumerable.Empty<Type>(), Enumerable.Empty<string>());
+            var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "{AggregateRootId}", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
             definition.GenerateIdentifierFor(@event).Should().Be(rootId.ToString());
         }
@@ -45,7 +45,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         {
             var rootId = Guid.NewGuid();
             var @event = new ChangedAValue(5) { AggregateRootId = rootId };
-            var definition = new ProjectorDefinition("{MissingField}", Enumerable.Empty<Type>(), Enumerable.Empty<string>());
+            var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "{MissingField}", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
             definition.GenerateIdentifierFor(@event).Should().Be(string.Empty);
         }
@@ -55,7 +55,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         {
             try
             {
-                new ProjectorDefinition(string.Empty, Enumerable.Empty<Type>(), Enumerable.Empty<string>());
+                new ProjectorDefinition(nameof(ProjectorDefinition), string.Empty, typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
                 Assert.Fail();
             }
@@ -67,7 +67,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         {
             try
             {
-                new ProjectorDefinition("Illegal{", Enumerable.Empty<Type>(), Enumerable.Empty<string>());
+                new ProjectorDefinition(nameof(ProjectorDefinition), "Illegal{", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
                 Assert.Fail();
             }
@@ -79,7 +79,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         {
             var rootId = Guid.NewGuid();
             var @event = new ChangedAValue(5) { AggregateRootId = rootId };
-            var definition = new ProjectorDefinition("ChangedAValue_{AggregateRootId}_{A}_Projector", Enumerable.Empty<Type>(), Enumerable.Empty<string>());
+            var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "ChangedAValue_{AggregateRootId}_{A}_Projector", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
             definition.GenerateIdentifierFor(@event).Should().Be($"ChangedAValue_{rootId}_{@event.A}_Projector");
         }

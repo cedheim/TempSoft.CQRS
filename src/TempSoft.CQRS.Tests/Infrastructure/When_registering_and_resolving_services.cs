@@ -8,6 +8,8 @@ namespace TempSoft.CQRS.Tests.Infrastructure
     [TestFixture]
     public class When_registering_and_resolving_services
     {
+        private ServicesLocator _services;
+
         public interface IExampleService
         {
         }
@@ -20,14 +22,20 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         {
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            _services = new ServicesLocator();
+        }
+
         [Test]
         public void Should_be_able_register_by_name()
         {
-            Services.Register<IExampleService, ExampleService1>();
-            Services.Register<IExampleService, ExampleService2>("service2");
+            _services.Register<IExampleService, ExampleService1>();
+            _services.Register<IExampleService, ExampleService2>("service2");
 
-            var service1 = Services.Resolve<IExampleService>();
-            var service2 = Services.Resolve<IExampleService>("service2");
+            var service1 = _services.Resolve<IExampleService>();
+            var service2 = _services.Resolve<IExampleService>("service2");
 
             service1.Should().NotBeNull();
             service1.Should().BeOfType<ExampleService1>();
@@ -39,10 +47,10 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         [Test]
         public void Should_be_able_to_override_a_registration()
         {
-            Services.Register<IExampleService, ExampleService1>();
-            Services.Register<IExampleService, ExampleService2>();
+            _services.Register<IExampleService, ExampleService1>();
+            _services.Register<IExampleService, ExampleService2>();
 
-            var service = Services.Resolve<IExampleService>();
+            var service = _services.Resolve<IExampleService>();
 
             service.Should().NotBeNull();
             service.Should().BeOfType<ExampleService2>();
@@ -51,9 +59,9 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         [Test]
         public void Should_be_able_to_resolve_an_object_by_interface()
         {
-            Services.Register<IExampleService, ExampleService1>();
+            _services.Register<IExampleService, ExampleService1>();
 
-            var service = Services.Resolve<IExampleService>();
+            var service = _services.Resolve<IExampleService>();
 
             service.Should().NotBeNull();
             service.Should().BeOfType<ExampleService1>();
@@ -62,7 +70,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         [Test]
         public void Should_be_able_to_resolve_new_objects()
         {
-            var root = Services.Resolve<AThingAggregateRoot>();
+            var root = _services.Resolve<AThingAggregateRoot>();
             root.Should().NotBeNull();
         }
     }

@@ -9,49 +9,86 @@ using TempSoft.CQRS.Exceptions;
 
 namespace TempSoft.CQRS.Projectors
 {
-    public class ProjectorDefinition
+    public class ProjectorDefinition : IComparable, IComparable<ProjectorDefinition>, IEquatable<ProjectorDefinition>
     {
         private static readonly Regex ParseRegex = new Regex("^((?<constant>[^\\{]+)|(?<field>\\{[^\\}]+\\}))*$");
 
-        private Token[] _tokens;
-
-        private ProjectorDefinition()
+        private readonly Token[] _tokens;
+        
+        public ProjectorDefinition(string name, string identifiedBy, Type projectorType, IEnumerable<Type> eventTypes, IEnumerable<string> eventGroups)
         {
-            IdentifiedBy = string.Empty;
-            EventGroups = new string[0];
-            EventTypes = new Type[0];
-
-            _tokens = new Token[0];
-        }
-
-        public ProjectorDefinition(string identifiedBy, IEnumerable<Type> eventTypes, IEnumerable<string> eventGroups)
-        {
-            IdentifiedBy = identifiedBy;
+            Name = name;
+            ProjectorType = projectorType;
             EventGroups = eventGroups?.ToArray() ?? new string[0];
             EventTypes = eventTypes?.ToArray() ?? new Type[0];
 
-            _tokens = ParseIdentifier().ToArray();
+            _tokens = ParseIdentifier(identifiedBy).ToArray();
         }
 
-        public string IdentifiedBy { get; private set; }
+        public string Name { get; }
 
-        public Type[] EventTypes { get; private set; }
+        public Type ProjectorType { get; }
+        
+        public Type[] EventTypes { get; }
 
-        public string[] EventGroups { get; private set; }
+        public string[] EventGroups { get; }
+
+        public bool Matches(IEvent @event)
+        {
+            var matchesEventGroup = (EventGroups?.Length ?? 0) == 0 || EventGroups.Contains(@event.EventGroup);
+            var matchesEventTypes = (EventTypes?.Length ?? 0) == 0 || EventTypes.Contains(@event.GetType());
+
+            return matchesEventTypes && matchesEventGroup;
+        }
 
         public string GenerateIdentifierFor(IEvent @event)
         {
             return _tokens.Aggregate(string.Empty, (s, token) => s + (token.GenerateToken(@event) ?? string.Empty));
         }
 
-        private IEnumerable<Token> ParseIdentifier()
+        #region Comparison
+
+        public int CompareTo(object obj)
         {
-            if (string.IsNullOrEmpty(IdentifiedBy))
+            if (obj is ProjectorDefinition other)
+            {
+                return this.CompareTo(other);
+            }
+
+            return -1;
+        }
+
+        public int CompareTo(ProjectorDefinition other)
+        {
+            return string.Compare(this.Name, other.Name, StringComparison.Ordinal);
+        }
+
+        public bool Equals(ProjectorDefinition other)
+        {
+            return this.CompareTo(other) == 0;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.CompareTo(obj) == 0;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Name.GetHashCode();
+        }
+        #endregion
+
+        #region Identifier parsing
+
+        private static IEnumerable<Token> ParseIdentifier(string identifiedBy)
+        {
+            if (string.IsNullOrEmpty(identifiedBy))
             {
                 throw new ProjectionIdentifierException("Identifier can not be empty.");
             }
 
-            var match = ParseRegex.Match(IdentifiedBy);
+            var match = ParseRegex.Match(identifiedBy);
 
             if (!match.Success)
             {
@@ -101,25 +138,22 @@ namespace TempSoft.CQRS.Projectors
                 _field = field;
             }
 
-
             public override string GenerateToken(IEvent @event)
             {
                 var type = @event.GetType();
 
                 var property = GetPropertyForType(type);
-                if (property == default(PropertyInfo))
-                {
-                    return default(string);
-                }
 
-                return property.GetMethod.Invoke(@event, new object[0])?.ToString();
+                return property?.GetMethod.Invoke(@event, new object[0])?.ToString();
             }
 
             private PropertyInfo GetPropertyForType(Type type)
             {
                 return type.GetProperty(_field);
-
             }
         }
+
+        #endregion
+
     }
 }
