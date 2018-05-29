@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace TempSoft.CQRS.Infrastructure
 {
-    public interface IServiceLocator : IServiceProvider, IDisposable
+    public interface IServiceLocator : IDisposable
     {
         void AutoRegister();
 

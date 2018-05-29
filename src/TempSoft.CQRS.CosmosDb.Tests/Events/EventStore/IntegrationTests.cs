@@ -119,7 +119,11 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
 
         private static class Data
         {
-            public const string DatabaseId = "tempsoft_cqrs_tests";
+#if NETCOREAPP2_0
+            public const string DatabaseId = "tempsoft_cqrs_tests_core";
+#else
+            public const string DatabaseId = "tempsoft_cqrs_tests_net452";
+#endif
             public const string Collectionid = "events";
             public const string DatabaseLink = "database";
             public const int AValue = 5;

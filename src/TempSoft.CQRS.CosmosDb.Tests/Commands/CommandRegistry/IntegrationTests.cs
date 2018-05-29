@@ -40,7 +40,11 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Commands.CommandRegistry
 
         private static class Data
         {
-            public const string DatabaseId = "tempsoft_cqrs_tests";
+#if NETCOREAPP2_0
+            public const string DatabaseId = "tempsoft_cqrs_tests_core";
+#else
+            public const string DatabaseId = "tempsoft_cqrs_tests_net452";
+#endif
             public const string Collectionid = "commands";
 
 

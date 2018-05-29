@@ -34,11 +34,8 @@ namespace TempSoft.CQRS.Tests.Infrastructure
             _bootstrapper.Invoking(b => b.Validate()).Should().Throw<BootstrapperValidationException>().Which.Should().Match<BootstrapperValidationException>(ex => 
                 ex.MissingServices.Contains(typeof(ICommandRouter)) &&
                 ex.MissingServices.Contains(typeof(ICommandRegistry)) &&
-                ex.MissingServices.Contains(typeof(IAggregateRootRepository)) &&
                 ex.MissingServices.Contains(typeof(IEventBus)) &&
-                ex.MissingServices.Contains(typeof(IEventStore)) &&
-                ex.MissingServices.Contains(typeof(IProjectorRegistry)) &&
-                ex.MissingServices.Contains(typeof(IProjectorRepository))
+                ex.MissingServices.Contains(typeof(IEventStore))
             );
         }
 
@@ -49,9 +46,6 @@ namespace TempSoft.CQRS.Tests.Infrastructure
                 .UseInMemoryCommandRouter()
                 .UseInMemoryEventBus()
                 .UseInMemoryEventStore()
-                .UseAggregateRootRepository()
-                .UseProjectorRegistry(new ProjectorDefinition[0])
-                .UseProjectorRepository()
                 .Validate();
         }
 
