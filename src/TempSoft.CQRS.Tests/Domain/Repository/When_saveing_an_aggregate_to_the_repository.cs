@@ -29,7 +29,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
             _eventStore = A.Fake<IEventStore>();
             _eventBus = A.Fake<IEventBus>();
             _commandRegistry = A.Fake<ICommandRegistry>();
-            _serviceProvider = new ServiceLocator();
+            _serviceProvider = new FluentBootstrapper();
 
             _aggregateRootRepository = new AggregateRootRepository(_eventStore, _eventBus, _commandRegistry, _serviceProvider);
 

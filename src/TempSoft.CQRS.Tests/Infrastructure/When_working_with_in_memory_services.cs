@@ -21,6 +21,20 @@ namespace TempSoft.CQRS.Tests.Infrastructure
                 .Validate();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _bootstrapper.Dispose();
+        }
+
+        [Test]
+        public void Fail()
+        {
+
+
+            Assert.Fail();
+        }
+
         
     }
 }

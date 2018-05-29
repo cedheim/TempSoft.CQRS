@@ -18,7 +18,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorRepositories
         [SetUp]
         public void SetUp()
         {
-            _serviceProvider = new ServiceLocator();
+            _serviceProvider = new FluentBootstrapper();
             _repository = new ProjectorRepository(_serviceProvider);
         }
 

@@ -8,7 +8,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
     [TestFixture]
     public class When_registering_and_resolving_services
     {
-        private ServiceLocator _services;
+        private FluentBootstrapper _services;
 
         public interface IExampleService
         {
@@ -25,30 +25,14 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         [SetUp]
         public void SetUp()
         {
-            _services = new ServiceLocator();
+            _services = new FluentBootstrapper();
         }
-
-        [Test]
-        public void Should_be_able_register_by_name()
-        {
-            _services.Register<IExampleService, ExampleService1>();
-            _services.Register<IExampleService, ExampleService2>("service2");
-
-            var service1 = _services.Resolve<IExampleService>();
-            var service2 = _services.Resolve<IExampleService>("service2");
-
-            service1.Should().NotBeNull();
-            service1.Should().BeOfType<ExampleService1>();
-
-            service2.Should().NotBeNull();
-            service2.Should().BeOfType<ExampleService2>();
-        }
-
+        
         [Test]
         public void Should_be_able_to_override_a_registration()
         {
-            _services.Register<IExampleService, ExampleService1>();
-            _services.Register<IExampleService, ExampleService2>();
+            _services.UseService<IExampleService, ExampleService1>();
+            _services.UseService<IExampleService, ExampleService2>();
 
             var service = _services.Resolve<IExampleService>();
 
@@ -59,7 +43,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         [Test]
         public void Should_be_able_to_resolve_an_object_by_interface()
         {
-            _services.Register<IExampleService, ExampleService1>();
+            _services.UseService<IExampleService, ExampleService1>();
 
             var service = _services.Resolve<IExampleService>();
 

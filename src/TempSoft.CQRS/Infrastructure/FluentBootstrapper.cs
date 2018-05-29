@@ -7,26 +7,26 @@ using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Exceptions;
 using TempSoft.CQRS.Projectors;
+using TinyIoC;
 
 namespace TempSoft.CQRS.Infrastructure
 {
     public class FluentBootstrapper : IDisposable, IServiceProvider
     {
         private readonly IProjectorRegistry _projectorRegistry;
-        private readonly IServiceLocator _locator;
+        private readonly TinyIoCContainer _container;
 
-        public FluentBootstrapper(IServiceLocator locator = default(IServiceLocator))
+        public FluentBootstrapper()
         {
-            this._locator = locator ?? new ServiceLocator();
+            this._container = new TinyIoCContainer();
             this._projectorRegistry = new ProjectorRegistry();
 
             // default registration.
-            this._locator.Register(this);
-            this._locator.Register<IServiceProvider>(this);
-            this._locator.Register<IServiceLocator>(this._locator);
-this._locator.Register<IAggregateRootRepository, AggregateRootRepository>().AsSingleton();
-            this._locator.Register<IProjectorRegistry>(_projectorRegistry);
-            this._locator.Register<IProjectorRepository, ProjectorRepository>().AsSingleton();
+            this._container.Register(this);
+            this._container.Register<IServiceProvider>(this);
+            this._container.Register<IAggregateRootRepository, AggregateRootRepository>().AsSingleton();
+            this._container.Register<IProjectorRegistry>(_projectorRegistry);
+            this._container.Register<IProjectorRepository, ProjectorRepository>().AsSingleton();
         }
 
         public FluentBootstrapper UseProjector<TProjector>(string name, string identifiedBy = default(string), IEnumerable<Type> eventTypes = default(IEnumerable<Type>), IEnumerable<string> eventGroups = default(IEnumerable<string>)) where TProjector : IProjector
@@ -43,7 +43,7 @@ this._locator.Register<IAggregateRootRepository, AggregateRootRepository>().AsSi
 
         public FluentBootstrapper UseService<TServiceInterface, TServiceImplementation>(bool singleton = false) where TServiceInterface : class where TServiceImplementation : class, TServiceInterface
         {
-            var registration = this._locator.Register<TServiceInterface, TServiceImplementation>();
+            var registration = this._container.Register<TServiceInterface, TServiceImplementation>();
             if (singleton)
             {
                 registration.AsSingleton();
@@ -55,7 +55,7 @@ this._locator.Register<IAggregateRootRepository, AggregateRootRepository>().AsSi
         public FluentBootstrapper UseService<TServiceInterface>(TServiceInterface instance)
             where TServiceInterface : class
         {
-            this._locator.Register<TServiceInterface>(instance);
+            this._container.Register<TServiceInterface>(instance);
 
             return this;
         }
@@ -63,13 +63,18 @@ this._locator.Register<IAggregateRootRepository, AggregateRootRepository>().AsSi
         public FluentBootstrapper UseService<TServiceInterface>(Func<TServiceInterface> factory, bool singleton = false)
             where TServiceInterface : class
         {
-            var registration = this._locator.Register<TServiceInterface>(factory);
+            var registration = this._container.Register<TServiceInterface>((container, overloads) => factory());
             if (singleton)
             {
                 registration.AsSingleton();
             }
 
             return this;
+        }
+
+        public TService Resolve<TService>() where TService : class
+        {
+            return _container.Resolve<TService>();
         }
 
         public FluentBootstrapper Validate()
@@ -91,9 +96,19 @@ this._locator.Register<IAggregateRootRepository, AggregateRootRepository>().AsSi
             return this;
         }
 
+        public void Dispose()
+        {
+            this._container.Dispose();
+        }
+
+        object IServiceProvider.GetService(Type serviceType)
+        {
+            return _container.Resolve(serviceType);
+        }
+
         private void ValidateServiceResolution<TService>(ICollection<ValidationFailure> failures) where TService : class
         {
-            if (!_locator.CanResolve<TService>())
+            if (!_container.CanResolve<TService>())
             {
                 failures.Add(new ValidationFailure(typeof(TService)));
             }
@@ -109,14 +124,5 @@ this._locator.Register<IAggregateRootRepository, AggregateRootRepository>().AsSi
             public Type ServiceType { get; }
         }
         
-        public void Dispose()
-        {
-            this._locator.Dispose();
-        }
-
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            return _locator.Resolve(serviceType);
-        }
     }
 }
