@@ -28,7 +28,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
             _eventStore = A.Fake<IEventStore>();
             _eventBus = A.Fake<IEventBus>();
             _commandRegistry = A.Fake<ICommandRegistry>();
-            _serviceProvider = new ServicesLocator();
+            _serviceProvider = new ServiceLocator();
 
             _aggregateRootRepository = new AggregateRootRepository(_eventStore, _eventBus, _commandRegistry, _serviceProvider);
             _root = await _aggregateRootRepository.Get<AThingAggregateRoot>(Data.AggregateRootId,

@@ -77,7 +77,9 @@ namespace TempSoft.CQRS.CosmosDb.Events
             if (filter.AggregateRootId.HasValue)
                 query = query.Where(e => e.AggregateRootId == filter.AggregateRootId.Value);
 
-            if (filter.EventTypes?.Length > 0) query = query.Where(e => filter.EventTypes.Contains(e.PayloadType));
+            var eventTypes = filter.EventTypes?.Select(t => t.ToFriendlyName()).ToArray() ?? new string[0];
+
+            if (eventTypes.Length > 0) query = query.Where(e => eventTypes.Contains(e.PayloadType));
 
             if (filter.EventGroups?.Length > 0) query = query.Where(e => filter.EventGroups.Contains(e.EventGroup));
 

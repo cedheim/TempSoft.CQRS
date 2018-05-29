@@ -5,7 +5,7 @@ using TinyIoC;
 
 namespace TempSoft.CQRS.Infrastructure
 {
-    public class ServicesLocator : IServiceLocator
+    public class ServiceLocator : IServiceLocator
     {
         private readonly TinyIoCContainer _container = new TinyIoCContainer();
 
@@ -178,9 +178,74 @@ namespace TempSoft.CQRS.Infrastructure
             return _container.Resolve<ResolveType>(name);
         }
 
+        public bool CanResolve(Type resolveType)
+        {
+            return _container.CanResolve(resolveType);
+        }
+
+        public bool CanResolve<ResolveType>() where ResolveType : class
+        {
+            return _container.CanResolve<ResolveType>();
+        }
+
+        public bool CanResolve<ResolveType>(string name) where ResolveType : class
+        {
+            return _container.CanResolve<ResolveType>(name);
+        }
+
+        public bool TryResolve(Type resolveType, out object resolvedType)
+        {
+            return _container.TryResolve(resolveType, out resolvedType);
+        }
+
+        public bool TryResolve(Type resolveType, string name, out object resolvedType)
+        {
+            return _container.TryResolve(resolveType, name, out resolvedType);
+        }
+
+        public bool TryResolve<ResolveType>(out ResolveType resolvedType) where ResolveType : class
+        {
+            return _container.TryResolve<ResolveType>(out resolvedType);
+        }
+
+        public bool TryResolve<ResolveType>(string name, out ResolveType resolvedType) where ResolveType : class
+        {
+            return _container.TryResolve<ResolveType>(name, out resolvedType);
+        }
+
+        public IEnumerable<object> ResolveAll(Type resolveType, bool includeUnnamed)
+        {
+            return _container.ResolveAll(resolveType, includeUnnamed);
+        }
+
+        public IEnumerable<object> ResolveAll(Type resolveType)
+        {
+            return _container.ResolveAll(resolveType);
+        }
+
+        public IEnumerable<ResolveType> ResolveAll<ResolveType>(bool includeUnnamed) where ResolveType : class
+        {
+            return _container.ResolveAll<ResolveType>(includeUnnamed);
+        }
+
+        public IEnumerable<ResolveType> ResolveAll<ResolveType>() where ResolveType : class
+        {
+            return _container.ResolveAll<ResolveType>();
+        }
+
+        public void BuildUp(object input)
+        {
+            _container.BuildUp(input);
+        }
+
         public object GetService(Type serviceType)
         {
             return Resolve(serviceType);
+        }
+
+        public void Dispose()
+        {
+            _container.Dispose();
         }
     }
 }

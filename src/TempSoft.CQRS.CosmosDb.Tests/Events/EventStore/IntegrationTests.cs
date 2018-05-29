@@ -160,7 +160,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
                 new EventStoreFilter
                 {
                     EventGroups = new[] {nameof(AThingAggregateRoot)},
-                    EventTypes = new[] {typeof(ChangedBValue).ToFriendlyName()}
+                    EventTypes = new[] {typeof(ChangedBValue) }
                 }, (e, token) => Task.Run(() => result.Add(e), token));
 
             result.Should().HaveCountGreaterThan(0);

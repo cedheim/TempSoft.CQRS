@@ -8,7 +8,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
     [TestFixture]
     public class When_registering_and_resolving_services
     {
-        private ServicesLocator _services;
+        private ServiceLocator _services;
 
         public interface IExampleService
         {
@@ -25,7 +25,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         [SetUp]
         public void SetUp()
         {
-            _services = new ServicesLocator();
+            _services = new ServiceLocator();
         }
 
         [Test]

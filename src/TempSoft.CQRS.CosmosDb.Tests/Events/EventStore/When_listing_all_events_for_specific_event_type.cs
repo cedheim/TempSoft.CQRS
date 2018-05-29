@@ -90,7 +90,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
 
             var filter = new EventStoreFilter
             {
-                EventTypes = new[] {typeof(ChangedAValue).ToFriendlyName()}
+                EventTypes = new[] {typeof(ChangedAValue) }
             };
 
             _repository = new CosmosDbEventStore(_client, _pager, Data.DatabaseId, Data.Collectionid);

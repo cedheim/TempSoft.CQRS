@@ -19,7 +19,7 @@ namespace TempSoft.CQRS.Events
     {
         public string[] EventGroups { get; set; }
         public Guid? AggregateRootId { get; set; }
-        public string[] EventTypes { get; set; }
+        public Type[] EventTypes { get; set; }
         public DateTime? From { get; set; }
     }
 }

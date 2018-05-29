@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace TempSoft.CQRS.Infrastructure
 {
-    public interface IServiceLocator : IServiceProvider
+    public interface IServiceLocator : IServiceProvider, IDisposable
     {
         void AutoRegister();
 
@@ -76,5 +76,18 @@ namespace TempSoft.CQRS.Infrastructure
 
         ResolveType Resolve<ResolveType>(string name)
             where ResolveType : class;
+        
+        bool CanResolve(Type resolveType);
+        bool CanResolve<ResolveType>() where ResolveType : class;
+        bool CanResolve<ResolveType>(string name) where ResolveType : class;
+        bool TryResolve(Type resolveType, out object resolvedType);
+        bool TryResolve(Type resolveType, string name, out object resolvedType);
+        bool TryResolve<ResolveType>(out ResolveType resolvedType) where ResolveType : class;
+        bool TryResolve<ResolveType>(string name, out ResolveType resolvedType) where ResolveType : class;
+        IEnumerable<object> ResolveAll(Type resolveType, bool includeUnnamed);
+        IEnumerable<object> ResolveAll(Type resolveType);
+        IEnumerable<ResolveType> ResolveAll<ResolveType>(bool includeUnnamed) where ResolveType : class;
+        IEnumerable<ResolveType> ResolveAll<ResolveType>() where ResolveType : class;
+        void BuildUp(object input);
     }
 }
