@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
@@ -229,13 +230,6 @@ namespace TempSoft.CQRS.Mocks
 
         public string Message { get; }
     }
-    
-    public class AThingQueryModel
-    {
-        public int A { get; set; }
-
-        public string B { get; set; }
-    }
 
     public class StuffReadModel
     {
@@ -257,11 +251,47 @@ namespace TempSoft.CQRS.Mocks
 
     public class AThingProjector : IProjector
     {
-        public Task Project(IEvent @event, CancellationToken cancellationToken)
+        private readonly IProjectionModelRepository _repository;
+
+        public AThingProjector(IProjectionModelRepository repository)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+        }
+
+        public async Task Project(IEvent @event, CancellationToken cancellationToken)
+        {
+            if (@event is ChangedAValue aEvent)
+            {
+
+            }
+            else if (@event is ChangedBValue @bEvent)
+            {
+
+            }
         }
 
         public string ProjectorId { get; set; }
+    }
+
+    public class AThingProjection : IProjection
+    {
+        [JsonConstructor]
+        private AThingProjection()
+        {
+        }
+
+        public AThingProjection(string id, string projectorId)
+        {
+            Id = id;
+            ProjectorId = projectorId;
+        }
+
+        public string Id { get; private set; }
+
+        public string ProjectorId { get; private set; }
+
+        public int A { get; set; }
+
+        public string B { get; set; }
     }
 }

@@ -1,6 +1,9 @@
-﻿using NUnit.Framework;
+﻿using FakeItEasy;
+using NUnit.Framework;
 using TempSoft.CQRS.Infrastructure;
+using TempSoft.CQRS.InMemory.Infrastructure;
 using TempSoft.CQRS.Mocks;
+using TempSoft.CQRS.Projectors;
 
 namespace TempSoft.CQRS.Tests.Infrastructure
 {
@@ -8,17 +11,21 @@ namespace TempSoft.CQRS.Tests.Infrastructure
     public class When_working_with_in_memory_services
     {
         private FluentBootstrapper _bootstrapper;
+        private IProjectionModelRepository _repository;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
+            _repository = A.Fake<IProjectionModelRepository>();
             _bootstrapper = new FluentBootstrapper();
             _bootstrapper.UseInMemoryCommandRegistry()
                 .UseInMemoryCommandRouter()
                 .UseInMemoryEventBus()
                 .UseInMemoryEventStore()
+                .UseService<IProjectionModelRepository>(_repository)
                 .UseProjector<AThingProjector>(nameof(AThingProjector))
                 .Validate();
+
         }
 
         [OneTimeTearDown]
@@ -27,13 +34,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
             _bootstrapper.Dispose();
         }
 
-        [Test]
-        public void Fail()
-        {
 
-
-            Assert.Fail();
-        }
 
         
     }

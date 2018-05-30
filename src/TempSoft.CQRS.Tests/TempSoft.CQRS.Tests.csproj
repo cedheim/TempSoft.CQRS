@@ -13,6 +13,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\TempSoft.CQRS.InMemory\TempSoft.CQRS.InMemory.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Mocks\TempSoft.CQRS.Mocks.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>

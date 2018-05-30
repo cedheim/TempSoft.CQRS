@@ -7,6 +7,7 @@ using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Infrastructure;
 using TempSoft.CQRS.Exceptions;
+using TempSoft.CQRS.InMemory.Infrastructure;
 using TempSoft.CQRS.Projectors;
 
 namespace TempSoft.CQRS.Tests.Infrastructure

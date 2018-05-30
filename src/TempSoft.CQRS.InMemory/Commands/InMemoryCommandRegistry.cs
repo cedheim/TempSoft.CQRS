@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TempSoft.CQRS.Commands;
 
-namespace TempSoft.CQRS.Commands
+namespace TempSoft.CQRS.InMemory.Commands
 {
     public class InMemoryCommandRegistry : ICommandRegistry
     {

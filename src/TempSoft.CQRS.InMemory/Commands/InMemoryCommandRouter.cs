@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Domain;
 
-namespace TempSoft.CQRS.Commands
+namespace TempSoft.CQRS.InMemory.Commands
 {
     public class InMemoryCommandRouter : ICommandRouter
     {

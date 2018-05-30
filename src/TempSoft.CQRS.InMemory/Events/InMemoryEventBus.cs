@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Projectors;
 
-namespace TempSoft.CQRS.Events
+namespace TempSoft.CQRS.InMemory.Events
 {
     public class InMemoryEventBus : IEventBus, IDisposable
     {
