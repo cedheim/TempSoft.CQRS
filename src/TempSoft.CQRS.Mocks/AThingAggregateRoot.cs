@@ -260,14 +260,31 @@ namespace TempSoft.CQRS.Mocks
 
         public async Task Project(IEvent @event, CancellationToken cancellationToken)
         {
-            if (@event is ChangedAValue aEvent)
+            var id = $"{nameof(AThingProjection)}_{@event.AggregateRootId}";
+            var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);
+            
+            if(@event is CreatedAThing initEvent)
             {
-
+                projection = new AThingProjection(id, ProjectorId);
             }
-            else if (@event is ChangedBValue @bEvent)
+            else
             {
+                if (object.ReferenceEquals(projection, default(AThingProjection)))
+                {
+                    throw new Exception("Can not project on unitialized event");
+                }
 
+                if (@event is ChangedAValue aEvent)
+                {
+                    projection.A = aEvent.A;
+                }
+                else if (@event is ChangedBValue @bEvent)
+                {
+                    projection.B = bEvent.B;
+                }
             }
+
+            await _repository.Save(projection, cancellationToken);
         }
 
         public string ProjectorId { get; set; }
@@ -286,9 +303,9 @@ namespace TempSoft.CQRS.Mocks
             ProjectorId = projectorId;
         }
 
-        public string Id { get; private set; }
+        public string Id { get; set; }
 
-        public string ProjectorId { get; private set; }
+        public string ProjectorId { get; set; }
 
         public int A { get; set; }
 

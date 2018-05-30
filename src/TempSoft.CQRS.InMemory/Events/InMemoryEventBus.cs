@@ -39,7 +39,7 @@ namespace TempSoft.CQRS.InMemory.Events
             {
                 try
                 {
-                    if (_queue.TryDequeue(out var @event))
+                    if (!_queue.TryDequeue(out var @event))
                     {
                         await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
                         continue;

@@ -6,7 +6,7 @@ using TempSoft.CQRS.Common.Extensions;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class CommandMessage : GenericMessage
     {
         [DataMember(Name = "AggregateRootType")]
@@ -28,6 +28,7 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         public Type AggregateRootType => _deserializedAggregateRootType ??
                                          (_deserializedAggregateRootType = Type.GetType(_aggregateRootType));
 
+        [IgnoreDataMember]
         public new ICommand Body => (ICommand) base.Body;
 
         public TCommand GetCommand<TCommand>()

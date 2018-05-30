@@ -4,7 +4,7 @@ using TempSoft.CQRS.Domain;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class ReadModelMessage : GenericMessage
     {
         public ReadModelMessage(IAggregateRootReadModel value, IEnumerable<KeyValuePair<string, object>> headers = null)

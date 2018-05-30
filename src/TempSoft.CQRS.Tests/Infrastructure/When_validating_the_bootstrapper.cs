@@ -36,7 +36,8 @@ namespace TempSoft.CQRS.Tests.Infrastructure
                 ex.MissingServices.Contains(typeof(ICommandRouter)) &&
                 ex.MissingServices.Contains(typeof(ICommandRegistry)) &&
                 ex.MissingServices.Contains(typeof(IEventBus)) &&
-                ex.MissingServices.Contains(typeof(IEventStore))
+                ex.MissingServices.Contains(typeof(IEventStore)) &&
+                ex.MissingServices.Contains(typeof(IProjectionModelRepository))
             );
         }
 
@@ -47,6 +48,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
                 .UseInMemoryCommandRouter()
                 .UseInMemoryEventBus()
                 .UseInMemoryEventStore()
+                .UseInMemoryProjectionModelRepository()
                 .Validate();
         }
 

@@ -12,26 +12,34 @@ namespace TempSoft.CQRS.InMemory.Projectors
 {
     public class InMemoryProjectionModelRepository : IProjectionModelRepository
     {
-        private readonly ConcurrentDictionary<string, IProjection> _db = new ConcurrentDictionary<string, IProjection>();
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, IProjection>> _db = new ConcurrentDictionary<string, ConcurrentDictionary<string, IProjection>>();
 
-        public Task Save<TProjectionModel>(TProjectionModel model, CancellationToken cancellationToken) where TProjectionModel : IProjection
+        public Task Save(IProjection model, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
-                _db.AddOrUpdate(model.Id, model, (id, existing) => model);
+                var bag = _db.GetOrAdd(model.ProjectorId, s => new ConcurrentDictionary<string, IProjection>());
+                bag.AddOrUpdate(model.Id, model, (id, existing) => model);
             }, cancellationToken);
         }
 
-        public Task<TProjectionModel> Get<TProjectionModel>(string id, CancellationToken cancellationToken) where TProjectionModel : IProjection
+        public Task<TProjectionModel> Get<TProjectionModel>(string id, string projectorId, CancellationToken cancellationToken) where TProjectionModel : IProjection
         {
             return Task.Run(() =>
             {
-                if (_db.TryGetValue(id, out IProjection projection))
+
+                if (!_db.TryGetValue(projectorId, out var bag))
                 {
-                    return (TProjectionModel) projection;
+
+                    return default(TProjectionModel);
                 }
 
-                return default(TProjectionModel);
+                if (!bag.TryGetValue(id, out IProjection projection))
+                {
+                    return default(TProjectionModel);
+                }
+
+                return (TProjectionModel)projection;
             }, cancellationToken);
 
 
@@ -39,7 +47,12 @@ namespace TempSoft.CQRS.InMemory.Projectors
 
         public async Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, CancellationToken cancellationToken)
         {
-            foreach (var projection in _db.Values.Where(p => p.ProjectorId == projectorId))
+            if (!_db.TryGetValue(projectorId, out var bag))
+            {
+                return;
+            }
+
+            foreach (var projection in bag.Values)
             {
                 await callback(projection, cancellationToken);
             }

@@ -2,7 +2,7 @@
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class MessageBody : GenericObjectBase
     {
         public MessageBody(object body) : base(body)

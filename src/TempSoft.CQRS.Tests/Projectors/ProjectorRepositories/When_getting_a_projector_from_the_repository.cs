@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Infrastructure;
@@ -13,12 +14,15 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorRepositories
     public class When_getting_a_projector_from_the_repository
     {
         private ProjectorRepository _repository;
-        private IServiceProvider _serviceProvider;
+        private IProjectionModelRepository _projectionModelRepository;
+        private FluentBootstrapper _serviceProvider;
 
         [SetUp]
         public void SetUp()
         {
+            _projectionModelRepository = A.Fake<IProjectionModelRepository>();
             _serviceProvider = new FluentBootstrapper();
+            _serviceProvider.UseService<IProjectionModelRepository>(_projectionModelRepository);
             _repository = new ProjectorRepository(_serviceProvider);
         }
 

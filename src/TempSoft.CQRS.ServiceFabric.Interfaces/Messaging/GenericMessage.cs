@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class GenericMessage : MessageBase
     {
         [DataMember(Name = "Body")] private MessageBody _body;

@@ -4,7 +4,7 @@ using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class EventMessage : GenericMessage
     {
         public EventMessage(IEvent value, IEnumerable<KeyValuePair<string, object>> headers = null) : base(value,

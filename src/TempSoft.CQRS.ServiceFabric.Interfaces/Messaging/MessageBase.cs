@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public abstract class MessageBase
     {
         [DataMember(Name = "Headers")] private List<MessageHeader> _headers;

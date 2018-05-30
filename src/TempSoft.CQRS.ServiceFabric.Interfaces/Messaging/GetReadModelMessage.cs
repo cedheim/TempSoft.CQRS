@@ -5,7 +5,7 @@ using TempSoft.CQRS.Common.Extensions;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class GetReadModelMessage : MessageBase
     {
         [DataMember(Name = "AggregateRootType")]
