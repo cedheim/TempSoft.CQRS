@@ -15,7 +15,7 @@ namespace TempSoft.CQRS.ServiceFabric.Infrastructure
 {
     public static class ServiceFabricBootstrapperExtensions
     {
-        public static FluentBootstrapper UseServiceFabricService(this FluentBootstrapper bootstrapper)
+        public static FluentBootstrapper UseServiceFabric(this FluentBootstrapper bootstrapper)
         {
             bootstrapper.UseService<ICommandRouter, ServiceFabricCommandRouter>(true);
             bootstrapper.UseService<IEventBus, ServiceFabricEventBus>(true);

@@ -60,14 +60,10 @@ namespace TempSoft.CQRS.Infrastructure
             return this;
         }
 
-        public FluentBootstrapper UseService<TServiceInterface>(Func<TServiceInterface> factory, bool singleton = false)
+        public FluentBootstrapper UseService<TServiceInterface>(Func<TServiceInterface> factory)
             where TServiceInterface : class
         {
-            var registration = this._container.Register<TServiceInterface>((container, overloads) => factory());
-            if (singleton)
-            {
-                registration.AsSingleton();
-            }
+            this._container.Register<TServiceInterface>((container, overloads) => factory());
 
             return this;
         }

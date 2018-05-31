@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.Common\TempSoft.CQRS.Common.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.InMemory\TempSoft.CQRS.InMemory.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Mocks\TempSoft.CQRS.Mocks.csproj" />
   </ItemGroup>
 </Project>
