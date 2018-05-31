@@ -70,16 +70,14 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Projectors
             var result = await _repository.Get<AThingProjection>(Data.ProjectionId1, Data.ProjectorId1, CancellationToken.None);
             result.Should().BeEquivalentTo(_projections[0]);
         }
-
-
+        
         [Test]
         public async Task When_getting_a_document_that_does_not_exist()
         {
             var result = await _repository.Get<AThingProjection>(Guid.NewGuid().ToString(), Data.ProjectorId3, CancellationToken.None);
             result.Should().BeNull();
         }
-
-
+        
         [Test]
         public async Task When_listing_documents()
         {

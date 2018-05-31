@@ -8,6 +8,7 @@ using NUnit.Framework;
 using TempSoft.CQRS.Mocks;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Domain;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Tools;
 
 namespace TempSoft.CQRS.ServiceFabric.Tests.Commands.ServiceFabricCommandRouter
 {
@@ -18,18 +19,22 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Commands.ServiceFabricCommandRouter
         private IAggregateRootActor _actor;
         private CQRS.ServiceFabric.Commands.ServiceFabricCommandRouter _router;
         private DoSomething _command;
+        private IUriHelper _uriHelper;
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
+            _uriHelper = A.Fake<IUriHelper>();
             _actorProxyFactory = A.Fake<IActorProxyFactory>();
             _actor = A.Fake<IAggregateRootActor>();
 
-            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(A<ActorId>.Ignored,
-                    A<string>.Ignored, A<string>.Ignored, A<string>.Ignored))
+            A.CallTo(() => _uriHelper.GetUriFor<IAggregateRootActor>())
+                .Returns(new Uri("fabric:/application/actorservice"));
+            
+            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(A<Uri>.Ignored, A<ActorId>.Ignored, A<string>.Ignored))
                 .Returns(_actor);
 
-            _router = new CQRS.ServiceFabric.Commands.ServiceFabricCommandRouter(_actorProxyFactory);
+            _router = new CQRS.ServiceFabric.Commands.ServiceFabricCommandRouter(_uriHelper, _actorProxyFactory);
 
             _command = new DoSomething(5, "HELLU");
             await _router.Handle<AThingAggregateRoot>(Data.RootId, _command, CancellationToken.None);
@@ -54,9 +59,8 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Commands.ServiceFabricCommandRouter
         [Test]
         public void Should_have_created_an_actor_proxy()
         {
-            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(
-                    A<ActorId>.That.Matches(a => a.GetGuidId() == Data.RootId), A<string>.Ignored, A<string>.Ignored,
-                    A<string>.Ignored))
+            A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(A<Uri>.That.IsNotNull(),
+                    A<ActorId>.That.Matches(a => a.GetGuidId() == Data.RootId), A<string>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
     }

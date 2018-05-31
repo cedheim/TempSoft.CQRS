@@ -8,12 +8,12 @@ using Microsoft.ServiceFabric.Services.Communication.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using NUnit.Framework;
 using TempSoft.CQRS.Common.Extensions;
-using TempSoft.CQRS.Common.Uri;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Mocks;
 using TempSoft.CQRS.ServiceFabric.Events;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Tools;
 
 namespace TempSoft.CQRS.ServiceFabric.Tests.Events.ServiceFabricEventBuses
 {
@@ -35,7 +35,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Events.ServiceFabricEventBuses
 
             A.CallTo(() => _proxyFactory.CreateServiceProxy<IEventBusService>(A<Uri>.Ignored, A<ServicePartitionKey>.Ignored, A<TargetReplicaSelector>.Ignored, A<string>.Ignored))
                 .Returns(_eventBusService);
-            A.CallTo(() => _uriHelper.GetUriForSerivce<IEventBusService>())
+            A.CallTo(() => _uriHelper.GetUriFor<IEventBusService>())
                 .Returns(Data.Uri);
             A.CallTo(() => _eventBusService.Publish(A<EventMessage[]>.Ignored, A<CancellationToken>.Ignored))
                 .Invokes(foc => _messages = foc.GetArgument<EventMessage[]>(0));

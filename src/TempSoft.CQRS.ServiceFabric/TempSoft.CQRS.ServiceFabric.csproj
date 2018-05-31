@@ -14,9 +14,6 @@
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric.Interfaces\TempSoft.CQRS.ServiceFabric.Interfaces.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Projectors\" />
-  </ItemGroup>
 
 
 </Project>

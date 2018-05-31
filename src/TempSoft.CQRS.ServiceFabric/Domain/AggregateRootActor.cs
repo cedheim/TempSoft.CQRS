@@ -20,11 +20,11 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
         private IAggregateRoot _root;
 
         public AggregateRootActor(ActorService actorService, ActorId actorId,
-            Func<AggregateRootActor, IAggregateRootRepository> aggregateRootRepositoryFactory,
+            IAggregateRootRepository aggregateRootRepository,
             IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService,
             actorId)
         {
-            _aggregateRootRepository = aggregateRootRepositoryFactory(this);
+            _aggregateRootRepository = aggregateRootRepository;
 
             ActorProxyFactory = actorProxyFactory;
             ServiceProxyFactory = serviceProxyFactory;

@@ -30,6 +30,8 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 
         [IgnoreDataMember] public IEnumerable<string> HeaderNames => _headers.Select(header => header.Name);
 
+        [IgnoreDataMember] public IEnumerable<KeyValuePair<string, object>> Headers => _headers.Select(header => new KeyValuePair<string, object>(header.Name, header.Body));
+
         public void SetHeader(string name, object value)
         {
             var existingHeader = _headers.FirstOrDefault(h => h.Name == name);

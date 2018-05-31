@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using TempSoft.CQRS.Common.Extensions;
-using TempSoft.CQRS.Common.Uri;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Events;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
+using TempSoft.CQRS.ServiceFabric.Tools;
 
 namespace TempSoft.CQRS.ServiceFabric.Events
 {
@@ -21,7 +21,7 @@ namespace TempSoft.CQRS.ServiceFabric.Events
         public ServiceFabricEventBus(IServiceProxyFactory proxyFactory, IUriHelper uriHelper)
         {
             _proxyFactory = proxyFactory;
-            _uri = uriHelper.GetUriForSerivce<IEventBusService>();
+            _uri = uriHelper.GetUriFor<IEventBusService>();
         }
 
         public async Task Publish(IEnumerable<IEvent> events, CancellationToken cancellationToken)

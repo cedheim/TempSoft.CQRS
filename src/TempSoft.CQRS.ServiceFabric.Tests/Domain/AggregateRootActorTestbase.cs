@@ -22,7 +22,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
         protected AggregateRootActorTestBase()
         {
             ActorService = ServiceFabricFactories.CreateActorServiceForActorWithCustomStateManager<AggregateRootActor>(
-                (service, id) => new AggregateRootActor(service, id, _ => AggregateRootRepository, ActorProxyFactory,
+                (service, id) => new AggregateRootActor(service, id, AggregateRootRepository, ActorProxyFactory,
                     ServiceProxyFactory));
         }
     }
