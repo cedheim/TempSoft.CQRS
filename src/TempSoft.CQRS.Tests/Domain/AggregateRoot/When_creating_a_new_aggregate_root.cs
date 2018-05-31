@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
 {
@@ -22,6 +21,11 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _events = _root.Commit().Events;
         }
 
+        private static class Data
+        {
+            public static readonly Guid RootId = Guid.NewGuid();
+        }
+
         [Test]
         public void Should_have_set_the_id()
         {
@@ -31,7 +35,8 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         [Test]
         public void Should_have_triggered_an_event()
         {
-            _events.Should().ContainSingle(e => e is IInitializationEvent && e.Version == 1 && e.EventGroup == nameof(AThingAggregateRoot));
+            _events.Should().ContainSingle(e =>
+                e is IInitializationEvent && e.Version == 1 && e.EventGroup == nameof(AThingAggregateRoot));
         }
 
         [Test]
@@ -39,11 +44,5 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         {
             _root.Version.Should().Be(1);
         }
-
-        private static class Data
-        {
-            public static readonly Guid RootId = Guid.NewGuid();
-        }
-
     }
 }

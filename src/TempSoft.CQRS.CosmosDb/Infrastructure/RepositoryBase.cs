@@ -9,14 +9,15 @@ namespace TempSoft.CQRS.CosmosDb.Infrastructure
 {
     public abstract class RepositoryBase
     {
-        protected readonly Uri Uri;
         protected readonly IDocumentClient Client;
-        protected readonly ICosmosDbQueryPager Pager;
-        protected readonly string DatabaseId;
         protected readonly string CollectionId;
+        protected readonly string DatabaseId;
         protected readonly int InitialThroughput;
+        protected readonly ICosmosDbQueryPager Pager;
+        protected readonly Uri Uri;
 
-        protected RepositoryBase(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId, string collectionId, int initialThroughput = 1000)
+        protected RepositoryBase(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId,
+            string collectionId, int initialThroughput = 1000)
         {
             Client = client;
             Pager = pager;
@@ -34,31 +35,25 @@ namespace TempSoft.CQRS.CosmosDb.Infrastructure
         {
             var database = Client.CreateDatabaseQuery().Where(x => x.Id == DatabaseId).ToArray().FirstOrDefault();
 
-            if (object.ReferenceEquals(database, default(Database)))
-            {
-                database = await Client.CreateDatabaseAsync(new Database() { Id = DatabaseId });
-            }
+            if (ReferenceEquals(database, default(Database)))
+                database = await Client.CreateDatabaseAsync(new Database {Id = DatabaseId});
 
 
             var collections = await Client.ReadDocumentCollectionFeedAsync(database.SelfLink);
             var collection = collections.Where(coll => coll.Id == CollectionId).ToArray().FirstOrDefault();
 
-            if (object.ReferenceEquals(collection, default(DocumentCollection)))
+            if (ReferenceEquals(collection, default(DocumentCollection)))
             {
                 var collectionSpec = new DocumentCollection
                 {
                     Id = CollectionId
                 };
 
-                foreach (var path in PartitionKeyPaths)
-                {
-                    collectionSpec.PartitionKey.Paths.Add(path);
-                }
+                foreach (var path in PartitionKeyPaths) collectionSpec.PartitionKey.Paths.Add(path);
 
-                await Client.CreateDocumentCollectionAsync(database.SelfLink, collectionSpec, new RequestOptions { OfferThroughput = InitialThroughput });
+                await Client.CreateDocumentCollectionAsync(database.SelfLink, collectionSpec,
+                    new RequestOptions {OfferThroughput = InitialThroughput});
             }
-
         }
-
     }
 }

@@ -1,7 +1,4 @@
-﻿using FakeItEasy;
-using NUnit.Framework;
-using TempSoft.CQRS.Commands;
-using TempSoft.CQRS.Infrastructure;
+﻿using NUnit.Framework;
 
 namespace TempSoft.CQRS.Tests
 {

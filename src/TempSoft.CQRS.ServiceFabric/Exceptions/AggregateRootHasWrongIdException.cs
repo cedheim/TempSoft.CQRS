@@ -14,11 +14,13 @@ namespace TempSoft.CQRS.ServiceFabric.Exceptions
         {
         }
 
-        public AggregateRootHasWrongIdException(string message, Exception innerException) : base(message, innerException)
+        public AggregateRootHasWrongIdException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected AggregateRootHasWrongIdException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected AggregateRootHasWrongIdException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

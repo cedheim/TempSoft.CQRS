@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
 
 namespace TempSoft.CQRS.Exceptions
 {
@@ -12,11 +13,13 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public DomainEventOnUninitializedAggregateException(string message, System.Exception innerException) : base(message, innerException)
+        public DomainEventOnUninitializedAggregateException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected DomainEventOnUninitializedAggregateException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected DomainEventOnUninitializedAggregateException(SerializationInfo info, StreamingContext context) : base(
+            info, context)
         {
         }
     }

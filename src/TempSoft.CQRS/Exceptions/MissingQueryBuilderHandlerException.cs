@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace TempSoft.CQRS.Exceptions
 {
     [Serializable]
-    public class MissingQueryBuilderHandlerException : System.Exception
+    public class MissingQueryBuilderHandlerException : Exception
     {
         public MissingQueryBuilderHandlerException()
         {
@@ -14,11 +14,13 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public MissingQueryBuilderHandlerException(string message, System.Exception innerException) : base(message, innerException)
+        public MissingQueryBuilderHandlerException(string message, Exception innerException) : base(message,
+            innerException)
         {
         }
 
-        protected MissingQueryBuilderHandlerException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected MissingQueryBuilderHandlerException(SerializationInfo info, StreamingContext context) : base(info,
+            context)
         {
         }
     }

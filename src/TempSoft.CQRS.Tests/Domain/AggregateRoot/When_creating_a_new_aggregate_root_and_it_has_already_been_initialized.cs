@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Exceptions;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
 {
@@ -23,17 +22,16 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _events = _root.Commit().Events;
         }
 
+        private static class Data
+        {
+            public static readonly Guid RootId = Guid.NewGuid();
+        }
+
         [Test]
         public void Should_throw_an_already_initialized_exception()
         {
             _root.Invoking(r => r.Initialize(Data.RootId))
                 .Should().Throw<InitializationOfAlreadyInitializedAggregateException>();
         }
-        
-        private static class Data
-        {
-            public static readonly Guid RootId = Guid.NewGuid();
-        }
-
     }
 }

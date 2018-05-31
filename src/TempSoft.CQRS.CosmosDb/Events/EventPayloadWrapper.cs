@@ -9,7 +9,9 @@ namespace TempSoft.CQRS.CosmosDb.Events
     public class EventPayloadWrapper
     {
         [JsonConstructor]
-        private EventPayloadWrapper() { }
+        private EventPayloadWrapper()
+        {
+        }
 
         public EventPayloadWrapper(IEvent @event)
         {
@@ -21,8 +23,7 @@ namespace TempSoft.CQRS.CosmosDb.Events
             EventGroup = @event.EventGroup;
         }
 
-        [JsonProperty("id")]
-        public Guid Id { get; set; }
+        [JsonProperty("id")] public Guid Id { get; set; }
 
         public JObject Payload { get; set; }
 
@@ -34,14 +35,13 @@ namespace TempSoft.CQRS.CosmosDb.Events
 
         public string EventGroup { get; set; }
 
-        [JsonProperty("_ts")]
-        public long Timestamp { get; set; }
+        [JsonProperty("_ts")] public long Timestamp { get; set; }
 
         public IEvent GetEvent()
         {
             var type = Type.GetType(PayloadType);
 
-            return (IEvent)Payload.ToObject(type);
+            return (IEvent) Payload.ToObject(type);
         }
     }
 }

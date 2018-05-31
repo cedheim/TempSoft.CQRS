@@ -14,28 +14,26 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
 {
     public class AggregateRootActor : Actor, IAggregateRootActor
     {
-        private readonly IAggregateRootRepository _aggregateRootRepository;
         private const string AggregateRootTypeStateName = "_tempsoft_cqrs_root_type";
+        private readonly IAggregateRootRepository _aggregateRootRepository;
 
-        public AggregateRootActor(ActorService actorService, ActorId actorId, Func<AggregateRootActor, IAggregateRootRepository> aggregateRootRepositoryFactory, IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService, actorId)
+        private IAggregateRoot _root;
+
+        public AggregateRootActor(ActorService actorService, ActorId actorId,
+            IAggregateRootRepository aggregateRootRepository,
+            IActorProxyFactory actorProxyFactory, IServiceProxyFactory serviceProxyFactory) : base(actorService,
+            actorId)
         {
-            _aggregateRootRepository = aggregateRootRepositoryFactory(this);
+            _aggregateRootRepository = aggregateRootRepository;
 
             ActorProxyFactory = actorProxyFactory;
             ServiceProxyFactory = serviceProxyFactory;
         }
 
-        protected override async Task OnActivateAsync()
-        {
-            await base.OnActivateAsync();
-        }
-
-        private IAggregateRoot _root;
-
         public IActorProxyFactory ActorProxyFactory { get; }
 
         public IServiceProxyFactory ServiceProxyFactory { get; }
-        
+
         public async Task Handle(CommandMessage message, CancellationToken cancellationToken)
         {
             try
@@ -44,18 +42,14 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
 
                 // should we initialize if we receive a command before it has been initialized?
                 if (_root == null)
-                {
                     _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
-                }
 
                 var command = message.Body;
 
                 await _root.Handle(command, cancellationToken);
 
                 if (_root.Id != id)
-                {
                     throw new AggregateRootHasWrongIdException($"Has id {_root.Id} but should have id {id}");
-                }
 
                 await _aggregateRootRepository.Save(_root, cancellationToken);
             }
@@ -67,15 +61,14 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
             }
         }
 
-        public async Task<ReadModelMessage> GetReadModel(GetReadModelMessage message, CancellationToken cancellationToken)
+        public async Task<ReadModelMessage> GetReadModel(GetReadModelMessage message,
+            CancellationToken cancellationToken)
         {
             var id = this.GetActorId().GetGuidId();
 
             // should we initialize if we receive a command before it has been initialized?
             if (_root == null)
-            {
                 _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
-            }
 
             if (_root is IAggregateRootWithReadModel rootWithReadModel)
             {
@@ -84,6 +77,11 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
             }
 
             throw new NotImplementedException();
+        }
+
+        protected override async Task OnActivateAsync()
+        {
+            await base.OnActivateAsync();
         }
     }
 }

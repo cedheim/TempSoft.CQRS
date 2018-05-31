@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Domain;
-using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
 {
@@ -25,24 +24,26 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _commit = _root.Commit();
         }
 
-        [Test]
-        public void Should_have_created_an_event()
+        private static class Data
         {
-            _commit.Events.Should().ContainSingle(e => e is AddedStuff && ((AddedStuff)e).EntityId == Data.EntityId && ((AddedStuff)e).Message == Data.StuffMessage);
+            public const string StuffMessage = "STUFF!!";
+            public static readonly Guid RootId = Guid.NewGuid();
+            public static readonly Guid EntityId = Guid.NewGuid();
         }
 
         [Test]
         public void Should_have_added_stuff_to_the_aggregate_root()
         {
-            _root.Stuff.Should().ContainSingle(stuff => stuff.Id == Data.EntityId && stuff.Message == Data.StuffMessage);
+            _root.Stuff.Should()
+                .ContainSingle(stuff => stuff.Id == Data.EntityId && stuff.Message == Data.StuffMessage);
         }
 
-        private static class Data
+        [Test]
+        public void Should_have_created_an_event()
         {
-            public static readonly Guid RootId = Guid.NewGuid();
-            public static readonly Guid EntityId = Guid.NewGuid();
-            public const string StuffMessage = "STUFF!!";
+            _commit.Events.Should().ContainSingle(e =>
+                e is AddedStuff && ((AddedStuff) e).EntityId == Data.EntityId &&
+                ((AddedStuff) e).Message == Data.StuffMessage);
         }
-
     }
 }

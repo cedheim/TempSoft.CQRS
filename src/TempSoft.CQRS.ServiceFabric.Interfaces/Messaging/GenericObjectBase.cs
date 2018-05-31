@@ -4,17 +4,16 @@ using TempSoft.CQRS.Common.Serialization;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public abstract class GenericObjectBase
     {
-        [DataMember(Name = "Type")]
-        private string _type;
+        [DataMember(Name = "Body")] private string _body;
 
-        [DataMember(Name = "Body")]
-        private string _body;
-        
-        [IgnoreDataMember] private Type _deserializedType;
         [IgnoreDataMember] private object _deserializedBody;
+
+        [IgnoreDataMember] private Type _deserializedType;
+
+        [DataMember(Name = "Type")] private string _type;
 
         protected GenericObjectBase()
         {
@@ -33,8 +32,7 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         [IgnoreDataMember]
         public object Body => _deserializedBody ?? (_deserializedBody = Serializer.Deserialize(_body, Type));
 
-        [IgnoreDataMember]
-        public Type Type => _deserializedType ?? (_deserializedType = Type.GetType(_type));
+        [IgnoreDataMember] public Type Type => _deserializedType ?? (_deserializedType = Type.GetType(_type));
 
         private void Serialize()
         {

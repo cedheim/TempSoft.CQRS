@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Threading;
 
 namespace TempSoft.CQRS.Common.Extensions
 {
     public static class GuidExtensions
     {
-        private static readonly ThreadLocal<System.Security.Cryptography.SHA256> _hasher = new ThreadLocal<System.Security.Cryptography.SHA256>(() => new System.Security.Cryptography.SHA256CryptoServiceProvider());
+        private static readonly ThreadLocal<SHA256> _hasher =
+            new ThreadLocal<SHA256>(() => new SHA256CryptoServiceProvider());
 
-        private static System.Security.Cryptography.SHA256 Hasher => _hasher.Value;
+        private static SHA256 Hasher => _hasher.Value;
 
         public static long GetHashCode64(this Guid guid)
         {

@@ -1,76 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Infrastructure;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Infrastructure
 {
     [TestFixture]
     public class When_registering_and_resolving_services
     {
-        [Test]
-        public void Should_be_able_to_resolve_new_objects()
+        private FluentBootstrapper _services;
+
+        public interface IExampleService
         {
-            var root = Services.Resolve<AThingAggregateRoot>();
-            root.Should().NotBeNull();
+        }
+
+        public class ExampleService1 : IExampleService
+        {
+        }
+
+        public class ExampleService2 : IExampleService
+        {
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _services = new FluentBootstrapper();
+        }
+        
+        [Test]
+        public void Should_be_able_to_override_a_registration()
+        {
+            _services.UseService<IExampleService, ExampleService1>();
+            _services.UseService<IExampleService, ExampleService2>();
+
+            var service = _services.Resolve<IExampleService>();
+
+            service.Should().NotBeNull();
+            service.Should().BeOfType<ExampleService2>();
         }
 
         [Test]
         public void Should_be_able_to_resolve_an_object_by_interface()
         {
-            Services.Register<IExampleService, ExampleService1>();
+            _services.UseService<IExampleService, ExampleService1>();
 
-            var service = Services.Resolve<IExampleService>();
+            var service = _services.Resolve<IExampleService>();
 
             service.Should().NotBeNull();
             service.Should().BeOfType<ExampleService1>();
         }
 
         [Test]
-        public void Should_be_able_to_override_a_registration()
+        public void Should_be_able_to_resolve_new_objects()
         {
-            Services.Register<IExampleService, ExampleService1>();
-            Services.Register<IExampleService, ExampleService2>();
-
-            var service = Services.Resolve<IExampleService>();
-
-            service.Should().NotBeNull();
-            service.Should().BeOfType<ExampleService2>();
-        }
-        
-        [Test]
-        public void Should_be_able_register_by_name()
-        {
-            Services.Register<IExampleService, ExampleService1>();
-            Services.Register<IExampleService, ExampleService2>("service2");
-
-            var service1 = Services.Resolve<IExampleService>();
-            var service2 = Services.Resolve<IExampleService>("service2");
-
-            service1.Should().NotBeNull();
-            service1.Should().BeOfType<ExampleService1>();
-
-            service2.Should().NotBeNull();
-            service2.Should().BeOfType<ExampleService2>();
-
-        }
-
-        public interface IExampleService
-        {
-
-        }
-
-        public class ExampleService1 : IExampleService
-        {
-
-        }
-
-        public class ExampleService2 : IExampleService
-        {
-
+            var root = _services.Resolve<AThingAggregateRoot>();
+            root.Should().NotBeNull();
         }
     }
 }

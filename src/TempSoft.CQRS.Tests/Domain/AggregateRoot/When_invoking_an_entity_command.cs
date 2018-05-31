@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Domain;
-using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
 {
@@ -26,25 +25,27 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _commit = _root.Commit();
         }
 
-        [Test]
-        public void Should_have_created_an_event()
+        private static class Data
         {
-            _commit.Events.Should().ContainSingle(e => e is StuffMessageSet && ((StuffMessageSet)e).EntityId == Data.EntityId && ((StuffMessageSet)e).Message == Data.ChangedStuffMessage);
+            public const string StuffMessage = "STUFF!!";
+            public const string ChangedStuffMessage = "MOAR STUFF!!!!";
+            public static readonly Guid RootId = Guid.NewGuid();
+            public static readonly Guid EntityId = Guid.NewGuid();
         }
 
         [Test]
         public void Should_have_changed_the_stuff_message()
         {
-            _root.Stuff.Should().ContainSingle(stuff => stuff.Id == Data.EntityId && stuff.Message == Data.ChangedStuffMessage);
+            _root.Stuff.Should()
+                .ContainSingle(stuff => stuff.Id == Data.EntityId && stuff.Message == Data.ChangedStuffMessage);
         }
 
-        private static class Data
+        [Test]
+        public void Should_have_created_an_event()
         {
-            public static readonly Guid RootId = Guid.NewGuid();
-            public static readonly Guid EntityId = Guid.NewGuid();
-            public const string StuffMessage = "STUFF!!";
-            public const string ChangedStuffMessage = "MOAR STUFF!!!!";
+            _commit.Events.Should().ContainSingle(e =>
+                e is StuffMessageSet && ((StuffMessageSet) e).EntityId == Data.EntityId &&
+                ((StuffMessageSet) e).Message == Data.ChangedStuffMessage);
         }
-
     }
 }

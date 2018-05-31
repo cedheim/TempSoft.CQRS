@@ -9,6 +9,7 @@ namespace TempSoft.CQRS.Commands
     {
         Task<IEnumerable<Guid>> Get(Guid id, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task Save(Guid id, IEnumerable<Guid> commandIds, CancellationToken cancellationToken = default(CancellationToken));
+        Task Save(Guid id, IEnumerable<Guid> commandIds,
+            CancellationToken cancellationToken = default(CancellationToken));
     }
 }

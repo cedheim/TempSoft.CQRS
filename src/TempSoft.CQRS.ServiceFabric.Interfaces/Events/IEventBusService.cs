@@ -7,6 +7,6 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Events
 {
     public interface IEventBusService : IService
     {
-        Task Publish(EventMessage[] events, CancellationToken cancellationToken);
+        Task Publish(EventMessage[] messages, CancellationToken cancellationToken);
     }
 }

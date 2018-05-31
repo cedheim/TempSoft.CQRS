@@ -12,13 +12,13 @@ namespace TempSoft.CQRS.Domain
         Guid Id { get; }
 
         int Version { get; }
-        
+
         Task Handle(ICommand command, CancellationToken cancellationToken);
 
         void LoadFrom(IEnumerable<IEvent> events, IEnumerable<Guid> commandIds);
 
         Commit Commit();
-        
+
         void ApplyChange(IEvent @event);
     }
 }

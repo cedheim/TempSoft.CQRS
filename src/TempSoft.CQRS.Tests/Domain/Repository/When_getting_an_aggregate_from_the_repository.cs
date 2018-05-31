@@ -5,42 +5,57 @@ using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Tests.Mocks;
+using TempSoft.CQRS.Infrastructure;
+using TempSoft.CQRS.Mocks;
 
 namespace TempSoft.CQRS.Tests.Domain.Repository
 {
     [TestFixture]
     public class When_getting_an_aggregate_from_the_repository
     {
-        private IEventStore _eventStore;
-        private IEventBus _eventBus;
-        private ICommandRegistry _commandRegistry;
-        private CQRS.Domain.AggregateRootRepository _aggregateRootRepository;
-        private AThingAggregateRoot _root;
-
         [SetUp]
         public async Task OneTimeSetUp()
         {
             _eventStore = A.Fake<IEventStore>();
             _eventBus = A.Fake<IEventBus>();
             _commandRegistry = A.Fake<ICommandRegistry>();
+            _serviceProvider = new FluentBootstrapper();
 
             A.CallTo(() => _eventStore.Get(A<Guid>.Ignored, A<int>.Ignored, A<CancellationToken>.Ignored))
-                .Returns(new IEvent[] { new CreatedAThing(Data.AggregateRootId) { Version = 1 }, new ChangedAValue(Data.AValue) { Version = 2 }, new ChangedBValue(Data.BValue) { Version = 3 }, });
+                .Returns(new IEvent[]
+                {
+                    new CreatedAThing(Data.AggregateRootId) {Version = 1}, new ChangedAValue(Data.AValue) {Version = 2},
+                    new ChangedBValue(Data.BValue) {Version = 3}
+                });
 
-            _aggregateRootRepository = new CQRS.Domain.AggregateRootRepository(_eventStore, _eventBus, _commandRegistry);
-            
-            _root = await _aggregateRootRepository.Get<AThingAggregateRoot>(Data.AggregateRootId, CancellationToken.None);
+            _aggregateRootRepository = new AggregateRootRepository(_eventStore, _eventBus, _commandRegistry, _serviceProvider);
 
+            _root = await _aggregateRootRepository.Get<AThingAggregateRoot>(Data.AggregateRootId,
+                CancellationToken.None);
         }
-        
-        [Test]
-        public void Should_initialize_with_events()
+
+        private IEventStore _eventStore;
+        private IEventBus _eventBus;
+        private ICommandRegistry _commandRegistry;
+        private AggregateRootRepository _aggregateRootRepository;
+        private AThingAggregateRoot _root;
+        private IServiceProvider _serviceProvider;
+
+
+        private static class Data
         {
-            _root.Id.Should().Be(Data.AggregateRootId);
-            _root.A.Should().Be(Data.AValue);
-            _root.B.Should().Be(Data.BValue);
+            public const int AValue = 5;
+            public const string BValue = "HELLU";
+            public static readonly Guid AggregateRootId = Guid.NewGuid();
+        }
+
+        [Test]
+        public void Should_have_tried_to_load_from_the_command_registry()
+        {
+            A.CallTo(() => _commandRegistry.Get(Data.AggregateRootId, A<CancellationToken>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Test]
@@ -51,18 +66,11 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
         }
 
         [Test]
-        public void Should_have_tried_to_load_from_the_command_registry()
+        public void Should_initialize_with_events()
         {
-            A.CallTo(() => _commandRegistry.Get(Data.AggregateRootId, A<CancellationToken>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-
-        private static class Data
-        {
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
-            public const int AValue = 5;
-            public const string BValue = "HELLU";
+            _root.Id.Should().Be(Data.AggregateRootId);
+            _root.A.Should().Be(Data.AValue);
+            _root.B.Should().Be(Data.BValue);
         }
     }
 }

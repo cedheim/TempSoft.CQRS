@@ -16,7 +16,7 @@ namespace TempSoft.CQRS.Common.Serialization
 
         public static void SetSerializer(ISerializer serializer)
         {
-            _serializer = serializer ??  DefaultSerializer;
+            _serializer = serializer ?? DefaultSerializer;
         }
 
         public static string Serialize(object o)

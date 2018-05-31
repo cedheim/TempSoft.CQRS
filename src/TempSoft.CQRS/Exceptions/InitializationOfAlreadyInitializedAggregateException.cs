@@ -14,11 +14,13 @@ namespace TempSoft.CQRS.Exceptions
         {
         }
 
-        public InitializationOfAlreadyInitializedAggregateException(string message, System.Exception innerException) : base(message, innerException)
+        public InitializationOfAlreadyInitializedAggregateException(string message, Exception innerException) : base(
+            message, innerException)
         {
         }
 
-        protected InitializationOfAlreadyInitializedAggregateException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected InitializationOfAlreadyInitializedAggregateException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

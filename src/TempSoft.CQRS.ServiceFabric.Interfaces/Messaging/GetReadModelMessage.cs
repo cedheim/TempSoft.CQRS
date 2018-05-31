@@ -5,14 +5,13 @@ using TempSoft.CQRS.Common.Extensions;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class GetReadModelMessage : MessageBase
     {
         [DataMember(Name = "AggregateRootType")]
         private string _aggregateRootType;
 
-        [IgnoreDataMember]
-        private Type _deserializedAggregateRootType;
+        [IgnoreDataMember] private Type _deserializedAggregateRootType;
 
         private GetReadModelMessage()
         {
@@ -26,7 +25,7 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 
 
         [IgnoreDataMember]
-        public Type AggregateRootType => _deserializedAggregateRootType ?? (_deserializedAggregateRootType = Type.GetType(_aggregateRootType));
-
+        public Type AggregateRootType => _deserializedAggregateRootType ??
+                                         (_deserializedAggregateRootType = Type.GetType(_aggregateRootType));
     }
 }

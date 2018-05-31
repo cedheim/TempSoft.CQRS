@@ -11,10 +11,11 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Exceptions
         {
         }
 
-        public NotInitializedException(Guid id) : base($"Tried to manipulate and aggregate root ({id}) which was not initialized.")
+        public NotInitializedException(Guid id) : base(
+            $"Tried to manipulate and aggregate root ({id}) which was not initialized.")
         {
         }
-        
+
         protected NotInitializedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }

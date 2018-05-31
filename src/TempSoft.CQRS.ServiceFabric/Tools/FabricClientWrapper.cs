@@ -11,7 +11,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tools
             _client = client;
         }
 
-        public IQueryClient QueryManager => (QueryClientWrapper)_client.QueryManager;
+        public IQueryClient QueryManager => (QueryClientWrapper) _client.QueryManager;
 
         public static implicit operator FabricClientWrapper(FabricClient client)
         {

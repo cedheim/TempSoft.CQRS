@@ -2,7 +2,7 @@
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {
-    [DataContract]
+    [DataContract(Namespace = ContractConstants.Namespace)]
     public class MessageHeader : GenericObjectBase
     {
         protected MessageHeader()
@@ -16,8 +16,6 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         }
 
 
-
-        [DataMember]
-        public string Name { get; private set; }
+        [DataMember] public string Name { get; private set; }
     }
 }
