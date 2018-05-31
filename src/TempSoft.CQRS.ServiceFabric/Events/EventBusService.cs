@@ -8,7 +8,6 @@ using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Data;
 using Microsoft.ServiceFabric.Data.Collections;
-using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
@@ -23,6 +22,7 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 {
     public class EventBusService : StatefulService, IEventBusService
     {
+        private const int MaxErrorCount = 10;
         private const string EventQueueName = "_tempsoft_event_queue";
 
         private readonly IProjectorRegistry _projectorRegistry;
@@ -56,6 +56,8 @@ namespace TempSoft.CQRS.ServiceFabric.Events
 
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
+            var errorCounter = 0;
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
@@ -69,21 +71,15 @@ namespace TempSoft.CQRS.ServiceFabric.Events
                             continue;
                         }
 
-                        var eventMessage = conditionalEvent.Value;
-
-                        var definitions = _projectorRegistry.ListDefinitionsByEvent(eventMessage.Body);
-                        var writeTasks = definitions.Select(definition => Task.Run(async () =>
+                        if (errorCounter < MaxErrorCount)
                         {
-                            var projectorId = definition.GenerateIdentifierFor(eventMessage.Body);
-                            var proxy = _actorProxyFactory.CreateActorProxy<IProjectorActor>(_projectorActorUri, new ActorId(projectorId));
-                            var projectorMessage = new ProjectorMessage(eventMessage.Body, definition.ProjectorType, eventMessage.Headers);
-
-                            await proxy.Project(projectorMessage, cancellationToken);
-                        }, cancellationToken));
-
-                        await Task.WhenAll(writeTasks);
-
+                            var eventMessage = conditionalEvent.Value;
+                            await SendEvent(eventMessage, cancellationToken);
+                        }
+                       
                         await tx.CommitAsync();
+
+                        errorCounter = 0;
                     }
                 }
                 catch (OperationCanceledException e)
@@ -96,9 +92,26 @@ namespace TempSoft.CQRS.ServiceFabric.Events
                 }
                 catch (Exception e)
                 {
-
+                    ++errorCounter;
+                    await Task.Delay(TimeSpan.FromMilliseconds(100 * errorCounter), cancellationToken);
                 }
             }
+        }
+
+        private async Task SendEvent(EventMessage eventMessage, CancellationToken cancellationToken)
+        {
+
+            var definitions = _projectorRegistry.ListDefinitionsByEvent(eventMessage.Body);
+            var writeTasks = definitions.Select(definition => Task.Run(async () =>
+            {
+                var projectorId = definition.GenerateIdentifierFor(eventMessage.Body);
+                var proxy = _actorProxyFactory.CreateActorProxy<IProjectorActor>(_projectorActorUri, new ActorId(projectorId));
+                var projectorMessage = new ProjectorMessage(eventMessage.Body, definition.ProjectorType, eventMessage.Headers);
+
+                await proxy.Project(projectorMessage, cancellationToken);
+            }, cancellationToken));
+
+            await Task.WhenAll(writeTasks);
         }
 
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
