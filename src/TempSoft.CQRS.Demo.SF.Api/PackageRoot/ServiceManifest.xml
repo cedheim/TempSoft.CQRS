@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ServiceManifest Name="TempSoft.CQRS.Demo.ApiPkg"
+<ServiceManifest Name="TempSoft.CQRS.Demo.SF.ApiPkg"
                  Version="1.0.0"
                  xmlns="http://schemas.microsoft.com/2011/01/fabric"
                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -14,7 +14,7 @@
   <CodePackage Name="Code" Version="1.0.0">
     <EntryPoint>
       <ExeHost>
-        <Program>TempSoft.CQRS.Demo.Api.exe</Program>
+        <Program>TempSoft.CQRS.Demo.SF.Api.exe</Program>
         <WorkingFolder>CodePackage</WorkingFolder>
       </ExeHost>
     </EntryPoint>

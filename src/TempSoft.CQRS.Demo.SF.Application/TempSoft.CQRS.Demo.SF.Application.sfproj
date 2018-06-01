@@ -32,10 +32,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TempSoft.CQRS.Demo.AggregateRoots\TempSoft.CQRS.Demo.AggregateRoots.csproj" />
-    <ProjectReference Include="..\TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj" />
-    <ProjectReference Include="..\TempSoft.CQRS.Demo.EventBus\TempSoft.CQRS.Demo.EventBus.csproj" />
-    <ProjectReference Include="..\TempSoft.CQRS.Demo.Projectors\TempSoft.CQRS.Demo.Projectors.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.SF.Api\TempSoft.CQRS.Demo.SF.Api.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.SF.Projectors\TempSoft.CQRS.Demo.SF.Projectors.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.SF.AggregateRoots\TempSoft.CQRS.Demo.SF.AggregateRoots.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.SF.EventBus\TempSoft.CQRS.Demo.SF.EventBus.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

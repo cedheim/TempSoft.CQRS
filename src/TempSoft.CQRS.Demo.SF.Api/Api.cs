@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
+using TempSoft.CQRS.Infrastructure;
 
 namespace TempSoft.CQRS.Demo.Api
 {
@@ -18,9 +19,14 @@ namespace TempSoft.CQRS.Demo.Api
     /// </summary>
     internal sealed class ApiService : StatelessService
     {
-        public ApiService(StatelessServiceContext context)
+        private readonly FluentBootstrapper _bootstrapper;
+
+        // moo
+        public ApiService(StatelessServiceContext context, FluentBootstrapper bootstrapper)
             : base(context)
-        { }
+        {
+            _bootstrapper = bootstrapper;
+        }
 
         /// <summary>
         /// Optional override to create listeners (like tcp, http) for this service instance.
@@ -36,15 +42,16 @@ namespace TempSoft.CQRS.Demo.Api
                         ServiceEventSource.Current.ServiceMessage(serviceContext, $"Starting Kestrel on {url}");
 
                         return new WebHostBuilder()
-                                    .UseKestrel()
-                                    .ConfigureServices(
-                                        services => services
-                                            .AddSingleton<StatelessServiceContext>(serviceContext))
-                                    .UseContentRoot(Directory.GetCurrentDirectory())
-                                    .UseStartup<Startup>()
-                                    .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
-                                    .UseUrls(url)
-                                    .Build();
+                                .ConfigureServices(svc => svc.Add(new ServiceDescriptor(typeof(FluentBootstrapper), _bootstrapper)))
+                                .UseKestrel()
+                                .ConfigureServices(
+                                    services => services
+                                        .AddSingleton<StatelessServiceContext>(serviceContext))
+                                .UseContentRoot(Directory.GetCurrentDirectory())
+                                .UseStartup<Startup>()
+                                .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
+                                .UseUrls(url)
+                                .Build();
                     }))
             };
         }

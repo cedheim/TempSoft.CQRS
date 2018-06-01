@@ -31,19 +31,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Domain",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Tests", "TempSoft.CQRS.Demo.Tests\TempSoft.CQRS.Demo.Tests.csproj", "{A98A8C5D-8F87-453E-9089-6F87B3423AF5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Configuration", "TempSoft.CQRS.Demo.Configuration\TempSoft.CQRS.Demo.Configuration.csproj", "{1557BF89-566F-4729-963C-5529B3C253FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.SF.Configuration", "TempSoft.CQRS.Demo.SF.Configuration\TempSoft.CQRS.Demo.SF.Configuration.csproj", "{1557BF89-566F-4729-963C-5529B3C253FA}"
 EndProject
-Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "TempSoft.CQRS.Demo.Application", "TempSoft.CQRS.Demo.Application\TempSoft.CQRS.Demo.Application.sfproj", "{1BB1E3B2-AB3D-4AC5-A7BB-456803E72EBF}"
+Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "TempSoft.CQRS.Demo.SF.Application", "TempSoft.CQRS.Demo.SF.Application\TempSoft.CQRS.Demo.SF.Application.sfproj", "{1BB1E3B2-AB3D-4AC5-A7BB-456803E72EBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.EventBus", "TempSoft.CQRS.Demo.EventBus\TempSoft.CQRS.Demo.EventBus.csproj", "{807E9087-F9C4-403D-ABCE-115DC6D6ADFA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.SF.EventBus", "TempSoft.CQRS.Demo.SF.EventBus\TempSoft.CQRS.Demo.SF.EventBus.csproj", "{807E9087-F9C4-403D-ABCE-115DC6D6ADFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.AggregateRoots", "TempSoft.CQRS.Demo.AggregateRoots\TempSoft.CQRS.Demo.AggregateRoots.csproj", "{7C7353D8-7813-4854-BBA6-896B21CC1C53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.SF.AggregateRoots", "TempSoft.CQRS.Demo.SF.AggregateRoots\TempSoft.CQRS.Demo.SF.AggregateRoots.csproj", "{7C7353D8-7813-4854-BBA6-896B21CC1C53}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ServiceFabric", "ServiceFabric", "{C6F2DB83-B3F7-419D-827E-7F5D75EF5260}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Projectors", "TempSoft.CQRS.Demo.Projectors\TempSoft.CQRS.Demo.Projectors.csproj", "{8CCF3F5A-3DC9-4351-A753-9C4382070EF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.SF.Projectors", "TempSoft.CQRS.Demo.SF.Projectors\TempSoft.CQRS.Demo.SF.Projectors.csproj", "{8CCF3F5A-3DC9-4351-A753-9C4382070EF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Api", "TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj", "{BD44FD95-E8BC-4C7D-BA19-02C13248828B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.SF.Api", "TempSoft.CQRS.Demo.SF.Api\TempSoft.CQRS.Demo.SF.Api.csproj", "{BD44FD95-E8BC-4C7D-BA19-02C13248828B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TempSoft.CQRS.Demo.Configuration\TempSoft.CQRS.Demo.Configuration.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.SF.Configuration\TempSoft.CQRS.Demo.SF.Configuration.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Demo.Domain\TempSoft.CQRS.Demo.Domain.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>

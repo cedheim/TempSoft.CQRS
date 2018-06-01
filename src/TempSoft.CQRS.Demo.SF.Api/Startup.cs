@@ -16,10 +16,10 @@ namespace TempSoft.CQRS.Demo.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, FluentBootstrapper bootstrapper)
         {
             Configuration = configuration;
-            Bootstrapper = ServiceFabricStartup.Configure();
+            Bootstrapper = bootstrapper;
         }
 
         public FluentBootstrapper Bootstrapper { get; }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/TempSoft.CQRS.Demo.Application" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+<Application xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="fabric:/TempSoft.CQRS.Demo.SF.Application" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
     <Parameter Name="ApiService_InstanceCount" Value="__ApiService_InstanceCount__" />
     <Parameter Name="EventBusService_MinReplicaSetSize" Value="__EventBusService_MinReplicaSetSize__" />
