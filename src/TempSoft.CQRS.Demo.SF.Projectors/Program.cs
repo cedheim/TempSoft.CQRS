@@ -21,6 +21,8 @@ namespace TempSoft.CQRS.Demo.Projectors
         {
             try
             {
+                // THIS IS A CHANGE
+
                 var bootstrapper = ServiceFabricStartup.Configure();
 
                 // This line registers an Actor Service to host your actor class with the Service Fabric runtime.
