@@ -21,6 +21,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
         private ICommandRouter _commandRouter;
         private IProjectionModelRepository _projectionModelRepository;
         private IEventStore _eventStore;
+        private IProjectionQueryRouter _projectionQueryRouter;
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
@@ -31,12 +32,14 @@ namespace TempSoft.CQRS.Tests.Infrastructure
                 .UseInMemoryEventBus()
                 .UseInMemoryEventStore()
                 .UseInMemoryProjectionModelRepository()
+                .UseInMemoryProjectionQueryRouter()
                 .UseProjector<AThingProjector>(nameof(AThingProjector))
                 .Validate();
 
             _commandRouter = _bootstrapper.Resolve<ICommandRouter>();
             _projectionModelRepository = _bootstrapper.Resolve<IProjectionModelRepository>();
             _eventStore = _bootstrapper.Resolve<IEventStore>();
+            _projectionQueryRouter = _bootstrapper.Resolve<IProjectionQueryRouter>();
 
             await _commandRouter.Handle<AThingAggregateRoot>(Data.RootId, new InitializeAThing(Data.RootId), CancellationToken.None);
             await _commandRouter.Handle<AThingAggregateRoot>(Data.RootId, new DoSomething(Data.AValue, Data.BValue), CancellationToken.None);
@@ -68,6 +71,18 @@ namespace TempSoft.CQRS.Tests.Infrastructure
             events.Should().ContainSingle(e => e is CreatedAThing);
             events.Should().ContainSingle(e => e is ChangedAValue);
             events.Should().ContainSingle(e => e is ChangedBValue);
+        }
+
+        [Test]
+        public async Task Should_be_able_to_query_for_projections()
+        {
+            var result = await _projectionQueryRouter.SendQuery<AThingProjector, AThingListResult>(new AThingListQuery(), nameof(AThingProjector), CancellationToken.None);
+
+            var projection = result.Projections.FirstOrDefault();
+
+            projection.Should().NotBeNull();
+            projection.A.Should().Be(Data.AValue);
+            projection.B.Should().Be(Data.BValue);
         }
 
         private static class Data

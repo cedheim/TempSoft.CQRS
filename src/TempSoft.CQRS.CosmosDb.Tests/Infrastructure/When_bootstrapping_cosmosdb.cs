@@ -35,6 +35,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Infrastructure
                 .UseCosmosDbProjectionModelRepository(Data.DatabaseId, Data.ProjectionsCollectionid)
                 .UseInMemoryCommandRouter()
                 .UseInMemoryEventBus()
+                .UseInMemoryProjectionQueryRouter()
                 .Validate();
         }
 

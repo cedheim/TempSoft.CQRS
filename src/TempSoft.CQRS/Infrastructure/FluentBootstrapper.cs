@@ -84,6 +84,7 @@ namespace TempSoft.CQRS.Infrastructure
             ValidateServiceResolution<IProjectorRegistry>(failures);
             ValidateServiceResolution<IProjectorRepository>(failures);
             ValidateServiceResolution<IProjectionModelRepository>(failures);
+            ValidateServiceResolution<IProjectionQueryRouter>(failures);
 
             if (failures.Count > 0)
             {

@@ -9,5 +9,7 @@ namespace TempSoft.CQRS.Projectors
         string ProjectorId { get; set; }
 
         Task Project(IEvent @event, CancellationToken cancellationToken);
+
+        Task<IQueryResult> Query(IQuery query, CancellationToken cancellationToken);
     }
 }

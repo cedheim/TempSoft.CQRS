@@ -40,5 +40,11 @@ namespace TempSoft.CQRS.InMemory.Infrastructure
             return bootstrapper;
         }
 
+        public static FluentBootstrapper UseInMemoryProjectionQueryRouter(this FluentBootstrapper bootstrapper)
+        {
+            bootstrapper.UseService<IProjectionQueryRouter, InMemoryProjectionQueryRouter>(true);
+            return bootstrapper;
+        }
+
     }
 }

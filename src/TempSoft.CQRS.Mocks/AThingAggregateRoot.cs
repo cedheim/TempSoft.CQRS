@@ -287,6 +287,26 @@ namespace TempSoft.CQRS.Mocks
             await _repository.Save(projection, cancellationToken);
         }
 
+        public async Task<IQueryResult> Query(IQuery query, CancellationToken cancellationToken)
+        {
+            var list = new List<AThingProjection>();
+
+            await _repository.List(ProjectorId, (projection, token) =>
+            {
+                if (projection is AThingProjection aThingProjection)
+                {
+                    list.Add(aThingProjection);
+                }
+                return Task.FromResult(true);
+            }, cancellationToken);
+
+            return new AThingListResult()
+            {
+                ProjectorId = ProjectorId,
+                Projections = list.ToArray()
+            };
+        }
+
         public string ProjectorId { get; set; }
     }
 
@@ -310,5 +330,16 @@ namespace TempSoft.CQRS.Mocks
         public int A { get; set; }
 
         public string B { get; set; }
+    }
+
+    public class AThingListQuery : IQuery
+    {
+    }
+
+    public class AThingListResult : IQueryResult
+    {
+        public string ProjectorId { get; set; }
+
+        public AThingProjection[] Projections { get; set; }
     }
 }
