@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Demo.Domain\TempSoft.CQRS.Demo.Domain.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.Infrastructure\TempSoft.CQRS.Demo.Infrastructure.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.ServiceFabric\TempSoft.CQRS.ServiceFabric.csproj" />
   </ItemGroup>
 

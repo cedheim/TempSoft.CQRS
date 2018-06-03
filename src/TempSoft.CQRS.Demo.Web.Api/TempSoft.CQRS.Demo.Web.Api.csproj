@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.CosmosDb\TempSoft.CQRS.CosmosDb.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.Demo.Api\TempSoft.CQRS.Demo.Api.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.Infrastructure\TempSoft.CQRS.Demo.Infrastructure.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS.InMemory\TempSoft.CQRS.InMemory.csproj" />
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>

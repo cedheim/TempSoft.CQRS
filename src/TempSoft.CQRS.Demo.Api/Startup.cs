@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Infrastructure;
+using TempSoft.CQRS.Projectors;
 
 namespace TempSoft.CQRS.Demo.Api
 {
@@ -23,6 +24,7 @@ namespace TempSoft.CQRS.Demo.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.Add(new ServiceDescriptor(typeof(ICommandRouter), Bootstrapper.Resolve<ICommandRouter>()));
+            services.Add(new ServiceDescriptor(typeof(IProjectionModelRepository), Bootstrapper.Resolve<IProjectionModelRepository>()));
             services.AddMvc();
         }
 
