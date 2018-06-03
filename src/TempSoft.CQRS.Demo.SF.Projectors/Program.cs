@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Fabric;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using TempSoft.CQRS.Demo.Configuration;
+using TempSoft.CQRS.Demo.SF.Configuration;
 using TempSoft.CQRS.Projectors;
 using TempSoft.CQRS.ServiceFabric.Projectors;
 
-namespace TempSoft.CQRS.Demo.Projectors
+namespace TempSoft.CQRS.Demo.SF.Projectors
 {
     internal static class Program
     {
@@ -21,8 +18,6 @@ namespace TempSoft.CQRS.Demo.Projectors
         {
             try
             {
-                // THIS IS A CHANGE
-
                 var bootstrapper = ServiceFabricStartup.Configure();
 
                 // This line registers an Actor Service to host your actor class with the Service Fabric runtime.

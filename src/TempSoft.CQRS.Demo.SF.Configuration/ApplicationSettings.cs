@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Fabric;
 
-namespace TempSoft.CQRS.Demo.Configuration
+namespace TempSoft.CQRS.Demo.SF.Configuration
 {
     public class ApplicationSettings : IApplicationSettings
     {

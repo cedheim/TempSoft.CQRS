@@ -1,11 +1,10 @@
-﻿using Microsoft.ServiceFabric.Services.Runtime;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
-using TempSoft.CQRS.Demo.Configuration;
+using Microsoft.ServiceFabric.Services.Runtime;
+using TempSoft.CQRS.Demo.SF.Configuration;
 
-namespace TempSoft.CQRS.Demo.Api
+namespace TempSoft.CQRS.Demo.SF.Api
 {
     internal static class Program
     {

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Tracing;
-using System.Fabric;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
 
-namespace TempSoft.CQRS.Demo.Projectors
+namespace TempSoft.CQRS.Demo.SF.Projectors
 {
     [EventSource(Name = "MyCompany-TempSoft.CQRS.Demo.Application-TempSoft.CQRS.Demo.Projectors")]
     internal sealed class ActorEventSource : EventSource

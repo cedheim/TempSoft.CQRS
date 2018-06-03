@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Fabric;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.ServiceFabric.Services.Runtime;
 
-namespace TempSoft.CQRS.Demo.EventBus
+namespace TempSoft.CQRS.Demo.SF.EventBus
 {
     [EventSource(Name = "MyCompany-TempSoft.CQRS.Demo.Application-TempSoft.CQRS.Demo.EventBus")]
     internal sealed class ServiceEventSource : EventSource

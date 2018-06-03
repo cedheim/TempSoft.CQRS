@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using Microsoft.ServiceFabric.Services.Runtime;
-using TempSoft.CQRS.Demo.Configuration;
+using TempSoft.CQRS.Demo.SF.Configuration;
 using TempSoft.CQRS.Projectors;
 using TempSoft.CQRS.ServiceFabric.Events;
 using TempSoft.CQRS.ServiceFabric.Tools;
 
-namespace TempSoft.CQRS.Demo.EventBus
+namespace TempSoft.CQRS.Demo.SF.EventBus
 {
     internal static class Program
     {

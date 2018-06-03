@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Fabric;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
-using TempSoft.CQRS.Demo.Configuration;
+using TempSoft.CQRS.Demo.SF.Configuration;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.ServiceFabric.Domain;
 
-namespace TempSoft.CQRS.Demo.AggregateRoots
+namespace TempSoft.CQRS.Demo.SF.AggregateRoots
 {
     internal static class Program
     {

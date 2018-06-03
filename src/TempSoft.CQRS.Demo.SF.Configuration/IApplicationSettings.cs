@@ -1,4 +1,4 @@
-﻿namespace TempSoft.CQRS.Demo.Configuration
+﻿namespace TempSoft.CQRS.Demo.SF.Configuration
 {
     public interface IApplicationSettings
     {

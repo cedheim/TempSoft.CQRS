@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Fabric;
-using Microsoft.Azure.Documents.Client;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
+using TempSoft.CQRS.Demo.Infrastructure;
 using TempSoft.CQRS.Infrastructure;
 using TempSoft.CQRS.ServiceFabric.Infrastructure;
 
-namespace TempSoft.CQRS.Demo.Configuration
+namespace TempSoft.CQRS.Demo.SF.Configuration
 {
     public static class ServiceFabricStartup
     {
         public static FluentBootstrapper Configure()
         {
             var configuration = new ApplicationSettings(FabricRuntime.GetActivationContext());
-            var bootstrapper = new FluentBootstrapper();
+            var bootstrapper = BootstrapperGenerator.Generate();
 
             bootstrapper.UseService<IApplicationSettings>(configuration);
             bootstrapper.UseServiceFabric();

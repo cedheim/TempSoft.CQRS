@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Tracing;
-using System.Fabric;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Actors.Runtime;
 
-namespace TempSoft.CQRS.Demo.AggregateRoots
+namespace TempSoft.CQRS.Demo.SF.AggregateRoots
 {
     [EventSource(Name = "MyCompany-TempSoft.CQRS.Demo.Application-TempSoft.CQRS.Demo.AggregateRoots")]
     internal sealed class ActorEventSource : EventSource
