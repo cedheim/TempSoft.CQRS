@@ -34,6 +34,11 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Projectors
             }
         }
 
+        public async Task<IQueryResult> Query(IQuery query, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
+        }
+
         private async Task Handle(MovieInitialized @event, CancellationToken cancellationToken)
         {
             await _repository.Save(new MovieListItemProjection

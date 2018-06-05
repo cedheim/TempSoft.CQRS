@@ -8,5 +8,7 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Projectors
     public interface IProjectorActor : IActor
     {
         Task Project(ProjectorMessage message, CancellationToken cancellationToken);
+
+        Task<QueryResultMessage> Query(QueryMessage message, CancellationToken cancellationToken);
     }
 }

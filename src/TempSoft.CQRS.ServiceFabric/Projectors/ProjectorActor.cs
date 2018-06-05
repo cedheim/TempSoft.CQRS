@@ -43,5 +43,22 @@ namespace TempSoft.CQRS.ServiceFabric.Projectors
 
             await _projector.Project(message.Body, cancellationToken);
         }
+
+        public async Task<QueryResultMessage> Query(QueryMessage message, CancellationToken cancellationToken)
+        {
+            if (object.ReferenceEquals(_projector, default(IProjector)))
+            {
+                _projector = await _repository.Get(message.ProjectorType, _projectorId, cancellationToken);
+            }
+            else if (_projector.GetType() != message.ProjectorType)
+            {
+                throw new ProjectorTypeMissmatchException($"Projector actor {_projectorId} message was for type {message.ProjectorType} but local projector is of type {_projector.GetType()}.");
+            }
+
+            var query = message.Body;
+            var result = await _projector.Query(query, cancellationToken);
+
+            return new QueryResultMessage(result);
+        }
     }
 }
