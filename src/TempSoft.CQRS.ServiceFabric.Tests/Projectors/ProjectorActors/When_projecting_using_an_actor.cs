@@ -43,13 +43,6 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Projectors.ProjectorActors
         }
 
         [Test]
-        public void Should_have_tried_to_get_the_projection()
-        {
-            A.CallTo(() => ProjectionModelRepository.Get<AThingProjection>(A<string>.That.IsNotNull(), Data.ProjectorId, A<CancellationToken>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
-        }
-
-        [Test]
         public void Should_have_saved_the_projection()
         {
             A.CallTo(() => ProjectionModelRepository.Save(A<IProjection>.That.IsNotNull(), A<CancellationToken>.Ignored))

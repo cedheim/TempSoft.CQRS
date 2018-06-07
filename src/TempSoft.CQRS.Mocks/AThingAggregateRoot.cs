@@ -249,7 +249,7 @@ namespace TempSoft.CQRS.Mocks
         public int Version { get; set; }
     }
 
-    public class AThingProjector : IProjector
+    public class AThingProjector : ProjectorBase<AThingProjector>
     {
         private readonly IProjectionModelRepository _repository;
 
@@ -258,36 +258,45 @@ namespace TempSoft.CQRS.Mocks
             _repository = repository;
         }
 
-        public async Task Project(IEvent @event, CancellationToken cancellationToken)
+        [Projector(typeof(CreatedAThing))]
+        public async Task Created(Guid aggregateRootId, CancellationToken cancellationToken)
         {
-            var id = $"{nameof(AThingProjection)}_{@event.AggregateRootId}";
-            var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);
-            
-            if(@event is CreatedAThing initEvent)
-            {
-                projection = new AThingProjection(id, ProjectorId);
-            }
-            else
-            {
-                if (object.ReferenceEquals(projection, default(AThingProjection)))
-                {
-                    throw new Exception("Can not project on unitialized event");
-                }
-
-                if (@event is ChangedAValue aEvent)
-                {
-                    projection.A = aEvent.A;
-                }
-                else if (@event is ChangedBValue @bEvent)
-                {
-                    projection.B = bEvent.B;
-                }
-            }
+            var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
+            var projection = new AThingProjection(id, ProjectorId);
 
             await _repository.Save(projection, cancellationToken);
         }
 
-        public async Task<IQueryResult> Query(IQuery query, CancellationToken cancellationToken)
+        [Projector(typeof(ChangedAValue))]
+        public async Task ChangedAValue(Guid aggregateRootId, int a, CancellationToken cancellationToken)
+        {
+            var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
+            var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);
+
+            if (object.ReferenceEquals(projection, default(AThingProjection)))
+            {
+                throw new Exception("Can not project on unitialized event");
+            }
+
+            projection.A = a;
+        }
+
+        [Projector(typeof(ChangedBValue))]
+        public async Task ChangedBValue(Guid aggregateRootId, string b, CancellationToken cancellationToken)
+        {
+            var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
+            var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);
+
+            if (object.ReferenceEquals(projection, default(AThingProjection)))
+            {
+                throw new Exception("Can not project on unitialized event");
+            }
+
+            projection.B = b;
+        }
+
+        [Query(typeof(AThingListQuery))]
+        public async Task<IQueryResult> List(AThingListQuery query, CancellationToken cancellationToken)
         {
             var list = new List<AThingProjection>();
 
@@ -307,7 +316,15 @@ namespace TempSoft.CQRS.Mocks
             };
         }
 
-        public string ProjectorId { get; set; }
+        [Query(typeof(AThingEmptyQuery))]
+        public IQueryResult Empty()
+        {
+            return new AThingListResult()
+            {
+                ProjectorId = ProjectorId,
+                Projections = new AThingProjection[0]
+            };
+        }
     }
 
     public class AThingProjection : IProjection
@@ -330,6 +347,11 @@ namespace TempSoft.CQRS.Mocks
         public int A { get; set; }
 
         public string B { get; set; }
+    }
+
+    public class AThingEmptyQuery : IQuery
+    {
+
     }
 
     public class AThingListQuery : IQuery
