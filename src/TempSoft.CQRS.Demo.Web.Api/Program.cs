@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Demo.Api;
 using TempSoft.CQRS.Demo.Infrastructure;
@@ -61,6 +57,7 @@ namespace TempSoft.CQRS.Demo.Web.Api
                 .UseCosmosDbProjectionModelRepository(dbConfiguration.ProjectionModelRepository.DatabaseId, dbConfiguration.ProjectionModelRepository.CollectionId)
                 .UseInMemoryCommandRouter()
                 .UseInMemoryEventBus()
+                .UseInMemoryProjectionQueryRouter()
                 .Validate();
 
             return WebHost.CreateDefaultBuilder(args)

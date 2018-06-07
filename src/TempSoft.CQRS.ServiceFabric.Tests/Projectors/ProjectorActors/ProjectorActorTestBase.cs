@@ -2,13 +2,11 @@
 using Microsoft.ServiceFabric.Actors.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
 using ServiceFabric.Mocks;
-using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Projectors;
-using TempSoft.CQRS.ServiceFabric.Domain;
 using TempSoft.CQRS.ServiceFabric.Projectors;
 using TempSoft.CQRS.ServiceFabric.Tests.Mocks;
 
-namespace TempSoft.CQRS.ServiceFabric.Tests.Projectors
+namespace TempSoft.CQRS.ServiceFabric.Tests.Projectors.ProjectorActors
 {
     public abstract class ProjectorActorTestBase
     {

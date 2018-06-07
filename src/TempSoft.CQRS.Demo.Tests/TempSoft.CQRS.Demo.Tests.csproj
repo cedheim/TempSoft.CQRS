@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TempSoft.CQRS.Demo.Domain\TempSoft.CQRS.Demo.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\" />
+  </ItemGroup>
+
 </Project>

@@ -10,7 +10,7 @@ using TempSoft.CQRS.Projectors;
 using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 using TempSoft.CQRS.ServiceFabric.Projectors;
 
-namespace TempSoft.CQRS.ServiceFabric.Tests.Projectors
+namespace TempSoft.CQRS.ServiceFabric.Tests.Projectors.ProjectorActors
 {
     [TestFixture]
     public class When_querying_a_projector_actor : ProjectorActorTestBase

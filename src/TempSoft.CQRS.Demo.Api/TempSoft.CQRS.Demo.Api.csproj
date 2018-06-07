@@ -17,4 +17,8 @@
     <ProjectReference Include="..\TempSoft.CQRS\TempSoft.CQRS.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

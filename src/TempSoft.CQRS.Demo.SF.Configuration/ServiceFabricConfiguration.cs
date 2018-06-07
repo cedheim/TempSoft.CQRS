@@ -17,14 +17,16 @@ namespace TempSoft.CQRS.Demo.SF.Configuration
             bootstrapper.UseService<IApplicationSettings>(configuration);
             bootstrapper.UseServiceFabric();
             bootstrapper.UseEventBusUri(new Uri("fabric:/TempSoft.CQRS.Demo.SF.Application/EventBusService"));
-            bootstrapper.UseProjectorActorrUri(new Uri("fabric:/TempSoft.CQRS.Demo.SF.Application/ProjectorActorService"));
+            bootstrapper.UseProjectorActorUri(new Uri("fabric:/TempSoft.CQRS.Demo.SF.Application/ProjectorActorService"));
             bootstrapper.UseAggregateRootActorUri(new Uri("fabric:/TempSoft.CQRS.Demo.SF.Application/AggregateRootActorService"));
 
             bootstrapper.UseCosmosDb(new Uri(configuration["CosmosDb_EndpointUri"]), configuration["CosmosDb_PrimaryKey"]);
             bootstrapper.UseCosmosDbCommandRegistry(configuration["CommandRegistry_DatabaseId"], configuration["CommandRegistry_CollectionId"]);
             bootstrapper.UseCosmosDbEventStore(configuration["EventStore_DatabaseId"], configuration["EventStore_CollectionId"]);
             bootstrapper.UseCosmosDbProjectionModelRepository(configuration["ProjectionModelRepository_DatabaseId"], configuration["ProjectionModelRepository_CollectionId"]);
-            
+
+            bootstrapper.Validate();
+
             return bootstrapper;
         }
     }
