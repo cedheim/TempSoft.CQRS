@@ -17,8 +17,8 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _root = new AThingAggregateRoot();
-            _root.Initialize(Data.RootId);
+            _root = new AThingAggregateRoot() {Id = Data.RootId};
+            _root.Initialize();
             await _root.AddStuff(Data.EntityId, Data.StuffMessage, CancellationToken.None);
             await _root.Handle(new SetStuffMessage(Data.EntityId, Data.ChangedStuffMessage), CancellationToken.None);
 

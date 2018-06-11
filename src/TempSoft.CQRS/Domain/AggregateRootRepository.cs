@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Extensions;
 using TempSoft.CQRS.Infrastructure;
 
 namespace TempSoft.CQRS.Domain
@@ -34,6 +35,8 @@ namespace TempSoft.CQRS.Domain
             var commandIds = (await getCommandIdsTask)?.ToArray();
 
             var root = Activate(type);
+            root.Id = id;
+
             if (!ReferenceEquals(events, default(IEnumerable<IEvent>)) && events.Length > 0)
                 root.LoadFrom(events, commandIds ?? Enumerable.Empty<Guid>());
 

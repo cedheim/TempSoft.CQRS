@@ -19,7 +19,7 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         {
             _events = new IEvent[]
             {
-                new CreatedAThing(Data.RootId) {Version = 1}, new ChangedAValue(Data.AValue) {Version = 3},
+                new CreatedAThing() {Version = 1}, new ChangedAValue(Data.AValue) {Version = 3},
                 new ChangedBValue(Data.BValue) {Version = 2}
             };
 

@@ -18,12 +18,13 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            var original = new AThingAggregateRoot();
-            original.Initialize(Data.RootId);
+            var original = new AThingAggregateRoot() {Id = Data.RootId};
+            original.Initialize();
+
             await original.Handle(new DoSomething(Data.AValue, Data.BValue), CancellationToken.None);
             _events = original.Commit().Events;
 
-            _root = new AThingAggregateRoot();
+            _root = new AThingAggregateRoot() {Id = Data.RootId};
             _root.LoadFrom(_events, Enumerable.Empty<Guid>());
         }
 

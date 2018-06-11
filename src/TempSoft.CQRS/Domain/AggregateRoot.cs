@@ -40,7 +40,7 @@ namespace TempSoft.CQRS.Domain
             InitializeCommandHandlers();
         }
 
-        public Guid Id { get; protected set; }
+        public Guid Id { get; set; }
 
         public int Version { get; private set; }
 
@@ -117,17 +117,9 @@ namespace TempSoft.CQRS.Domain
                 if (Version != 0)
                     throw new InitializationOfAlreadyInitializedAggregateException(
                         $"Tried to initialize root that already is initialized.");
-
-                if (@event.AggregateRootId == Guid.Empty)
-                    throw new InitializationEventMissingAggregateRootIdException(
-                        $"Tried to initialize aggregate root without aggregate root id.");
-
-                Id = @event.AggregateRootId;
             }
-            else
-            {
-                @event.AggregateRootId = Id;
-            }
+
+            @event.AggregateRootId = Id;
 
             ++Version;
 
@@ -234,6 +226,12 @@ namespace TempSoft.CQRS.Domain
                 new Dictionary<Type, Action<TEntity, IEntityEvent>>();
 
             protected readonly T Root;
+
+            protected void ApplyChange(IEntityEvent @event)
+            {
+                @event.EntityId = Id;
+                Root.ApplyChange(@event);
+            }
 
             static Entity()
             {

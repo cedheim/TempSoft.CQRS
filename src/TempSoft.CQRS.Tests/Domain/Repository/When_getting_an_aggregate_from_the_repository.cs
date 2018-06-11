@@ -26,7 +26,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
             A.CallTo(() => _eventStore.Get(A<Guid>.Ignored, A<int>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(new IEvent[]
                 {
-                    new CreatedAThing(Data.AggregateRootId) {Version = 1}, new ChangedAValue(Data.AValue) {Version = 2},
+                    new CreatedAThing() {Version = 1}, new ChangedAValue(Data.AValue) {Version = 2},
                     new ChangedBValue(Data.BValue) {Version = 3}
                 });
 

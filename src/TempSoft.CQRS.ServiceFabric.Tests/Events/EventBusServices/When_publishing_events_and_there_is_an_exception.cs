@@ -30,7 +30,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Events.EventBusServices
 
             _events = new IEvent[]
             {
-                new CreatedAThing(Data.RootId) {Version = 1}
+                new CreatedAThing() {Version = 1}
             };
 
             var messages = _events.Select(e => new EventMessage(e)).ToArray();

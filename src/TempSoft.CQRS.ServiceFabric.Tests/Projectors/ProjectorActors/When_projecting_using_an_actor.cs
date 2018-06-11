@@ -24,7 +24,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Projectors.ProjectorActors
         public async Task OneTimeSetUp()
         {
             _projector = new AThingProjector(ProjectionModelRepository) { ProjectorId = Data.ProjectorId };
-            _event = new CreatedAThing(Guid.NewGuid());
+            _event = new CreatedAThing();
             _message = new ProjectorMessage(_event, typeof(AThingProjector));
             _actorId = new ActorId(Data.ProjectorId);
 

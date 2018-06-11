@@ -24,7 +24,7 @@ namespace TempSoft.CQRS.Tests.Projectors
                 ProjectorId = Data.ProjectorId
             };
 
-            await _projector.Project(new CreatedAThing(Data.AggregateRootId), CancellationToken.None);
+            await _projector.Project(new CreatedAThing(){AggregateRootId = Data.AggregateRootId }, CancellationToken.None);
         }
 
         [Test]

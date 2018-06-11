@@ -17,18 +17,11 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _root = new AThingAggregateRoot();
-            _root.Initialize(Data.RootId);
+            _root = new AThingAggregateRoot() {Id = Data.RootId};
+            _root.Initialize();
             await _root.AddStuff(Data.EntityId, Data.StuffMessage, CancellationToken.None);
 
             _commit = _root.Commit();
-        }
-
-        private static class Data
-        {
-            public const string StuffMessage = "STUFF!!";
-            public static readonly Guid RootId = Guid.NewGuid();
-            public static readonly Guid EntityId = Guid.NewGuid();
         }
 
         [Test]
@@ -44,6 +37,13 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _commit.Events.Should().ContainSingle(e =>
                 e is AddedStuff && ((AddedStuff) e).EntityId == Data.EntityId &&
                 ((AddedStuff) e).Message == Data.StuffMessage);
+        }
+
+        private static class Data
+        {
+            public const string StuffMessage = "STUFF!!";
+            public static readonly Guid RootId = Guid.NewGuid();
+            public static readonly Guid EntityId = Guid.NewGuid();
         }
     }
 }

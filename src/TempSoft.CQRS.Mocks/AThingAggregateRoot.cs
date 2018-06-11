@@ -53,13 +53,12 @@ namespace TempSoft.CQRS.Mocks
         [EventHandler(typeof(CreatedAThing))]
         private void Apply(CreatedAThing @event)
         {
-            Id = @event.AggregateRootId;
         }
 
         [CommandHandler(typeof(InitializeAThing))]
-        public void Initialize(Guid aggregateRootId)
+        public void Initialize()
         {
-            ApplyChange(new CreatedAThing(aggregateRootId));
+            ApplyChange(new CreatedAThing());
         }
 
         [CommandHandler(typeof(AddStuff))]
@@ -188,14 +187,9 @@ namespace TempSoft.CQRS.Mocks
         public string B { get; }
     }
 
-    public class CreatedAThing : InitializationEventBase
+    public class CreatedAThing : EventBase, IInitializationEvent
     {
-        private CreatedAThing()
-        {
-        }
-
-        public CreatedAThing(Guid aggregateRootId)
-            : base(aggregateRootId)
+        public CreatedAThing()
         {
         }
     }

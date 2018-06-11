@@ -22,8 +22,8 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _root = new AThingAggregateRoot();
-            _root.Initialize(Data.ActorId);
+            _root = new AThingAggregateRoot() {Id = Data.ActorId};
+            _root.Initialize();
             await _root.DoSomething(Data.AValue, Data.BValue, CancellationToken.None);
             _root.Commit();
 
