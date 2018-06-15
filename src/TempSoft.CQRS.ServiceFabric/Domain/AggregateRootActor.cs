@@ -66,9 +66,11 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
         {
             var id = this.GetActorId().GetGuidId();
 
-            // should we initialize if we receive a command before it has been initialized?
             if (_root == null)
-                _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, cancellationToken);
+                _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, false, cancellationToken);
+
+            if (_root == null)
+                return new ReadModelMessage(null);
 
             if (_root is IAggregateRootWithReadModel rootWithReadModel)
             {

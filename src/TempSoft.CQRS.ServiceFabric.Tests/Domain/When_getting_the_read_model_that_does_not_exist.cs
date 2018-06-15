@@ -12,23 +12,17 @@ using TempSoft.CQRS.ServiceFabric.Interfaces.Messaging;
 namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
 {
     [TestFixture]
-    public class When_getting_the_read_model : AggregateRootActorTestBase
+    public class When_getting_the_read_model_that_does_not_exist : AggregateRootActorTestBase
     {
         private AggregateRootActor _actor;
-        private AThingAggregateRoot _root;
         private ActorId _actorId;
         private ReadModelMessage _readModelMessage;
 
         [OneTimeSetUp]
         public async Task OneTimeSetUp()
         {
-            _root = new AThingAggregateRoot() {Id = Data.ActorId};
-            _root.Initialize();
-            await _root.DoSomething(Data.AValue, Data.BValue, CancellationToken.None);
-            _root.Commit();
-
             A.CallTo(() => AggregateRootRepository.Get(A<Type>.Ignored, A<Guid>.Ignored, A<bool>.Ignored, A<CancellationToken>.Ignored))
-                .Returns(_root);
+                .Returns(default(AThingAggregateRoot));
 
             _actorId = new ActorId(Data.ActorId);
             _actor = ActorService.Activate(_actorId);
@@ -57,15 +51,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
         public void Should_have_returned_the_correct_read_model()
         {
             var readModel = _readModelMessage.GetReadModel<AThingReadModel>();
-
-            readModel.Should().BeEquivalentTo(_root);
-        }
-
-        [Test]
-        public void Should_have_set_the_values()
-        {
-            _root.A.Should().Be(Data.AValue);
-            _root.B.Should().Be(Data.BValue);
+            readModel.Should().BeNull();
         }
     }
 }

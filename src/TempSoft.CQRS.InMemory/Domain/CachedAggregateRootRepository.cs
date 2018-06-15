@@ -24,9 +24,22 @@ namespace TempSoft.CQRS.InMemory.Domain
             return Task.FromResult(root);
         }
 
+        public Task<IAggregateRoot> Get(Type type, Guid id, bool createIfItDoesNotExist, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var root = _cache.GetOrAdd(id, guid => _internalRepository.Get(type, guid, createIfItDoesNotExist, cancellationToken).GetAwaiter().GetResult());
+            return Task.FromResult(root);
+        }
+
         public Task<TAggregate> Get<TAggregate>(Guid id, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
         {
             var root = _cache.GetOrAdd(id, guid => _internalRepository.Get(typeof(TAggregate), guid, cancellationToken).GetAwaiter().GetResult());
+            return Task.FromResult((TAggregate)root);
+        }
+
+        public Task<TAggregate> Get<TAggregate>(Guid id, bool createIfItDoesNotExist,
+            CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
+        {
+            var root = _cache.GetOrAdd(id, guid => _internalRepository.Get(typeof(TAggregate), guid, createIfItDoesNotExist, cancellationToken).GetAwaiter().GetResult());
             return Task.FromResult((TAggregate)root);
         }
 

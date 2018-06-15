@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using TempSoft.CQRS.Common.Extensions;
 using TempSoft.CQRS.Common.Serialization;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
@@ -23,8 +24,16 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 
         protected GenericObjectBase(object body)
         {
-            _deserializedType = body.GetType();
-            _deserializedBody = body;
+            if (object.ReferenceEquals(body, default(object)))
+            {
+                _deserializedType = typeof(object);
+                _deserializedBody = null;
+            }
+            else
+            {
+                _deserializedType = body.GetType();
+                _deserializedBody = body;
+            }
 
             Serialize();
         }
@@ -37,7 +46,7 @@ namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
         private void Serialize()
         {
             // Type name without version qualifier. Not sure how to handle this properly.
-            _type = $"{_deserializedType.FullName}, {_deserializedType.Assembly.GetName().Name}";
+            _type = _deserializedType.ToFriendlyName();
             _body = Serializer.Serialize(_deserializedBody);
         }
     }

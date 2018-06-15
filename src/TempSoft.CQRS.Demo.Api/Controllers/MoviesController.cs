@@ -24,7 +24,7 @@ namespace TempSoft.CQRS.Demo.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetMovie(Guid id, CancellationToken cancellationToken)
         {
             var movie = await _router.GetReadModel<Movie, MovieModel>(id, cancellationToken);
             if (object.ReferenceEquals(movie, default(MovieModel)))
@@ -36,7 +36,7 @@ namespace TempSoft.CQRS.Demo.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] MovieInputModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateMovie([FromBody] MovieInputModel model, CancellationToken cancellationToken)
         {
             var aggregateRootId = Guid.NewGuid();
             await _router.Handle<Movie>(aggregateRootId, new CreateMovie(model.OriginalTitle), cancellationToken);
@@ -46,20 +46,20 @@ namespace TempSoft.CQRS.Demo.Api.Controllers
                 await Task.WhenAll(model.LocalInformation.Select(li => _router.Handle<Movie>(aggregateRootId, new SetLocalTitle(new Culture(li.Key), li.Value.Title), cancellationToken)));
             }
 
-            return await Get(aggregateRootId, cancellationToken);
+            return await GetMovie(aggregateRootId, cancellationToken);
         }
 
         [HttpPut("{id}/local/{culture}/title")]
-        public async Task<IActionResult> Put(Guid id, string culture, [FromBody] LocalTitleInputModel model, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateTitle(Guid id, string culture, [FromBody] LocalTitleInputModel model, CancellationToken cancellationToken)
         {
             await _router.Handle<Movie>(id, new SetLocalTitle(new Culture(culture), model.Title),
                 cancellationToken);
 
-            return await Get(id, cancellationToken);
+            return await GetTitle(id, culture, cancellationToken);
         }
 
         [HttpGet("{id}/local/{culture}/title")]
-        public async Task<IActionResult> Get(Guid id, string culture, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetTitle(Guid id, string culture, CancellationToken cancellationToken)
         {
             var movie = await _router.GetReadModel<Movie, MovieModel>(id, cancellationToken);
             var cultureModel = new Culture(culture);
@@ -73,6 +73,44 @@ namespace TempSoft.CQRS.Demo.Api.Controllers
             var localInformation = localInformationDictionary[cultureModel.ToString()];
 
             return Ok(localInformation);
+        }
+
+        [HttpPut("{id}/identifier/{type}")]
+        public async Task<IActionResult> UpdateIdentifier(Guid id, string type, [FromBody] IdentifierInputModel model, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(type))
+            {
+                return StatusCode(422, "An identifier type is required.");
+            }
+
+            if (string.IsNullOrEmpty(model?.Value))
+            {
+                return StatusCode(422, "An identifier value is required.");
+            }
+
+            type = type.ToUpper().Trim();
+            await _router.Handle<Movie>(id, new SetIdentifier(type, model.Value), cancellationToken);
+            return await GetIdentifier(id, type, cancellationToken);
+        }
+
+        [HttpGet("{id}/identifier/{type}")]
+        public async Task<IActionResult> GetIdentifier(Guid id, string type, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(type))
+            {
+                return StatusCode(422, "An identifier type is required.");
+            }
+
+            type = type.ToUpper().Trim();
+            var movie = await _router.GetReadModel<Movie, MovieModel>(id, cancellationToken);
+            var identifierId = default(string);
+
+            if (movie.Identifiers.ContainsKey(type))
+            {
+                identifierId = movie.Identifiers[type];
+            }
+
+            return Ok(new Dictionary<string, string> {{type, identifierId}});
         }
     }
 }

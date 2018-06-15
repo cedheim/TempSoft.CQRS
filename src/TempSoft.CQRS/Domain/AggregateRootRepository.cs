@@ -25,14 +25,23 @@ namespace TempSoft.CQRS.Domain
             _serviceProvider = serviceProvider;
         }
 
-        public async Task<IAggregateRoot> Get(Type type, Guid id,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IAggregateRoot> Get(Type type, Guid id, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await Get(type, id, true, cancellationToken);
+        }
+
+        public async Task<IAggregateRoot> Get(Type type, Guid id, bool createIfItDoesNotExist, CancellationToken cancellationToken = default(CancellationToken))
         {
             var getEventsTask = _eventStore.Get(id, cancellationToken: cancellationToken);
             var getCommandIdsTask = _commandRegistry.Get(id, cancellationToken);
 
             var events = (await getEventsTask)?.ToArray();
             var commandIds = (await getCommandIdsTask)?.ToArray();
+
+            if (object.ReferenceEquals(events, default(IEvent[])) && !createIfItDoesNotExist)
+            {
+                return default(IAggregateRoot);
+            }
 
             var root = Activate(type);
             root.Id = id;
@@ -47,6 +56,12 @@ namespace TempSoft.CQRS.Domain
             CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
         {
             return (TAggregate) await Get(typeof(TAggregate), id, cancellationToken);
+        }
+
+        public async Task<TAggregate> Get<TAggregate>(Guid id, bool createIfItDoesNotExist, CancellationToken cancellationToken = default(CancellationToken)) 
+            where TAggregate : IAggregateRoot
+        {
+            return (TAggregate)await Get(typeof(TAggregate), id, createIfItDoesNotExist, cancellationToken);
         }
 
         public async Task Save(IAggregateRoot root, CancellationToken cancellationToken = default(CancellationToken))

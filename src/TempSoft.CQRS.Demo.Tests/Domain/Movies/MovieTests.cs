@@ -3,13 +3,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Castle.DynamicProxy.Generators.Emitters;
+using FakeItEasy;
 using FluentAssertions;
 using NUnit.Framework;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Commands;
 using TempSoft.CQRS.Demo.Domain.Movies.Entities;
 using TempSoft.CQRS.Demo.Domain.Movies.Events;
+using TempSoft.CQRS.Demo.Domain.Movies.Exceptions;
 using TempSoft.CQRS.Demo.Domain.Movies.Models;
+using TempSoft.CQRS.Demo.Domain.Persons.Entities;
+using TempSoft.CQRS.Demo.Domain.Persons.Models;
 using TempSoft.CQRS.Demo.ValueObjects;
 using TempSoft.CQRS.Events;
 
@@ -19,11 +23,14 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
     public class MovieTests
     {
         private Movie _entity;
+        private ICommandRouter _router;
 
         [SetUp]
         public async Task SetUp()
         {
-            _entity = new Movie() {Id = Data.AggregateRootId};
+            _router = A.Fake<ICommandRouter>();
+
+            _entity = new Movie(_router) {Id = Data.AggregateRootId};
             await _entity.Handle(new CreateMovie(Data.OriginalTitle), CancellationToken.None);
         }
 
@@ -78,22 +85,6 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
             commit.Events.Should().ContainSingle(e => e is IdentifierUpdated && ((IdentifierUpdated)e).Value == Data.IdentifierValue);
         }
 
-        [Test]
-        public void Should_be_able_to_serialize_events()
-        {
-            var event1 = new MovieCreated(Data.OriginalTitle)
-            {
-                AggregateRootId = Data.AggregateRootId,
-                EventGroup = nameof(Movie),
-                Version = 1,
-                Timestamp = DateTime.UtcNow
-            };
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(event1);
-            var event2 = Newtonsoft.Json.JsonConvert.DeserializeObject<MovieCreated>(json);
-
-            event2.Should().BeEquivalentTo(event1);
-        }
-
         [TestCase(typeof(MovieCreated), new object[]{ Data.OriginalTitle })]
         [TestCase(typeof(IdentifierCreated), new object[] { Data.IdentifierId })]
         [TestCase(typeof(IdentifierUpdated), new object[] { Data.IdentifierValue })]
@@ -115,6 +106,7 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
         [TestCase(typeof(CreateMovie), new object[]{ Data.OriginalTitle })]
         [TestCase(typeof(SetIdentifier), new object[] { Data.IdentifierId, Data.IdentifierValue })]
         [TestCase(typeof(SetLocalTitle), new object[] { Data.Country, Data.Language, Data.LocalTitle })]
+        [TestCase(typeof(AddActor), new object[] { Data.ActorIdString })]
         public void Should_be_able_to_serialize_command(Type commandType, object[] arguments)
         {
             var o1 = Activator.CreateInstance(commandType, arguments) as ICommand;
@@ -122,6 +114,36 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
             var o2 = Newtonsoft.Json.JsonConvert.DeserializeObject(json, commandType);
 
             o2.Should().BeEquivalentTo(o1);
+        }
+
+        [Test]
+        public async Task Should_be_able_to_add_a_person_as_an_actor()
+        {
+            A.CallTo(() => _router.GetReadModel<Person, PersonModel>(A<Guid>.Ignored, A<CancellationToken>.Ignored))
+                .Returns(new PersonModel {Id = Data.ActorId});
+
+            await _entity.Handle(new AddActor(Data.ActorId), CancellationToken.None);
+            var commit = _entity.Commit();
+
+            commit.Events.Should().ContainSingle(e => e is PersonAdded && ((PersonAdded)e).PersonId == Data.ActorId && ((PersonAdded)e).Role == "ACTOR");
+
+            A.CallTo(() => _router.GetReadModel<Person, PersonModel>(Data.ActorId, A<CancellationToken>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+
+            var persons = _entity.Persons;
+
+            persons.Should().ContainKey("ACTOR");
+            persons["ACTOR"].Should().ContainSingle(personId => personId == Data.ActorId);
+        }
+
+        [Test]
+        public void Should_not_be_able_to_add_a_person_if_it_does_not_exist()
+        {
+            A.CallTo(() => _router.GetReadModel<Person, PersonModel>(A<Guid>.Ignored, A<CancellationToken>.Ignored))
+                .Returns(default(PersonModel));
+
+            _entity.Invoking(e => e.Handle(new AddActor(Data.ActorId), CancellationToken.None).Wait())
+                .Should().Throw<UnableToAddPersonException>();
         }
 
         private static class Data
@@ -141,6 +163,10 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
             public const string IdentifierId = "IMDB";
 
             public const string IdentifierValue = "tt0076759";
+
+            public const string ActorIdString = "aecb0185-401f-419f-8991-f0c56ea5e202";
+
+            public static readonly Guid ActorId = Guid.Parse(ActorIdString);
         }
     }
 }
