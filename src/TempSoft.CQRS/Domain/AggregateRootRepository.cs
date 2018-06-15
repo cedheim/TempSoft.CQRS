@@ -38,7 +38,7 @@ namespace TempSoft.CQRS.Domain
             var events = (await getEventsTask)?.ToArray();
             var commandIds = (await getCommandIdsTask)?.ToArray();
 
-            if (object.ReferenceEquals(events, default(IEvent[])) && !createIfItDoesNotExist)
+            if ((object.ReferenceEquals(events, default(IEvent[])) || events.Length == 0) && !createIfItDoesNotExist)
             {
                 return default(IAggregateRoot);
             }

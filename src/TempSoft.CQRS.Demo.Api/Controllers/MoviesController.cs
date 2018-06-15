@@ -29,7 +29,7 @@ namespace TempSoft.CQRS.Demo.Api.Controllers
             var movie = await _router.GetReadModel<Movie, MovieModel>(id, cancellationToken);
             if (object.ReferenceEquals(movie, default(MovieModel)))
             {
-                NotFound();
+                return NotFound();
             }
 
             return Ok(movie);

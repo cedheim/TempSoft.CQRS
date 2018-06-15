@@ -24,8 +24,9 @@ namespace TempSoft.CQRS.InMemory.Commands
 
         public async Task<TReadModel> GetReadModel<TAggregate, TReadModel>(Guid id, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRootWithReadModel where TReadModel : IAggregateRootReadModel
         {
-            var root = await _repository.Get<TAggregate>(id, cancellationToken);
-            return (TReadModel) (root.GetReadModel());
+            var root = await _repository.Get<TAggregate>(id, false, cancellationToken);
+
+            return (TReadModel) (root?.GetReadModel());
         }
     }
 }
