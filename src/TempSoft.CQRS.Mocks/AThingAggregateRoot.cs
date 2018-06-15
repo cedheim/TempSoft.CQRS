@@ -62,7 +62,7 @@ namespace TempSoft.CQRS.Mocks
         }
 
         [CommandHandler(typeof(AddStuff))]
-        public async Task AddStuff(Guid entityId, string message, CancellationToken cancellationToken)
+        public async Task AddStuff(string entityId, string message, CancellationToken cancellationToken)
         {
             ApplyChange(new AddedStuff(entityId, message));
         }
@@ -77,7 +77,7 @@ namespace TempSoft.CQRS.Mocks
 
     public class StuffEntity : AggregateRoot<AThingAggregateRoot>.Entity<StuffEntity>
     {
-        public StuffEntity(AThingAggregateRoot root, Guid id, string message) : base(root, id)
+        public StuffEntity(AThingAggregateRoot root, string id, string message) : base(root, id)
         {
             Message = message;
         }
@@ -87,7 +87,7 @@ namespace TempSoft.CQRS.Mocks
         [CommandHandler(typeof(SetStuffMessage))]
         public async Task SetMessage(string message, CancellationToken cancellationToken)
         {
-            Root.ApplyChange(new StuffMessageSet(Id, message));
+            ApplyChange(new StuffMessageSet(Id, message));
         }
 
         [EventHandler(typeof(StuffMessageSet))]
@@ -117,7 +117,7 @@ namespace TempSoft.CQRS.Mocks
         {
         }
 
-        public AddStuff(Guid entityId, string message)
+        public AddStuff(string entityId, string message)
         {
             Message = message;
             EntityId = entityId;
@@ -125,7 +125,7 @@ namespace TempSoft.CQRS.Mocks
 
         public string Message { get; }
 
-        public Guid EntityId { get; }
+        public string EntityId { get; }
     }
 
     public class SetStuffMessage : EntityCommandBase
@@ -134,7 +134,7 @@ namespace TempSoft.CQRS.Mocks
         {
         }
 
-        public SetStuffMessage(Guid entityId, string message)
+        public SetStuffMessage(string entityId, string message)
         {
             Message = message;
             EntityId = entityId;
@@ -200,13 +200,13 @@ namespace TempSoft.CQRS.Mocks
         {
         }
 
-        public AddedStuff(Guid entityId, string message)
+        public AddedStuff(string entityId, string message)
         {
             EntityId = entityId;
             Message = message;
         }
 
-        public Guid EntityId { get; }
+        public string EntityId { get; }
         public string Message { get; }
     }
 
@@ -216,7 +216,7 @@ namespace TempSoft.CQRS.Mocks
         {
         }
 
-        public StuffMessageSet(Guid entityId, string message)
+        public StuffMessageSet(string entityId, string message)
         {
             EntityId = entityId;
             Message = message;
@@ -227,7 +227,7 @@ namespace TempSoft.CQRS.Mocks
 
     public class StuffReadModel
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public string Message { get; set; }
     }

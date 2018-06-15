@@ -4,6 +4,6 @@ namespace TempSoft.CQRS.Events
 {
     public interface IEntityEvent : IEvent
     {
-        Guid EntityId { get; set; }
+        string EntityId { get; set; }
     }
 }

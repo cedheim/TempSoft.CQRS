@@ -5,10 +5,6 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
 {
     public class CreateMovie : CommandBase
     {
-        private CreateMovie()
-        {
-        }
-
         public CreateMovie(string originalTitle)
         {
             OriginalTitle = originalTitle;

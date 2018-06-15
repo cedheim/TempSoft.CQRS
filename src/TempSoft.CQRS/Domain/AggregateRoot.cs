@@ -27,7 +27,7 @@ namespace TempSoft.CQRS.Domain
         private readonly HashSet<Guid> _commandIds = new HashSet<Guid>();
 
         // registered entities
-        private readonly Dictionary<Guid, IEntity> _entities = new Dictionary<Guid, IEntity>();
+        private readonly Dictionary<string, IEntity> _entities = new Dictionary<string, IEntity>();
 
         // session cache
         private readonly List<ICommand> _processedCommands = new List<ICommand>();
@@ -50,15 +50,19 @@ namespace TempSoft.CQRS.Domain
 
             if (command is IEntityCommand entityCommand)
             {
-                if (_entities.TryGetValue(entityCommand.EntityId, out var entity) &&
-                    EntityCommandHandler.TryGetValue(entity.GetType(), out var method))
+                if (!_entities.TryGetValue(entityCommand.EntityId, out var entity))
+                {
+                    entity = MissingEntityHandler(entityCommand);
+                }
+
+                if (EntityCommandHandler.TryGetValue(entity.GetType(), out var method))
                 {
                     var task = (Task) method.Invoke(this, new object[] {entity, entityCommand, cancellationToken});
                     await task;
                 }
                 else
                 {
-                    throw new MissingEntityException($"Entity with id {entityCommand.EntityId} not found.");
+                    throw new MissingEntityException($"Unable to find command handler for {entityCommand.GetType()} for entity {entityCommand.EntityId}.");
                 }
             }
             else
@@ -131,6 +135,11 @@ namespace TempSoft.CQRS.Domain
             _uncommitedEvents.Add(@event);
         }
 
+        protected virtual IEntity MissingEntityHandler(IEntityCommand command)
+        {
+            throw new MissingEntityException($"Entity with id {command.EntityId} not found.");
+        }
+
         private async Task HandleCommandForEntity<TEntity>(TEntity entity, IEntityCommand command,
             CancellationToken cancellationToken) where TEntity : Entity<TEntity>
         {
@@ -151,7 +160,7 @@ namespace TempSoft.CQRS.Domain
         {
             if (_entities.ContainsKey(entity.Id))
                 throw new EntityAlreadyExistsException($"An entity with id {entity.Id} already exists.");
-            if (entity.Id == Guid.Empty)
+            if (string.IsNullOrEmpty(entity.Id))
                 throw new EntityMissingIdException($"Tried to register an entity without a proper id.");
 
             _entities.Add(entity.Id, entity);
@@ -242,14 +251,14 @@ namespace TempSoft.CQRS.Domain
                 CreateApplyEventForEntity();
             }
 
-            protected Entity(T root, Guid id)
+            protected Entity(T root, string id)
             {
                 Id = id;
                 Root = root;
                 Root.RegisterEntity(this);
             }
 
-            public Guid Id { get; set; }
+            public string Id { get; set; }
 
 
             private static void InitializeEventHandlers()

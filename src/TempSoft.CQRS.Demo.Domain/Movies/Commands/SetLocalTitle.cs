@@ -1,21 +1,27 @@
-﻿using TempSoft.CQRS.Commands;
-using TempSoft.CQRS.Demo.Domain.Movies.Values;
+﻿using Newtonsoft.Json;
+using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Demo.ValueObjects;
 
 namespace TempSoft.CQRS.Demo.Domain.Movies.Commands
 {
-    public class SetLocalTitle : CommandBase
+    public class SetLocalTitle : EntityCommandBase, ILocalInformationCommand
     {
-        private SetLocalTitle()
+        public SetLocalTitle(string country, string language, string title)
         {
-        }
-
-        public SetLocalTitle(Country country, string title)
-        {
-            Country = country;
+            Culture = new Culture(country, language);
+            EntityId = Culture.ToString();
             Title = title;
         }
 
-        public Country Country { get; private set; }
+        [JsonConstructor]
+        public SetLocalTitle(Culture culture, string title)
+        {
+            EntityId = culture.ToString();
+            Culture = culture;
+            Title = title;
+        }
+
+        public Culture Culture { get; private set; }
 
         public string Title { get; private set; }
     }

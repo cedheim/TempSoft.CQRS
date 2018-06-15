@@ -1,7 +1,9 @@
 ﻿using TempSoft.CQRS.Commands;
+using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Infrastructure;
 using TempSoft.CQRS.InMemory.Commands;
+using TempSoft.CQRS.InMemory.Domain;
 using TempSoft.CQRS.InMemory.Events;
 using TempSoft.CQRS.InMemory.Projectors;
 using TempSoft.CQRS.Projectors;
@@ -43,6 +45,12 @@ namespace TempSoft.CQRS.InMemory.Infrastructure
         public static FluentBootstrapper UseInMemoryProjectionQueryRouter(this FluentBootstrapper bootstrapper)
         {
             bootstrapper.UseService<IProjectionQueryRouter, InMemoryProjectionQueryRouter>(true);
+            return bootstrapper;
+        }
+
+        public static FluentBootstrapper UseCachedAggregateRootRepository(this FluentBootstrapper bootstrapper)
+        {
+            bootstrapper.UseService<IAggregateRootRepository, CachedAggregateRootRepository>(true);
             return bootstrapper;
         }
 

@@ -4,6 +4,6 @@ namespace TempSoft.CQRS.Commands
 {
     public abstract class EntityCommandBase : CommandBase, IEntityCommand
     {
-        public Guid EntityId { get; set; }
+        public string EntityId { get; set; }
     }
 }

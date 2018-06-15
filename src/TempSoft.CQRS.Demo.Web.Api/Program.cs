@@ -58,6 +58,7 @@ namespace TempSoft.CQRS.Demo.Web.Api
                 .UseInMemoryCommandRouter()
                 .UseInMemoryEventBus()
                 .UseInMemoryProjectionQueryRouter()
+                //.UseCachedAggregateRootRepository()
                 .Validate();
 
             return WebHost.CreateDefaultBuilder(args)

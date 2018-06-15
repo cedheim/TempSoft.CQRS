@@ -1,14 +1,12 @@
 ﻿using System;
+using Newtonsoft.Json;
 using TempSoft.CQRS.Events;
 
 namespace TempSoft.CQRS.Demo.Domain.Movies.Events
 {
     public class MovieCreated : EventBase, IInitializationEvent
     {
-        private MovieCreated()
-        {
-        }
-
+        [JsonConstructor]
         public MovieCreated(string originalTitle)
             : base()
         {
