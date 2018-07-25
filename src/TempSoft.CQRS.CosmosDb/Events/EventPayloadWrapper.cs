@@ -35,7 +35,11 @@ namespace TempSoft.CQRS.CosmosDb.Events
 
         public string EventGroup { get; set; }
 
-        [JsonProperty("_ts")] public long Timestamp { get; set; }
+        [JsonProperty("_ts")]
+        public long Epoch { get; set; }
+
+        [JsonIgnore]
+        public DateTime Timestamp => Epoch.ToDateTime();
 
         public IEvent GetEvent()
         {

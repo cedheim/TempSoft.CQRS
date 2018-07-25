@@ -86,10 +86,10 @@ namespace TempSoft.CQRS.CosmosDb.Events
             if (filter.From.HasValue)
             {
                 var unixTime = filter.From.Value.ToUnixTime();
-                query = query.Where(e => e.Timestamp >= unixTime);
+                query = query.Where(e => e.Epoch >= unixTime);
             }
 
-            var pagedQuery = Pager.CreatePagedQuery(query.OrderBy(e => e.Timestamp));
+            var pagedQuery = Pager.CreatePagedQuery(query.OrderBy(e => e.Epoch));
 
             while (pagedQuery.HasMoreResults && !cancellationToken.IsCancellationRequested)
             {

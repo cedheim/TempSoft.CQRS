@@ -24,7 +24,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
         public async Task OneTimeSetUp()
         {
             _root = new AThingAggregateRoot();
-            A.CallTo(() => AggregateRootRepository.Get(A<Type>.Ignored, A<Guid>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => AggregateRootRepository.Get(A<Type>.Ignored, A<Guid>.Ignored, A<bool>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(_root);
 
             _actorId = new ActorId(Data.ActorId);
@@ -45,7 +45,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
         public void Should_have_gotten_the_root_from_the_repository()
         {
             A.CallTo(() =>
-                    AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId,
+                    AggregateRootRepository.Get(typeof(AThingAggregateRoot), Data.ActorId, true,
                         A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }

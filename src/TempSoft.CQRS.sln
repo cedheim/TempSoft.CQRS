@@ -53,7 +53,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Api", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.Infrastructure", "TempSoft.CQRS.Demo.Infrastructure\TempSoft.CQRS.Demo.Infrastructure.csproj", "{FA8798B0-F8B4-4E31-A969-167C4C723C40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.ValueObjects", "TempSoft.CQRS.Demo.ValueObjects\TempSoft.CQRS.Demo.ValueObjects.csproj", "{DE2918B0-2D60-4A72-A29C-3D63D47AF657}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TempSoft.CQRS.Demo.ValueObjects", "TempSoft.CQRS.Demo.ValueObjects\TempSoft.CQRS.Demo.ValueObjects.csproj", "{DE2918B0-2D60-4A72-A29C-3D63D47AF657}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempSoft.CQRS.Demo.Projectors", "TempSoft.CQRS.Demo.Projectors\TempSoft.CQRS.Demo.Projectors.csproj", "{0ADD86A1-74C1-4A10-8514-237BB4898F77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -239,6 +241,14 @@ Global
 		{DE2918B0-2D60-4A72-A29C-3D63D47AF657}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE2918B0-2D60-4A72-A29C-3D63D47AF657}.Release|x64.ActiveCfg = Release|Any CPU
 		{DE2918B0-2D60-4A72-A29C-3D63D47AF657}.Release|x64.Build.0 = Release|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Debug|x64.Build.0 = Debug|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Release|x64.ActiveCfg = Release|Any CPU
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -262,6 +272,7 @@ Global
 		{E2E6C802-7E98-4599-93FE-3E150D28FEB7} = {F6F037CC-570E-40B0-AF69-7C6554EB8BD3}
 		{FA8798B0-F8B4-4E31-A969-167C4C723C40} = {F6F037CC-570E-40B0-AF69-7C6554EB8BD3}
 		{DE2918B0-2D60-4A72-A29C-3D63D47AF657} = {F6F037CC-570E-40B0-AF69-7C6554EB8BD3}
+		{0ADD86A1-74C1-4A10-8514-237BB4898F77} = {F6F037CC-570E-40B0-AF69-7C6554EB8BD3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {47244D3C-7056-4D10-A8C5-E47C9F7789C2}

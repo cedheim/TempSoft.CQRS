@@ -10,6 +10,8 @@ namespace TempSoft.CQRS.Projectors
 
         Task<TProjectionModel> Get<TProjectionModel>(string id, string projectorId, CancellationToken cancellationToken) where TProjectionModel : IProjection;
 
+        Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, int skip, int take, CancellationToken cancellationToken);
+
         Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, CancellationToken cancellationToken);
     }
 }

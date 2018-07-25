@@ -45,17 +45,34 @@ namespace TempSoft.CQRS.InMemory.Projectors
 
         }
 
-        public async Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, CancellationToken cancellationToken)
+        public async Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, int skip, int take, CancellationToken cancellationToken)
         {
             if (!_db.TryGetValue(projectorId, out var bag))
             {
                 return;
             }
 
+            var query = bag.Values.AsQueryable();
+
+            if (skip > 0)
+            {
+                query = query.Skip(skip);
+            }
+
+            if (take > 0)
+            {
+                query = query.Take(take);
+            }
+
             foreach (var projection in bag.Values)
             {
                 await callback(projection, cancellationToken);
             }
+        }
+
+        public Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, CancellationToken cancellationToken)
+        {
+            return List(projectorId, callback, -1, -1, cancellationToken);
         }
     }
 }

@@ -50,5 +50,11 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
 
             return wrapper;
         }
+
+        [JsonProperty("_ts")]
+        public long Epoch { get; set; }
+
+        [JsonIgnore]
+        public DateTime Timestamp => Epoch.ToDateTime();
     }
 }

@@ -17,7 +17,7 @@ namespace TempSoft.CQRS.InMemory.Commands
 
         public async Task Handle<TAggregate>(Guid id, ICommand command, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
         {
-            var root = await _repository.Get<TAggregate>(id, cancellationToken);
+            var root = await _repository.Get<TAggregate>(id, true, cancellationToken);
             await root.Handle(command, cancellationToken);
             await _repository.Save(root, cancellationToken);
         }

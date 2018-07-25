@@ -29,6 +29,9 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
         public async Task SetUp()
         {
             _router = A.Fake<ICommandRouter>();
+            A.CallTo(() => _router.GetReadModel<Person, PersonModel>(A<Guid>.Ignored, A<CancellationToken>.Ignored))
+                .Returns(new PersonModel { Id = Data.ActorId });
+
 
             _entity = new Movie(_router) {Id = Data.AggregateRootId};
             await _entity.Handle(new CreateMovie(Data.OriginalTitle), CancellationToken.None);
@@ -63,6 +66,7 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
         {
             await _entity.Handle(new SetLocalTitle(Data.Culture, Data.LocalTitle), CancellationToken.None);
             await _entity.Handle(new SetIdentifier(Data.IdentifierId, Data.IdentifierValue), CancellationToken.None);
+            await _entity.Handle(new AddActor(Data.ActorId), CancellationToken.None);
 
             var model = (MovieModel) _entity.GetReadModel();
 
@@ -71,6 +75,8 @@ namespace TempSoft.CQRS.Demo.Tests.Domain.Movies
             model.OriginalTitle.Should().Be(_entity.OriginalTitle);
             model.LocalInformation.Should().ContainKey(Data.Culture.ToString());
             model.Identifiers.Should().Contain(Data.IdentifierId, Data.IdentifierValue);
+            model.Persons.Should().ContainKey("ACTOR");
+            model.Persons["ACTOR"].Should().ContainSingle(p => p == Data.ActorId);
         }
 
         [Test]

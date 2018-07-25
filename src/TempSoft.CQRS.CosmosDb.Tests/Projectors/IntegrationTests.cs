@@ -99,6 +99,17 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Projectors
             result2.ProjectorId.Should().Be(Data.ProjectorId2);
         }
 
+        [Test]
+        public async Task Should_be_able_to_skip_and_take_when_listing()
+        {
+            var result = new List<IProjection>();
+            await _repository.List(Data.ProjectorId1, (projection, token) => Task.Run(() => result.Add(projection)), 1, 1, CancellationToken.None);
+
+
+            result.Should().HaveCount(1);
+
+        }
+
         private static class Data
         {
 #if NETCOREAPP2_0

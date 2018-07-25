@@ -32,8 +32,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
 
             _aggregateRootRepository = new AggregateRootRepository(_eventStore, _eventBus, _commandRegistry, _serviceProvider);
 
-            _root = await _aggregateRootRepository.Get<AThingAggregateRoot>(Data.AggregateRootId,
-                CancellationToken.None);
+            _root = await _aggregateRootRepository.Get<AThingAggregateRoot>(Data.AggregateRootId,true, CancellationToken.None);
         }
 
         private IEventStore _eventStore;

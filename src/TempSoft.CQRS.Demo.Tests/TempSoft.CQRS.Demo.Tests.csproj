@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TempSoft.CQRS.Demo.Domain\TempSoft.CQRS.Demo.Domain.csproj" />
+    <ProjectReference Include="..\TempSoft.CQRS.Demo.Projectors\TempSoft.CQRS.Demo.Projectors.csproj" />
   </ItemGroup>
 
 </Project>

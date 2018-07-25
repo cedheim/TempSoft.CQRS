@@ -85,7 +85,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
                 .ReturnsLazily(foc =>
                     new MockDocumentQuery<EventPayloadWrapper>(foc.GetArgument<IQueryable<EventPayloadWrapper>>(0)));
             A.CallTo(() => _client.CreateDocumentQuery<EventPayloadWrapper>(A<Uri>.Ignored, A<FeedOptions>.Ignored))
-                .Returns(_events.Select(e => new EventPayloadWrapper(e) {Timestamp = Data.Timestamp}).AsQueryable()
+                .Returns(_events.Select(e => new EventPayloadWrapper(e) {Epoch = Data.Timestamp}).AsQueryable()
                     .OrderBy(e => e.Version));
 
             var filter = new EventStoreFilter

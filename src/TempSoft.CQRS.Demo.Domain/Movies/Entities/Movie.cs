@@ -92,7 +92,8 @@ namespace TempSoft.CQRS.Demo.Domain.Movies.Entities
                 {
                     Title = li.Title
                 }),
-                Identifiers = _identifiers.ToDictionary(id => id.Id, id => id.Value)
+                Identifiers = _identifiers.ToDictionary(id => id.Id, id => id.Value),
+                Persons = _persons.ToDictionary(p => p.Key, p => p.Value.ToArray())
             };
         }
 

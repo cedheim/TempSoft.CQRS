@@ -17,27 +17,14 @@ namespace TempSoft.CQRS.InMemory.Domain
         {
             _internalRepository = new AggregateRootRepository(eventStore, eventBus, commandRegistry, serviceProvider);
         }
-
-        public Task<IAggregateRoot> Get(Type type, Guid id, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var root = _cache.GetOrAdd(id, guid => _internalRepository.Get(type, guid, cancellationToken).GetAwaiter().GetResult());
-            return Task.FromResult(root);
-        }
-
-        public Task<IAggregateRoot> Get(Type type, Guid id, bool createIfItDoesNotExist, CancellationToken cancellationToken = default(CancellationToken))
+        
+        public Task<IAggregateRoot> Get(Type type, Guid id, bool createIfItDoesNotExist = true, CancellationToken cancellationToken = default(CancellationToken))
         {
             var root = _cache.GetOrAdd(id, guid => _internalRepository.Get(type, guid, createIfItDoesNotExist, cancellationToken).GetAwaiter().GetResult());
             return Task.FromResult(root);
         }
 
-        public Task<TAggregate> Get<TAggregate>(Guid id, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
-        {
-            var root = _cache.GetOrAdd(id, guid => _internalRepository.Get(typeof(TAggregate), guid, cancellationToken).GetAwaiter().GetResult());
-            return Task.FromResult((TAggregate)root);
-        }
-
-        public Task<TAggregate> Get<TAggregate>(Guid id, bool createIfItDoesNotExist,
-            CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
+        public Task<TAggregate> Get<TAggregate>(Guid id, bool createIfItDoesNotExist = true, CancellationToken cancellationToken = default(CancellationToken)) where TAggregate : IAggregateRoot
         {
             var root = _cache.GetOrAdd(id, guid => _internalRepository.Get(typeof(TAggregate), guid, createIfItDoesNotExist, cancellationToken).GetAwaiter().GetResult());
             return Task.FromResult((TAggregate)root);

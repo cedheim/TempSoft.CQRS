@@ -13,12 +13,12 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
 {
     public class CosmosDbProjectionModelRepository : RepositoryBase, IProjectionModelRepository
     {
-        public CosmosDbProjectionModelRepository(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId, string collectionId, int initialThroughput = 1000) 
+        public CosmosDbProjectionModelRepository(IDocumentClient client, ICosmosDbQueryPager pager, string databaseId, string collectionId, int initialThroughput = 1000)
             : base(client, pager, databaseId, collectionId, initialThroughput)
         {
         }
 
-        public override IEnumerable<string> PartitionKeyPaths => new[]{ "/ProjectorId" };
+        public override IEnumerable<string> PartitionKeyPaths => new[] { "/ProjectorId" };
 
         public async Task Save(IProjection model, CancellationToken cancellationToken)
         {
@@ -43,10 +43,10 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
                 };
 
                 var document = (await Client.ReadDocumentAsync(documentUri, requestOptions)).Resource;
-                var wrapper = (ProjectionPayloadWrapper) document;
+                var wrapper = (ProjectionPayloadWrapper)document;
 
                 var projection = wrapper.GetProjection();
-                return (TProjectionModel) projection;
+                return (TProjectionModel)projection;
             }
             catch (DocumentClientException)
             {
@@ -54,7 +54,7 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
             }
         }
 
-        public async Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, CancellationToken cancellationToken)
+        public async Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, int skip, int take, CancellationToken cancellationToken)
         {
             var feedOptions = new FeedOptions
             {
@@ -63,21 +63,56 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
             };
 
             var collectionUri = UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId);
-            var query = Client.CreateDocumentQuery<ProjectionPayloadWrapper>(collectionUri, feedOptions)
-                .Where(w => w.ProjectorId == projectorId);
+            IQueryable<ProjectionPayloadWrapper> query = Client.CreateDocumentQuery<ProjectionPayloadWrapper>(collectionUri, feedOptions)
+                .Where(w => w.ProjectorId == projectorId)
+                .OrderBy(w => w.Epoch);
 
-            var pagedQuery = Pager.CreatePagedQuery(query);
-            
-            while (pagedQuery.HasMoreResults && !cancellationToken.IsCancellationRequested)
+            if (skip < 0)
             {
-                var next = (await pagedQuery.ExecuteNextAsync<ProjectionPayloadWrapper>(cancellationToken));
+                skip = 0;
+            }
 
-                foreach (var wrapper in next)
+            var count = 0;
+            using (var pagedQuery = Pager.CreatePagedQuery(query))
+            {
+
+                while (pagedQuery.HasMoreResults && !cancellationToken.IsCancellationRequested)
                 {
-                    await callback(wrapper.GetProjection(), cancellationToken);
+                    var next = (await pagedQuery.ExecuteNextAsync<ProjectionPayloadWrapper>(cancellationToken));
+
+                    foreach (var wrapper in next)
+                    {
+                        if (count >= skip)
+                        {
+                            if (take < 0)
+                            {
+                               await callback(wrapper.GetProjection(), cancellationToken);
+                            }
+                            else if (count < (skip + take)) 
+                            {
+                                await callback(wrapper.GetProjection(), cancellationToken);
+                            }
+                            else
+                            {
+                                return;
+                            }
+
+
+                        }
+
+
+
+                        ++count;
+                    }
                 }
             }
 
+
+        }
+
+        public Task List(string projectorId, Func<IProjection, CancellationToken, Task> callback, CancellationToken cancellationToken)
+        {
+            return List(projectorId, callback, -1, -1, cancellationToken);
         }
     }
 }
