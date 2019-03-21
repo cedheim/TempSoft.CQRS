@@ -33,7 +33,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         [Test]
         public void Should_be_able_to_generate_an_identifier_based_on_inherited_field()
         {
-            var rootId = Guid.NewGuid();
+            var rootId = Guid.NewGuid().ToString();
             var @event = new ChangedAValue(5) { AggregateRootId = rootId };
             var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "{AggregateRootId}", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
@@ -43,7 +43,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         [Test]
         public void Should_be_able_to_generate_an_identifier_even_if_a_field_does_not_exist()
         {
-            var rootId = Guid.NewGuid();
+            var rootId = Guid.NewGuid().ToString();
             var @event = new ChangedAValue(5) { AggregateRootId = rootId };
             var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "{MissingField}", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 
@@ -77,7 +77,7 @@ namespace TempSoft.CQRS.Tests.Projectors.ProjectorDefinitions
         [Test]
         public void Should_be_able_to_generate_complex_identifiers()
         {
-            var rootId = Guid.NewGuid();
+            var rootId = Guid.NewGuid().ToString();
             var @event = new ChangedAValue(5) { AggregateRootId = rootId };
             var definition = new ProjectorDefinition(nameof(ProjectorDefinition), "ChangedAValue_{AggregateRootId}_{A}_Projector", typeof(AThingProjector), Enumerable.Empty<Type>(), Enumerable.Empty<string>());
 

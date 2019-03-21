@@ -28,13 +28,6 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _root.LoadFrom(_events, Enumerable.Empty<Guid>());
         }
 
-        private static class Data
-        {
-            public const int AValue = 5;
-            public const string BValue = "FLEUF";
-            public static readonly Guid RootId = Guid.NewGuid();
-        }
-
         [Test]
         public void Should_have_set_the_id()
         {
@@ -65,6 +58,13 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         public void Should_have_updated_version()
         {
             _root.Version.Should().Be(3);
+        }
+
+        private static class Data
+        {
+            public const int AValue = 5;
+            public const string BValue = "FLEUF";
+            public static readonly string RootId = Guid.NewGuid().ToString();
         }
     }
 }

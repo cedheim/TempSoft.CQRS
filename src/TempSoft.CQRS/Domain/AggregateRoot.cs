@@ -40,7 +40,7 @@ namespace TempSoft.CQRS.Domain
             InitializeCommandHandlers();
         }
 
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public int Version { get; private set; }
 

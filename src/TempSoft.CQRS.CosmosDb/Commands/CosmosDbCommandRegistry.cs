@@ -18,37 +18,42 @@ namespace TempSoft.CQRS.CosmosDb.Commands
         {
         }
 
-        public override IEnumerable<string> PartitionKeyPaths => new[] {"/AggregateRootId"};
+        public override IEnumerable<string> PartitionKeyPaths => new[] { "/PartitionId" };
 
-        public async Task<IEnumerable<Guid>> Get(Guid aggregateRootId,
-            CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<IEnumerable<Guid>> Get(string aggregateRootId, CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (string.IsNullOrEmpty(aggregateRootId))
+                throw new ArgumentNullException(nameof(aggregateRootId));
+
             var list = new List<Guid>();
             var query = Client.CreateDocumentQuery<CommandRegistryWrapper>(Uri,
-                    new FeedOptions
-                    {
-                        PartitionKey = new PartitionKey(aggregateRootId.ToString()),
-                        MaxDegreeOfParallelism = -1,
-                        EnableCrossPartitionQuery = false
-                    })
-                .Where(cmd => cmd.AggregateRootId == aggregateRootId);
+                new FeedOptions
+                {
+                    PartitionKey = new PartitionKey(aggregateRootId),
+                    MaxDegreeOfParallelism = -1,
+                    EnableCrossPartitionQuery = false
+                })
+                .Where(e => e.PartitionId == aggregateRootId && e.DocumentType == CommandRegistryWrapper.DocumentTypeName);
 
             var pagedQuery = Pager.CreatePagedQuery(query);
             while (pagedQuery.HasMoreResults)
             {
                 var next = await pagedQuery.ExecuteNextAsync<CommandRegistryWrapper>(cancellationToken);
-                foreach (var wrapper in next) list.Add(wrapper.Id);
+                foreach (var wrapper in next) list.Add(wrapper.CommandId);
             }
 
             return list;
         }
 
-        public async Task Save(Guid aggregateRootId, IEnumerable<Guid> commandIds,
+        public async Task Save(string aggregateRootId, IEnumerable<Guid> commandIds,
             CancellationToken cancellationToken = default(CancellationToken))
         {
+            if (string.IsNullOrEmpty(aggregateRootId))
+                throw new ArgumentNullException(nameof(aggregateRootId));
+
             var requestOptions = new RequestOptions
             {
-                PartitionKey = new PartitionKey(aggregateRootId.ToString())
+                PartitionKey = new PartitionKey(aggregateRootId)
             };
 
             await Task.WhenAll(commandIds.Select(id =>

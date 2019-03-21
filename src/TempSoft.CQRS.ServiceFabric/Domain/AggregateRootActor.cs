@@ -38,7 +38,7 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
         {
             try
             {
-                var id = this.GetActorId().GetGuidId();
+                var id = this.GetActorId().GetStringId();
 
                 // should we initialize if we receive a command before it has been initialized?
                 if (_root == null)
@@ -64,21 +64,21 @@ namespace TempSoft.CQRS.ServiceFabric.Domain
         public async Task<ReadModelMessage> GetReadModel(GetReadModelMessage message,
             CancellationToken cancellationToken)
         {
-            var id = this.GetActorId().GetGuidId();
+            var id = this.GetActorId().GetStringId();
 
             if (_root == null)
                 _root = await _aggregateRootRepository.Get(message.AggregateRootType, id, false, cancellationToken);
 
-            if (_root == null)
-                return new ReadModelMessage(null);
-
-            if (_root is IAggregateRootWithReadModel rootWithReadModel)
+            switch (_root)
             {
-                var readModel = rootWithReadModel.GetReadModel();
-                return new ReadModelMessage(readModel);
+                case null:
+                    return new ReadModelMessage(null);
+                case IAggregateRootWithReadModel rootWithReadModel:
+                    var readModel = rootWithReadModel.GetReadModel();
+                    return new ReadModelMessage(readModel);
+                default:
+                    throw new NotImplementedException();
             }
-
-            throw new NotImplementedException();
         }
 
         protected override async Task OnActivateAsync()

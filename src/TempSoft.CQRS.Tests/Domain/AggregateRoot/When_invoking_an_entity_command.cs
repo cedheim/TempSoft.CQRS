@@ -25,14 +25,6 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _commit = _root.Commit();
         }
 
-        private static class Data
-        {
-            public const string StuffMessage = "STUFF!!";
-            public const string ChangedStuffMessage = "MOAR STUFF!!!!";
-            public static readonly Guid RootId = Guid.NewGuid();
-            public static readonly string EntityId = Guid.NewGuid().ToString();
-        }
-
         [Test]
         public void Should_have_changed_the_stuff_message()
         {
@@ -46,6 +38,14 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _commit.Events.Should().ContainSingle(e =>
                 e is StuffMessageSet && ((StuffMessageSet) e).EntityId == Data.EntityId &&
                 ((StuffMessageSet) e).Message == Data.ChangedStuffMessage);
+        }
+
+        private static class Data
+        {
+            public const string StuffMessage = "STUFF!!";
+            public const string ChangedStuffMessage = "MOAR STUFF!!!!";
+            public static readonly string RootId = Guid.NewGuid().ToString();
+            public static readonly string EntityId = Guid.NewGuid().ToString();
         }
     }
 }

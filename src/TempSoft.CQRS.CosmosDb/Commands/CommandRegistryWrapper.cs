@@ -1,24 +1,30 @@
 ﻿using System;
 using Newtonsoft.Json;
+using TempSoft.CQRS.CosmosDb.Common;
 
 namespace TempSoft.CQRS.CosmosDb.Commands
 {
-    public class CommandRegistryWrapper
+    public class CommandRegistryWrapper : StorageBase
     {
+        public const string DocumentTypeName = "command";
+
+        [JsonConstructor]
         private CommandRegistryWrapper()
         {
         }
 
-        public CommandRegistryWrapper(Guid aggregateRootId, Guid commandId)
+        public CommandRegistryWrapper(string aggregateRootId, Guid commandId)
+            : base(aggregateRootId, DocumentTypeName)
         {
-            Id = commandId;
-            AggregateRootId = aggregateRootId;
+            CommandId = commandId;
+            Id = CreateIdentifier(commandId);
         }
+        
+        public Guid CommandId { get; set; }
 
-        [JsonProperty("id")] public Guid Id { get; set; }
-
-        public Guid AggregateRootId { get; set; }
-
-        [JsonProperty("_ts")] public long Timestamp { get; set; }
+        public static string CreateIdentifier(Guid commandId)
+        {
+            return IdentityFormatter.Format(commandId.ToString(), DocumentTypeName);
+        }
     }
 }

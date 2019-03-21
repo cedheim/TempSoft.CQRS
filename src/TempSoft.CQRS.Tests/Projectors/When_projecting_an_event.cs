@@ -38,7 +38,7 @@ namespace TempSoft.CQRS.Tests.Projectors
         private static class Data
         {
             public const string ProjectorId = nameof(AThingProjection);
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
+            public static readonly string AggregateRootId = Guid.NewGuid().ToString();
             public static readonly string ProjectionId = $"{ProjectorId}_{AggregateRootId}";
         }
     }

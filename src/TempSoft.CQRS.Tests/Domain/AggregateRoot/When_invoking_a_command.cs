@@ -24,14 +24,7 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             await _root.Handle(new DoSomething(Data.AValue, Data.BValue), CancellationToken.None);
             _events = _root.Commit().Events;
         }
-
-        private static class Data
-        {
-            public const int AValue = 5;
-            public const string BValue = "FLEUF";
-            public static readonly Guid RootId = Guid.NewGuid();
-        }
-
+        
         [Test]
         public void Should_have_triggered_events()
         {
@@ -50,6 +43,12 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         public void Should_have_updated_version()
         {
             _root.Version.Should().Be(3);
+        }
+        private static class Data
+        {
+            public const int AValue = 5;
+            public const string BValue = "FLEUF";
+            public static readonly string RootId = Guid.NewGuid().ToString();
         }
     }
 }

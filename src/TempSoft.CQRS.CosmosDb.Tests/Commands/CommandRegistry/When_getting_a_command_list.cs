@@ -59,9 +59,9 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Commands.CommandRegistry
             public const string DatabaseId = "tempsoft";
             public const string Collectionid = "commands";
 
-            public static readonly Guid AggregateRootId1 = Guid.NewGuid();
+            public static readonly string AggregateRootId1 = Guid.NewGuid().ToString();
             public static readonly Guid CommandId1 = Guid.NewGuid();
-            public static readonly Guid AggregateRootId2 = Guid.NewGuid();
+            public static readonly string AggregateRootId2 = Guid.NewGuid().ToString();
             public static readonly Guid CommandId2 = Guid.NewGuid();
         }
 
@@ -76,8 +76,8 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Commands.CommandRegistry
         [Test]
         public void Should_have_returned_the_correct_event()
         {
-            _result.Should().BeEquivalentTo(_commands.Where(cmd => cmd.AggregateRootId == Data.AggregateRootId1)
-                .Select(cmd => cmd.Id));
+            _result.Should().BeEquivalentTo(_commands.Where(cmd => cmd.PartitionId == Data.AggregateRootId1)
+                .Select(cmd => cmd.CommandId));
         }
     }
 }

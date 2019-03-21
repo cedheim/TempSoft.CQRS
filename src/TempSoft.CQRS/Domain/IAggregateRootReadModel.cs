@@ -4,7 +4,7 @@ namespace TempSoft.CQRS.Domain
 {
     public interface IAggregateRootReadModel
     {
-        Guid Id { get; }
+        string Id { get; }
         int Version { get; }
     }
 }

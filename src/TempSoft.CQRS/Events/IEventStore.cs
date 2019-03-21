@@ -7,7 +7,7 @@ namespace TempSoft.CQRS.Events
 {
     public interface IEventStore
     {
-        Task<IEnumerable<IEvent>> Get(Guid id, int fromVersion = default(int),
+        Task<IEnumerable<IEvent>> Get(string id, int fromVersion = default(int),
             CancellationToken cancellationToken = default(CancellationToken));
 
         Task Save(IEnumerable<IEvent> events, CancellationToken cancellationToken = default(CancellationToken));
@@ -18,7 +18,7 @@ namespace TempSoft.CQRS.Events
     public class EventStoreFilter
     {
         public string[] EventGroups { get; set; }
-        public Guid? AggregateRootId { get; set; }
+        public string AggregateRootId { get; set; }
         public Type[] EventTypes { get; set; }
         public DateTime? From { get; set; }
     }

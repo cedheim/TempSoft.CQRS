@@ -23,7 +23,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
             _commandRegistry = A.Fake<ICommandRegistry>();
             _serviceProvider = new FluentBootstrapper();
 
-            A.CallTo(() => _eventStore.Get(A<Guid>.Ignored, A<int>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => _eventStore.Get(A<string>.Ignored, A<int>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(new IEvent[]
                 {
                     new CreatedAThing() {Version = 1}, new ChangedAValue(Data.AValue) {Version = 2},
@@ -47,7 +47,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
         {
             public const int AValue = 5;
             public const string BValue = "HELLU";
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
+            public static readonly string AggregateRootId = Guid.NewGuid().ToString();
         }
 
         [Test]

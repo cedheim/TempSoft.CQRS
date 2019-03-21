@@ -24,13 +24,13 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
         public async Task OneTimeSetUp()
         {
             _root = new AThingAggregateRoot();
-            A.CallTo(() => AggregateRootRepository.Get(A<Type>.Ignored, A<Guid>.Ignored, A<bool>.Ignored, A<CancellationToken>.Ignored))
+            A.CallTo(() => AggregateRootRepository.Get(A<Type>.Ignored, A<string>.Ignored, A<bool>.Ignored, A<CancellationToken>.Ignored))
                 .Returns(_root);
 
             _actorId = new ActorId(Data.ActorId);
             _actor = ActorService.Activate(_actorId);
 
-            _message = new CommandMessage(typeof(AThingAggregateRoot), new InitializeAThing(Guid.NewGuid()));
+            _message = new CommandMessage(typeof(AThingAggregateRoot), new InitializeAThing(Guid.NewGuid().ToString()));
 
             _actor.Invoking(a => a.Handle(_message, CancellationToken.None).Wait()).Should()
                 .Throw<AggregateRootHasWrongIdException>();
@@ -38,7 +38,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Domain
 
         private static class Data
         {
-            public static readonly Guid ActorId = Guid.NewGuid();
+            public static readonly string ActorId = Guid.NewGuid().ToString();
         }
 
         [Test]

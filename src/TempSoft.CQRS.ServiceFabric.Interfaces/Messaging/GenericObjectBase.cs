@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using TempSoft.CQRS.Common.Extensions;
-using TempSoft.CQRS.Common.Serialization;
+using TempSoft.CQRS.Extensions;
+using TempSoft.CQRS.ServiceFabric.Interfaces.Serialization;
 
 namespace TempSoft.CQRS.ServiceFabric.Interfaces.Messaging
 {

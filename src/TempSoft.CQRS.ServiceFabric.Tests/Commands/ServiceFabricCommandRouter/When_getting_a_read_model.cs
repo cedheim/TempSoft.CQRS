@@ -42,14 +42,14 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Commands.ServiceFabricCommandRouter
 
         private static class Data
         {
-            public static readonly Guid RootId = Guid.NewGuid();
+            public static readonly string RootId = Guid.NewGuid().ToString();
         }
 
         [Test]
         public void Should_have_created_an_actor_proxy()
         {
             A.CallTo(() => _actorProxyFactory.CreateActorProxy<IAggregateRootActor>(A<Uri>.That.IsNotNull(),
-                    A<ActorId>.That.Matches(a => a.GetGuidId() == Data.RootId), A<string>.Ignored))
+                    A<ActorId>.That.Matches(a => a.GetStringId() == Data.RootId), A<string>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

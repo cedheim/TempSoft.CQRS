@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using TempSoft.CQRS.Common.Extensions;
 using TempSoft.CQRS.Events;
 using TempSoft.CQRS.Projectors;
 

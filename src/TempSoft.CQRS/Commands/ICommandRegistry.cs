@@ -7,9 +7,9 @@ namespace TempSoft.CQRS.Commands
 {
     public interface ICommandRegistry
     {
-        Task<IEnumerable<Guid>> Get(Guid id, CancellationToken cancellationToken = default(CancellationToken));
+        Task<IEnumerable<Guid>> Get(string id, CancellationToken cancellationToken = default(CancellationToken));
 
-        Task Save(Guid id, IEnumerable<Guid> commandIds,
+        Task Save(string id, IEnumerable<Guid> commandIds,
             CancellationToken cancellationToken = default(CancellationToken));
     }
 }

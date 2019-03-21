@@ -24,13 +24,6 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _readModel = _root.GetReadModel() as AThingReadModel;
         }
 
-        private static class Data
-        {
-            public const int AValue = 5;
-            public const string BValue = "FLEUF";
-            public static readonly Guid RootId = Guid.NewGuid();
-        }
-
         [Test]
         public void Should_have_set_fields()
         {
@@ -38,6 +31,13 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _readModel.B.Should().Be(Data.BValue);
             _readModel.Id.Should().Be(Data.RootId);
             _readModel.Version.Should().Be(3);
+        }
+
+        private static class Data
+        {
+            public const int AValue = 5;
+            public const string BValue = "FLEUF";
+            public static readonly string RootId = Guid.NewGuid().ToString();
         }
     }
 }

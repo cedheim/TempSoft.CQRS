@@ -36,7 +36,7 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
 
         private static class Data
         {
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
+            public static readonly string AggregateRootId = Guid.NewGuid().ToString();
         }
 
         [Test]

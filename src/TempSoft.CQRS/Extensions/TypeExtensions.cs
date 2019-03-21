@@ -231,5 +231,10 @@ namespace TempSoft.CQRS.Extensions
 
             return action;
         }
+
+        public static string ToFriendlyName(this Type type)
+        {
+            return $"{type.FullName}, {type.Assembly.GetName().Name}";
+        }
     }
 }

@@ -50,7 +50,8 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Projectors
         [Test]
         public void Should_have_called_the_client()
         {
-            A.CallTo(() => _client.ReadDocumentAsync(A<Uri>.That.Matches(uri => uri == UriFactory.CreateDocumentUri(Data.DatabaseId, Data.Collectionid, Data.ProjectionId)), A<RequestOptions>.Ignored))
+            var documentId = ProjectionPayloadWrapper.CreateIdentifier(Data.ProjectionId);
+            A.CallTo(() => _client.ReadDocumentAsync(A<Uri>.That.Matches(uri => uri == UriFactory.CreateDocumentUri(Data.DatabaseId, Data.Collectionid, documentId)), A<RequestOptions>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

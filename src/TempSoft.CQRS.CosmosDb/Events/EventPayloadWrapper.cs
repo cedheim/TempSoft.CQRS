@@ -1,29 +1,34 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TempSoft.CQRS.Common.Extensions;
+using TempSoft.CQRS.CosmosDb.Common;
+using TempSoft.CQRS.CosmosDb.Extensions;
 using TempSoft.CQRS.Events;
+using TempSoft.CQRS.Extensions;
 
 namespace TempSoft.CQRS.CosmosDb.Events
 {
-    public class EventPayloadWrapper
+    public class EventPayloadWrapper : StorageBase
     {
+        public const string DocumentTypeName = "event";
+
         [JsonConstructor]
         private EventPayloadWrapper()
         {
         }
 
         public EventPayloadWrapper(IEvent @event)
+            : base(@event.AggregateRootId, DocumentTypeName)
         {
-            Id = @event.Id;
+            Id = CreateIdentifier(@event.Id);
+            EventId = @event.Id;
             Payload = JObject.FromObject(@event);
             PayloadType = @event.GetType().ToFriendlyName();
             Version = @event.Version;
-            AggregateRootId = @event.AggregateRootId;
             EventGroup = @event.EventGroup;
         }
-
-        [JsonProperty("id")] public Guid Id { get; set; }
+        
+        public Guid EventId { get; set; }
 
         public JObject Payload { get; set; }
 
@@ -31,21 +36,18 @@ namespace TempSoft.CQRS.CosmosDb.Events
 
         public int Version { get; set; }
 
-        public Guid AggregateRootId { get; set; }
-
         public string EventGroup { get; set; }
-
-        [JsonProperty("_ts")]
-        public long Epoch { get; set; }
-
-        [JsonIgnore]
-        public DateTime Timestamp => Epoch.ToDateTime();
-
+        
         public IEvent GetEvent()
         {
             var type = Type.GetType(PayloadType);
 
             return (IEvent) Payload.ToObject(type);
+        }
+
+        public static string CreateIdentifier(Guid commandId)
+        {
+            return IdentityFormatter.Format(commandId.ToString(), DocumentTypeName);
         }
     }
 }

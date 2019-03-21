@@ -10,9 +10,9 @@ namespace TempSoft.CQRS.InMemory.Events
 {
     public class InMemoryEventStore : IEventStore
     {
-        private readonly ConcurrentDictionary<Guid, ConcurrentBag<IEvent>> _db = new ConcurrentDictionary<Guid, ConcurrentBag<IEvent>>();
+        private readonly ConcurrentDictionary<string, ConcurrentBag<IEvent>> _db = new ConcurrentDictionary<string, ConcurrentBag<IEvent>>();
 
-        public Task<IEnumerable<IEvent>> Get(Guid id, int fromVersion = default(int), CancellationToken cancellationToken = default(CancellationToken))
+        public Task<IEnumerable<IEvent>> Get(string id, int fromVersion = default(int), CancellationToken cancellationToken = default(CancellationToken))
         {
             return Task.Run(() =>
             {
@@ -36,7 +36,7 @@ namespace TempSoft.CQRS.InMemory.Events
 
         public async Task List(EventStoreFilter filter, Func<IEvent, CancellationToken, Task> callback, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var aggregateRootIds = filter.AggregateRootId.HasValue ? new[] {filter.AggregateRootId.Value} : _db.Keys.ToArray();
+            var aggregateRootIds = !string.IsNullOrEmpty(filter.AggregateRootId) ? new[] {filter.AggregateRootId} : _db.Keys.ToArray();
             foreach (var aggregateRootId in aggregateRootIds)
             {
                 var bag = _db.GetOrAdd(aggregateRootId, guid => new ConcurrentBag<IEvent>());

@@ -90,7 +90,7 @@ namespace TempSoft.CQRS.Tests.Infrastructure
             public const int AValue = 5;
             public const string BValue = "HELLO WORLD?";
 
-            public static readonly Guid RootId = Guid.NewGuid();
+            public static readonly string RootId = Guid.NewGuid().ToString();
         }
     }
 }

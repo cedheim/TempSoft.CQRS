@@ -42,7 +42,7 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         private static class Data
         {
             public const string StuffMessage = "STUFF!!";
-            public static readonly Guid RootId = Guid.NewGuid();
+            public static readonly string RootId = Guid.NewGuid().ToString();
             public static readonly string EntityId = Guid.NewGuid().ToString();
         }
     }

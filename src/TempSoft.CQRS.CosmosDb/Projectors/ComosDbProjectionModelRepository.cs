@@ -18,7 +18,7 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
         {
         }
 
-        public override IEnumerable<string> PartitionKeyPaths => new[] { "/ProjectorId" };
+        public override IEnumerable<string> PartitionKeyPaths => new[] { "/PartitionId" };
 
         public async Task Save(IProjection model, CancellationToken cancellationToken)
         {
@@ -34,9 +34,15 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
 
         public async Task<TProjectionModel> Get<TProjectionModel>(string id, string projectorId, CancellationToken cancellationToken) where TProjectionModel : IProjection
         {
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+            if (string.IsNullOrEmpty(projectorId))
+                throw new ArgumentNullException(nameof(projectorId));
+
             try
             {
-                var documentUri = UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id);
+                var documentId = ProjectionPayloadWrapper.CreateIdentifier(id);
+                var documentUri = UriFactory.CreateDocumentUri(DatabaseId, CollectionId, documentId);
                 var requestOptions = new RequestOptions()
                 {
                     PartitionKey = new PartitionKey(projectorId)
@@ -44,8 +50,8 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
 
                 var document = (await Client.ReadDocumentAsync(documentUri, requestOptions)).Resource;
                 var wrapper = (ProjectionPayloadWrapper)document;
-
                 var projection = wrapper.GetProjection();
+
                 return (TProjectionModel)projection;
             }
             catch (DocumentClientException)
@@ -64,7 +70,7 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
 
             var collectionUri = UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId);
             IQueryable<ProjectionPayloadWrapper> query = Client.CreateDocumentQuery<ProjectionPayloadWrapper>(collectionUri, feedOptions)
-                .Where(w => w.ProjectorId == projectorId)
+                .Where(w => w.PartitionId == projectorId && w.DocumentType == ProjectionPayloadWrapper.DocumentTypeName)
                 .OrderBy(w => w.Epoch);
 
             if (skip < 0)

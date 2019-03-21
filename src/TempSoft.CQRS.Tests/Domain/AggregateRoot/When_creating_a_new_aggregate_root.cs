@@ -21,11 +21,6 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _events = _root.Commit().Events;
         }
 
-        private static class Data
-        {
-            public static readonly Guid RootId = Guid.NewGuid();
-        }
-
         [Test]
         public void Should_have_set_the_id()
         {
@@ -43,6 +38,11 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
         public void Should_have_updated_the_version()
         {
             _root.Version.Should().Be(1);
+        }
+
+        private static class Data
+        {
+            public static readonly string RootId = Guid.NewGuid().ToString();
         }
     }
 }

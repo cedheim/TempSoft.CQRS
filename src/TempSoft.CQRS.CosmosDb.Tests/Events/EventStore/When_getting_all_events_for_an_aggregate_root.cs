@@ -54,7 +54,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
             public const string DatabaseLink = "database";
             public const int AValue = 5;
 
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
+            public static readonly string AggregateRootId = Guid.NewGuid().ToString();
         }
 
         [Test]

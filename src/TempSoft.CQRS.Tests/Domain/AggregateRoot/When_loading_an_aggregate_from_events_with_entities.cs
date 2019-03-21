@@ -31,19 +31,19 @@ namespace TempSoft.CQRS.Tests.Domain.AggregateRoot
             _root.LoadFrom(_events, Enumerable.Empty<Guid>());
         }
 
-        private static class Data
-        {
-            public const string StuffMessage = "STUFF!!";
-            public const string ChangedStuffMessage = "MOAR STUFF!!!!";
-            public static readonly Guid RootId = Guid.NewGuid();
-            public static readonly string EntityId = Guid.NewGuid().ToString();
-        }
-
         [Test]
         public void Should_have_added_and_updated_entity()
         {
             _root.Stuff.Should()
                 .ContainSingle(stuff => stuff.Id == Data.EntityId && stuff.Message == Data.ChangedStuffMessage);
+        }
+
+        private static class Data
+        {
+            public const string StuffMessage = "STUFF!!";
+            public const string ChangedStuffMessage = "MOAR STUFF!!!!";
+            public static readonly string RootId = Guid.NewGuid().ToString();
+            public static readonly string EntityId = Guid.NewGuid().ToString();
         }
     }
 }

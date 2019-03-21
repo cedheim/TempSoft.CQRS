@@ -6,7 +6,6 @@ using FluentAssertions;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using NUnit.Framework;
-using TempSoft.CQRS.Common.Extensions;
 using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.Events;
@@ -119,7 +118,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
 
         private static class Data
         {
-#if NETCOREAPP2_0
+#if NETCOREAPP2_1
             public const string DatabaseId = "tempsoft_cqrs_tests_core";
 #else
             public const string DatabaseId = "tempsoft_cqrs_tests_net452";
@@ -129,9 +128,9 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
             public const int AValue = 5;
             public const string BValue = "DOH";
 
-            public static readonly Guid AggregateRootId1 = Guid.NewGuid();
-            public static readonly Guid AggregateRootId2 = Guid.NewGuid();
-            public static readonly Guid AggregateRootId3 = Guid.NewGuid();
+            public static readonly string AggregateRootId1 = Guid.NewGuid().ToString();
+            public static readonly string AggregateRootId2 = Guid.NewGuid().ToString();
+            public static readonly string AggregateRootId3 = Guid.NewGuid().ToString();
         }
 
         [Test]
@@ -183,7 +182,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
                     EnableCrossPartitionQuery = false,
                     MaxDegreeOfParallelism = -1,
                     MaxBufferedItemCount = -1
-                }).Where(e => e.Id == @event.Id).ToArray().FirstOrDefault();
+                }).Where(e => e.EventId == @event.Id).ToArray().FirstOrDefault();
 
             result.GetEvent().Should().BeEquivalentTo(@event);
         }

@@ -10,9 +10,9 @@ namespace TempSoft.CQRS.InMemory.Commands
 {
     public class InMemoryCommandRegistry : ICommandRegistry
     {
-        private readonly ConcurrentDictionary<Guid, ConcurrentBag<Guid>> _db = new ConcurrentDictionary<Guid, ConcurrentBag<Guid>>();
+        private readonly ConcurrentDictionary<string, ConcurrentBag<Guid>> _db = new ConcurrentDictionary<string, ConcurrentBag<Guid>>();
 
-        public Task<IEnumerable<Guid>> Get(Guid id, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<IEnumerable<Guid>> Get(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
             return Task.Run(() =>
             {
@@ -21,7 +21,7 @@ namespace TempSoft.CQRS.InMemory.Commands
             }, cancellationToken);
         }
 
-        public Task Save(Guid id, IEnumerable<Guid> commandIds, CancellationToken cancellationToken = default(CancellationToken))
+        public Task Save(string id, IEnumerable<Guid> commandIds, CancellationToken cancellationToken = default(CancellationToken))
         {
             return Task.Run(() =>
             {

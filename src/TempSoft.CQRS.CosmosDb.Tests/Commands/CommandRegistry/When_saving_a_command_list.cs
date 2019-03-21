@@ -46,7 +46,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Commands.CommandRegistry
             public const string DatabaseId = "tempsoft";
             public const string Collectionid = "commands";
 
-            public static readonly Guid AggregateRootId1 = Guid.NewGuid();
+            public static readonly string AggregateRootId1 = Guid.NewGuid().ToString();
             public static readonly Guid CommandId1 = Guid.NewGuid();
             public static readonly Guid CommandId2 = Guid.NewGuid();
         }
@@ -57,7 +57,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Commands.CommandRegistry
             A.CallTo(() => _client.UpsertDocumentAsync(
                     UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid),
                     A<CommandRegistryWrapper>.That.Matches(wrapper =>
-                        wrapper.AggregateRootId == Data.AggregateRootId1 && _commands.Contains(wrapper.Id)),
+                        wrapper.PartitionId == Data.AggregateRootId1 && _commands.Contains(wrapper.CommandId)),
                     A<RequestOptions>.Ignored, A<bool>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Times(_commands.Length));
         }

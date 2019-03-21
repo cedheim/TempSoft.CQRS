@@ -7,8 +7,8 @@ using FluentAssertions;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using NUnit.Framework;
-using TempSoft.CQRS.Common.Extensions;
 using TempSoft.CQRS.CosmosDb.Events;
+using TempSoft.CQRS.CosmosDb.Extensions;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.CosmosDb.Tests.Mocks;
 using TempSoft.CQRS.Events;
@@ -113,8 +113,8 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
             public static readonly DateTime Timestamp = new DateTime(2018, 04, 30, 12, 0, 0, DateTimeKind.Utc);
 
 
-            public static readonly Guid AggregateRootId1 = Guid.NewGuid();
-            public static readonly Guid AggregateRootId2 = Guid.NewGuid();
+            public static readonly string AggregateRootId1 = Guid.NewGuid().ToString();
+            public static readonly string AggregateRootId2 = Guid.NewGuid().ToString();
         }
 
         [Test]

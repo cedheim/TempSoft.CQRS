@@ -10,7 +10,7 @@ namespace TempSoft.CQRS.Events
 
         int Version { get; set; }
 
-        Guid AggregateRootId { get; set; }
+        string AggregateRootId { get; set; }
 
         string EventGroup { get; set; }
     }

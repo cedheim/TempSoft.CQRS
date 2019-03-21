@@ -2,35 +2,37 @@
 using Microsoft.Azure.Documents;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TempSoft.CQRS.Common.Extensions;
+using TempSoft.CQRS.CosmosDb.Common;
+using TempSoft.CQRS.CosmosDb.Extensions;
 using TempSoft.CQRS.Projectors;
+using TempSoft.CQRS.Extensions;
 
 namespace TempSoft.CQRS.CosmosDb.Projectors
 {
-    public class ProjectionPayloadWrapper
+    public class ProjectionPayloadWrapper : StorageBase
     {
+        public const string DocumentTypeName = "projection";
+
         [JsonConstructor]
         private ProjectionPayloadWrapper()
         {
         }
 
         public ProjectionPayloadWrapper(IProjection projection)
+            : base(projection.ProjectorId, DocumentTypeName)
         {
-            Id = projection.Id;
+            Id = CreateIdentifier(projection.Id);
             PayloadType = projection.GetType().ToFriendlyName();
-            ProjectorId = projection.ProjectorId;
+            ProjectionId = projection.Id;
             Payload = JObject.FromObject(projection);
         }
 
-        [JsonProperty("id")]
-        public string Id { get; set; }
+        public string ProjectionId { get; set; }
 
         public JObject Payload { get; set; }
 
         public string PayloadType { get; set; }
-
-        public string ProjectorId { get; set; }
-
+        
         public IProjection GetProjection()
         {
             var type = Type.GetType(PayloadType);
@@ -43,18 +45,21 @@ namespace TempSoft.CQRS.CosmosDb.Projectors
             var wrapper = new ProjectionPayloadWrapper
             {
                 Id = document.Id,
+                ProjectionId = document.GetPropertyValue<string>(nameof(ProjectionId)),
                 Payload = document.GetPropertyValue<JObject>(nameof(Payload)),
                 PayloadType = document.GetPropertyValue<string>(nameof(PayloadType)),
-                ProjectorId = document.GetPropertyValue<string>(nameof(ProjectorId))
+
+                PartitionId = document.GetPropertyValue<string>(nameof(PartitionId)),
+                DocumentType = document.GetPropertyValue<string>(nameof(DocumentType)),
+                Epoch = document.Timestamp.ToUnixTime(),
             };
 
             return wrapper;
         }
-
-        [JsonProperty("_ts")]
-        public long Epoch { get; set; }
-
-        [JsonIgnore]
-        public DateTime Timestamp => Epoch.ToDateTime();
+        
+        public static string CreateIdentifier(string projectionId)
+        {
+            return IdentityFormatter.Format(projectionId, DocumentTypeName);
+        }
     }
 }

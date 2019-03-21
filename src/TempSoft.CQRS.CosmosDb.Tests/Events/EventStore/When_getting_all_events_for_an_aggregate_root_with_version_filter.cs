@@ -61,7 +61,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
             public const int AValue = 5;
             public const int Version = 2;
 
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
+            public static readonly string AggregateRootId = Guid.NewGuid().ToString();
         }
 
         [Test]

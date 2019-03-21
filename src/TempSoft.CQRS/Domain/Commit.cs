@@ -7,14 +7,14 @@ namespace TempSoft.CQRS.Domain
 {
     public class Commit
     {
-        public Commit(Guid aggregateRootId, IEnumerable<IEvent> events, IEnumerable<Guid> commandIds)
+        public Commit(string aggregateRootId, IEnumerable<IEvent> events, IEnumerable<Guid> commandIds)
         {
             AggregateRootId = aggregateRootId;
             Events = events?.ToArray() ?? new IEvent[0];
             CommandIds = commandIds?.ToArray() ?? new Guid[0];
         }
 
-        public Guid AggregateRootId { get; }
+        public string AggregateRootId { get; }
 
         public IEvent[] Events { get; }
 

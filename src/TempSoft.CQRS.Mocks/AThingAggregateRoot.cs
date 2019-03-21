@@ -103,12 +103,12 @@ namespace TempSoft.CQRS.Mocks
         {
         }
 
-        public InitializeAThing(Guid aggregateRootId)
+        public InitializeAThing(string aggregateRootId)
         {
             AggregateRootId = aggregateRootId;
         }
 
-        public Guid AggregateRootId { get; }
+        public string AggregateRootId { get; }
     }
 
     public class AddStuff : CommandBase
@@ -239,7 +239,7 @@ namespace TempSoft.CQRS.Mocks
         public string B { get; set; }
 
         public StuffReadModel[] Stuff { get; set; }
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public int Version { get; set; }
     }
 
@@ -253,7 +253,7 @@ namespace TempSoft.CQRS.Mocks
         }
 
         [Projector(typeof(CreatedAThing))]
-        public async Task Created(Guid aggregateRootId, CancellationToken cancellationToken)
+        public async Task Created(string aggregateRootId, CancellationToken cancellationToken)
         {
             var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
             var projection = new AThingProjection(id, ProjectorId);
@@ -262,7 +262,7 @@ namespace TempSoft.CQRS.Mocks
         }
 
         [Projector(typeof(ChangedAValue))]
-        public async Task ChangedAValue(Guid aggregateRootId, int a, CancellationToken cancellationToken)
+        public async Task ChangedAValue(string aggregateRootId, int a, CancellationToken cancellationToken)
         {
             var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
             var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);
@@ -276,7 +276,7 @@ namespace TempSoft.CQRS.Mocks
         }
 
         [Projector(typeof(ChangedBValue))]
-        public async Task ChangedBValue(Guid aggregateRootId, string b, CancellationToken cancellationToken)
+        public async Task ChangedBValue(string aggregateRootId, string b, CancellationToken cancellationToken)
         {
             var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
             var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);

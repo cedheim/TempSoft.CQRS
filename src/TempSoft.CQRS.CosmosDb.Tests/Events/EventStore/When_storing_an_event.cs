@@ -45,7 +45,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
             public const string DatabaseLink = "database";
             public const int AValue = 5;
 
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
+            public static readonly string AggregateRootId = Guid.NewGuid().ToString();
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Events.EventStore
             A.CallTo(() => _client.UpsertDocumentAsync(
                     A<Uri>.That.Matches(u =>
                         u == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)),
-                    A<object>.That.Matches(o => ((EventPayloadWrapper) o).Id == _event.Id), A<RequestOptions>.Ignored,
+                    A<object>.That.Matches(o => ((EventPayloadWrapper) o).EventId == _event.Id), A<RequestOptions>.Ignored,
                     A<bool>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }

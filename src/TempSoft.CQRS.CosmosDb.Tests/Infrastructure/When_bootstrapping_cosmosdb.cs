@@ -41,7 +41,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Infrastructure
 
         private static class Data
         {
-#if NETCOREAPP2_0
+#if NETCOREAPP2_1
             public const string DatabaseId = "tempsoft_cqrs_tests_core";
 #else
             public const string DatabaseId = "tempsoft_cqrs_tests_net452";

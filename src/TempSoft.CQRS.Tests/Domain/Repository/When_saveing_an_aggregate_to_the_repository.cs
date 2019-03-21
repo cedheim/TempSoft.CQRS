@@ -41,13 +41,6 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
         }
 
 
-        private static class Data
-        {
-            public const int AValue = 5;
-            public const string BValue = "HELLU";
-            public static readonly Guid AggregateRootId = Guid.NewGuid();
-        }
-
         [Test]
         public void Should_have_published_the_events()
         {
@@ -77,6 +70,13 @@ namespace TempSoft.CQRS.Tests.Domain.Repository
             A.CallTo(() => _commandRegistry.Save(Data.AggregateRootId,
                     A<IEnumerable<Guid>>.That.Matches(ids => ids.Any()), A<CancellationToken>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        private static class Data
+        {
+            public const int AValue = 5;
+            public const string BValue = "HELLU";
+            public static readonly string AggregateRootId = Guid.NewGuid().ToString();
         }
     }
 }

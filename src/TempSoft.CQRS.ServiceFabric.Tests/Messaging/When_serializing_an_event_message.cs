@@ -19,7 +19,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Messaging
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            _input = new EventMessage(new ChangedAValue(5) {AggregateRootId = Guid.NewGuid(), Version = 5});
+            _input = new EventMessage(new ChangedAValue(5) {AggregateRootId = Guid.NewGuid().ToString(), Version = 5});
             var serializer = new DataContractSerializer(typeof(EventMessage));
 
             using (var stream = new MemoryStream())

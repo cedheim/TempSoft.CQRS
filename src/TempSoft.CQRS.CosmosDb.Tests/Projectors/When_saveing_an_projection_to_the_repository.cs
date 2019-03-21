@@ -54,7 +54,8 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Projectors
         [Test]
         public void Should_have_upserted_the_document()
         {
-            A.CallTo(() => _client.UpsertDocumentAsync(A<Uri>.That.Matches(uri => uri == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)), A<object>.That.Matches(o => ((ProjectionPayloadWrapper)o).Id == Data.ProjectionId), A<RequestOptions>.Ignored, A<bool>.Ignored))
+            var documentId = ProjectionPayloadWrapper.CreateIdentifier(Data.ProjectionId);
+            A.CallTo(() => _client.UpsertDocumentAsync(A<Uri>.That.Matches(uri => uri == UriFactory.CreateDocumentCollectionUri(Data.DatabaseId, Data.Collectionid)), A<object>.That.Matches(o => ((ProjectionPayloadWrapper)o).Id == documentId), A<RequestOptions>.Ignored, A<bool>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

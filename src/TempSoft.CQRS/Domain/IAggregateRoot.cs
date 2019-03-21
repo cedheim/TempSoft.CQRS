@@ -9,7 +9,7 @@ namespace TempSoft.CQRS.Domain
 {
     public interface IAggregateRoot
     {
-        Guid Id { get; set; }
+        string Id { get; set; }
 
         int Version { get; }
 

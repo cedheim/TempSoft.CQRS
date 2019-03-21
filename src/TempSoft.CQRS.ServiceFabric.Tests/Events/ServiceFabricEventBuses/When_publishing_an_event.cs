@@ -78,7 +78,7 @@ namespace TempSoft.CQRS.ServiceFabric.Tests.Events.ServiceFabricEventBuses
 
         private static class Data
         {
-            public static readonly Guid AggregateRootId1 = Guid.NewGuid();
+            public static readonly string AggregateRootId1 = Guid.NewGuid().ToString();
             public static readonly Uri Uri = new Uri("fabric:/application/service");
         }
 

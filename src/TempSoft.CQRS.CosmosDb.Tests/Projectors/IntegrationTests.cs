@@ -7,7 +7,6 @@ using FluentAssertions;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using NUnit.Framework;
-using TempSoft.CQRS.Common.Extensions;
 using TempSoft.CQRS.CosmosDb.Events;
 using TempSoft.CQRS.CosmosDb.Infrastructure;
 using TempSoft.CQRS.CosmosDb.Projectors;
@@ -112,7 +111,7 @@ namespace TempSoft.CQRS.CosmosDb.Tests.Projectors
 
         private static class Data
         {
-#if NETCOREAPP2_0
+#if NETCOREAPP2_1
             public const string DatabaseId = "tempsoft_cqrs_tests_core";
 #else
             public const string DatabaseId = "tempsoft_cqrs_tests_net452";
