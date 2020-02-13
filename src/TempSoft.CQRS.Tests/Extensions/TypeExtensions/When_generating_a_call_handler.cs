@@ -136,7 +136,14 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             _object.A.Should().Be(_argument.A);
             _object.B.Should().Be(_argument.B);
         }
-        
+
+        [Test]
+        public async Task Should_not_be_able_to_create_a_wrapper_for_a_method_with_the_wrong_return_type()
+        {
+            Action method = () => ATestClass.AnAsyncMethodWithWrongReturnTypeInfo.GenerateAsyncHandlerWithReturnType<ATestClass, ATestArgument, string>();
+            method.Should().Throw<ArgumentException>();
+        }
+
         private class ATestClass
         {
             public static MethodInfo AnAsyncMethodInfo = typeof(ATestClass).GetMethod(nameof(AnAsyncMethod));
@@ -144,8 +151,8 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             public static MethodInfo AnAsyncMethodWithReturnValueInfo = typeof(ATestClass).GetMethod(nameof(AnAsyncMethodWithReturnValue));
             public static MethodInfo ASyncMethodWithReturnValueInfo = typeof(ATestClass).GetMethod(nameof(ASyncMethodWithReturnValue));
             public static MethodInfo AnAsyncMethodThatTakesTheEntireArgumentInfo = typeof(ATestClass).GetMethod(nameof(AnAsyncMethodThatTakesTheEntireArgument));
+            public static MethodInfo AnAsyncMethodWithWrongReturnTypeInfo = typeof(ATestClass).GetMethod(nameof(AnAsyncMethodWithWrongReturnType));
             
-
             private readonly string _returnValue;
 
             public ATestClass()
@@ -187,6 +194,11 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             public void ASyncMethod(int a, string b)
             {
                 ASyncMethodWithReturnValue(a, b);
+            }
+
+            public Task<int> AnAsyncMethodWithWrongReturnType(int a, string b)
+            {
+                return Task.FromResult(17);
             }
         }
 
