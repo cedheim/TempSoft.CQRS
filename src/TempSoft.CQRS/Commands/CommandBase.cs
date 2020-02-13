@@ -11,6 +11,7 @@ namespace TempSoft.CQRS.Commands
         }
 
         public Guid Id { get; set; }
+
         public DateTime Timestamp { get; set; }
     }
 }
