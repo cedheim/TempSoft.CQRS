@@ -76,20 +76,8 @@ namespace TempSoft.CQRS.Extensions
             // use implicit call.
             else
             {
-                var parameterExpressions = new List<Expression>();
                 var publicProperties = objectType.GetProperties();
-
-                foreach (var parameter in parameters)
-                {
-                    var matchingProperty = publicProperties.FirstOrDefault(property =>
-                        string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) ==
-                        0 && parameter.ParameterType.IsAssignableFrom(property.PropertyType));
-                    if (matchingProperty == default(PropertyInfo))
-                        throw new Exception(
-                            $"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
-
-                    parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
-                }
+                var parameterExpressions = MapParametersToInput(parameters, publicProperties, eventVariable, objectType);
 
                 rootCall = Expression.Call(rootParameter, method, parameterExpressions);
             }
@@ -130,32 +118,9 @@ namespace TempSoft.CQRS.Extensions
             var parameters = method.GetParameters();
 
             // use explicit call.
-            var parameterExpressions = new List<Expression>();
             var publicProperties = objectType.GetProperties();
+            var parameterExpressions = MapParametersToInput(parameters, publicProperties, eventVariable, objectType, cancellationParameter);
 
-            foreach (var parameter in parameters)
-            {
-                if (parameter.ParameterType == objectType)
-                {
-                    parameterExpressions.Add(eventVariable);
-                    continue;
-                }
-
-                if (parameter.ParameterType == typeof(CancellationToken))
-                {
-                    parameterExpressions.Add(cancellationParameter);
-                    continue;
-                }
-
-                var matchingProperty = publicProperties.FirstOrDefault(property =>
-                    string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 &&
-                    parameter.ParameterType.IsAssignableFrom(property.PropertyType));
-                if (matchingProperty == default(PropertyInfo))
-                    throw new Exception(
-                        $"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
-
-                parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
-            }
 
             var rootCall = Expression.Call(rootParameter, method, parameterExpressions);
             // if the method is void 
@@ -180,6 +145,33 @@ namespace TempSoft.CQRS.Extensions
             return action;
         }
 
+        private static IEnumerable<Expression> MapParametersToInput(ParameterInfo[] parameters, PropertyInfo[] publicProperties, Expression eventVariable, Type objectType, Expression cancellationParameter = default(Expression))
+        {
+            
+            foreach (var parameter in parameters)
+            {
+                if (parameter.ParameterType == objectType)
+                {
+                    yield return eventVariable;
+                    continue;
+                }
+
+                if (parameter.ParameterType == typeof(CancellationToken) && !object.ReferenceEquals(cancellationParameter, default(Expression)))
+                {
+                    yield return cancellationParameter;
+                    continue;
+                }
+
+                var matchingProperty = publicProperties.FirstOrDefault(property =>
+                    string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 &&
+                    parameter.ParameterType.IsAssignableFrom(property.PropertyType));
+                if (matchingProperty == default(PropertyInfo))
+                    throw new Exception($"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
+
+                yield return Expression.Property(eventVariable, matchingProperty);
+            }
+        }
+
         internal static Func<TDomain, TArgument, CancellationToken, Task<TReturn>> GenerateAsyncHandlerWithReturnType<TDomain, TArgument, TReturn>(this MethodInfo method)
         {
             return GenerateAsyncHandlerWithReturnType<TDomain, TArgument, TReturn>(method, typeof(TArgument));
@@ -201,31 +193,9 @@ namespace TempSoft.CQRS.Extensions
             var parameters = method.GetParameters();
 
             // use explicit call.
-            var parameterExpressions = new List<Expression>();
             var publicProperties = objectType.GetProperties();
+            var parameterExpressions = MapParametersToInput(parameters, publicProperties, eventVariable, objectType, cancellationParameter);
 
-            foreach (var parameter in parameters)
-            {
-                if (parameter.ParameterType == objectType)
-                {
-                    parameterExpressions.Add(eventVariable);
-                    continue;
-                }
-
-                if (parameter.ParameterType == typeof(CancellationToken))
-                {
-                    parameterExpressions.Add(cancellationParameter);
-                    continue;
-                }
-
-                var matchingProperty = publicProperties.FirstOrDefault(property =>
-                    string.Compare(property.Name, parameter.Name, StringComparison.InvariantCultureIgnoreCase) == 0 &&
-                    parameter.ParameterType.IsAssignableFrom(property.PropertyType));
-                if (matchingProperty == default(PropertyInfo))
-                    throw new Exception($"Unable to find a property on {objectType.Name} that matches the parameter name {parameter.Name}");
-
-                parameterExpressions.Add(Expression.Property(eventVariable, matchingProperty));
-            }
 
             var rootCall = Expression.Call(rootParameter, method, parameterExpressions);
 

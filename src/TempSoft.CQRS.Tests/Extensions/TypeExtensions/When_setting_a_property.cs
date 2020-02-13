@@ -52,6 +52,20 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             _aTestClass.SetProperty("_E", 5);
             _aTestClass.E.Should().Be(5);
         }
+        [Test]
+
+        public void Should_throw_an_exception_when_setting_a_property_that_does_not_exist()
+        {
+            Action method = () => _aTestClass.SetProperty("Q", 5);
+            method.Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Should_throw_an_exception_when_setting_a_property_that_does_not_have_a_setter()
+        {
+            Action method = () => _aTestClass.SetProperty("X", 5);
+            method.Should().Throw<ArgumentException>();
+        }
 
         private class ATestClass : ABaseClass
         {
@@ -68,6 +82,8 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             public int E => _E;
 
             public int D => _D;
+
+            public int X => 5;
         }
 
 

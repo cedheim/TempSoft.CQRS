@@ -53,6 +53,20 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             _aTestClass.GetProperty("E").Should().Be(5);
         }
 
+        [Test]
+        public void Should_throw_an_exception_when_getting_a_property_that_does_not_exist()
+        {
+            Action method = () => _aTestClass.GetProperty("Q");
+            method.Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Should_throw_an_exception_when_getting_a_property_that_does_not_have_a_get_accessor()
+        {
+            Action method = () => _aTestClass.GetProperty("X");
+            method.Should().Throw<ArgumentException>();
+        }
+
         private class ATestClass : ABaseClass
         {
             private int _c;
@@ -62,13 +76,19 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             public int B { private get; set; }
 
             private int E { get; set; }
+
+            public int X 
+            {
+                set {
+
+                } 
+            }
         }
 
 
         private class ABaseClass
         {
             protected int D { get; set; }
-
 
         }
     }

@@ -127,12 +127,24 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             method.Should().Throw<Exception>();
         }
 
+        [Test]
+        public async Task Should_be_able_to_call_a_method_with_a_specific_argument()
+        {
+            var handler = ATestClass.AnAsyncMethodThatTakesTheEntireArgumentInfo.GenerateAsyncHandler<ATestClass, ATestArgument>();
+            await handler(_object, _argument, CancellationToken.None);
+
+            _object.A.Should().Be(_argument.A);
+            _object.B.Should().Be(_argument.B);
+        }
+        
         private class ATestClass
         {
             public static MethodInfo AnAsyncMethodInfo = typeof(ATestClass).GetMethod(nameof(AnAsyncMethod));
             public static MethodInfo ASyncMethodInfo = typeof(ATestClass).GetMethod(nameof(ASyncMethod));
             public static MethodInfo AnAsyncMethodWithReturnValueInfo = typeof(ATestClass).GetMethod(nameof(AnAsyncMethodWithReturnValue));
             public static MethodInfo ASyncMethodWithReturnValueInfo = typeof(ATestClass).GetMethod(nameof(ASyncMethodWithReturnValue));
+            public static MethodInfo AnAsyncMethodThatTakesTheEntireArgumentInfo = typeof(ATestClass).GetMethod(nameof(AnAsyncMethodThatTakesTheEntireArgument));
+            
 
             private readonly string _returnValue;
 
@@ -153,6 +165,11 @@ namespace TempSoft.CQRS.Tests.Extensions.TypeExtensions
             public Task AnAsyncMethod(int a, string b)
             {
                 return Task.FromResult(ASyncMethodWithReturnValue(a, b));
+            }
+
+            public Task AnAsyncMethodThatTakesTheEntireArgument(ATestArgument arg)
+            {
+                return Task.FromResult(ASyncMethodWithReturnValue(arg.A, arg.B));
             }
 
             public Task<string> AnAsyncMethodWithReturnValue(int a, string b)
