@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using TempSoft.CQRS.Commands;
 using TempSoft.CQRS.Domain;
 using TempSoft.CQRS.Events;
-using TempSoft.CQRS.Projectors;
 
 namespace TempSoft.CQRS.Mocks
 {
@@ -241,121 +240,5 @@ namespace TempSoft.CQRS.Mocks
         public StuffReadModel[] Stuff { get; set; }
         public string Id { get; set; }
         public int Version { get; set; }
-    }
-
-    public class AThingProjector : ProjectorBase<AThingProjector>
-    {
-        private readonly IProjectionModelRepository _repository;
-
-        public AThingProjector(IProjectionModelRepository repository)
-        {
-            _repository = repository;
-        }
-
-        [Projector(typeof(CreatedAThing))]
-        public async Task Created(string aggregateRootId, CancellationToken cancellationToken)
-        {
-            var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
-            var projection = new AThingProjection(id, ProjectorId);
-
-            await _repository.Save(projection, cancellationToken);
-        }
-
-        [Projector(typeof(ChangedAValue))]
-        public async Task ChangedAValue(string aggregateRootId, int a, CancellationToken cancellationToken)
-        {
-            var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
-            var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);
-
-            if (object.ReferenceEquals(projection, default(AThingProjection)))
-            {
-                throw new Exception("Can not project on unitialized event");
-            }
-
-            projection.A = a;
-        }
-
-        [Projector(typeof(ChangedBValue))]
-        public async Task ChangedBValue(string aggregateRootId, string b, CancellationToken cancellationToken)
-        {
-            var id = $"{nameof(AThingProjection)}_{aggregateRootId}";
-            var projection = await _repository.Get<AThingProjection>(id, ProjectorId, cancellationToken);
-
-            if (object.ReferenceEquals(projection, default(AThingProjection)))
-            {
-                throw new Exception("Can not project on unitialized event");
-            }
-
-            projection.B = b;
-        }
-
-        [Query(typeof(AThingListQuery))]
-        public async Task<IQueryResult> List(AThingListQuery query, CancellationToken cancellationToken)
-        {
-            var list = new List<AThingProjection>();
-
-            await _repository.List(ProjectorId, (projection, token) =>
-            {
-                if (projection is AThingProjection aThingProjection)
-                {
-                    list.Add(aThingProjection);
-                }
-                return Task.FromResult(true);
-            }, cancellationToken);
-
-            return new AThingListResult()
-            {
-                ProjectorId = ProjectorId,
-                Projections = list.ToArray()
-            };
-        }
-
-        [Query(typeof(AThingEmptyQuery))]
-        public IQueryResult Empty()
-        {
-            return new AThingListResult()
-            {
-                ProjectorId = ProjectorId,
-                Projections = new AThingProjection[0]
-            };
-        }
-    }
-
-    public class AThingProjection : IProjection
-    {
-        [JsonConstructor]
-        private AThingProjection()
-        {
-        }
-
-        public AThingProjection(string id, string projectorId)
-        {
-            Id = id;
-            ProjectorId = projectorId;
-        }
-
-        public string Id { get; set; }
-
-        public string ProjectorId { get; set; }
-
-        public int A { get; set; }
-
-        public string B { get; set; }
-    }
-
-    public class AThingEmptyQuery : IQuery
-    {
-
-    }
-
-    public class AThingListQuery : IQuery
-    {
-    }
-
-    public class AThingListResult : IQueryResult
-    {
-        public string ProjectorId { get; set; }
-
-        public AThingProjection[] Projections { get; set; }
     }
 }

@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using TempSoft.CQRS.Projectors;
 
 namespace TempSoft.CQRS.Extensions
 {
@@ -22,7 +21,7 @@ namespace TempSoft.CQRS.Extensions
                 .FirstOrDefault(q => q.Parameters.Length == 1 && q.Parameters[0].ParameterType == typeof(Action))
                 .Method;
             TaskRunMethodWithReturnType = typeof(Task).GetMethods()
-                .Where(m => m.Name == "Run")
+                .Where(m => m.Name == "Run" && m.IsGenericMethodDefinition)
                 .Select(m => new { Method = m, Parameters = m.GetParameters() })
                 .FirstOrDefault(q => q.Parameters.Length == 1 && q.Parameters[0].ParameterType.IsGenericType && q.Parameters[0].ParameterType.GetGenericTypeDefinition() == typeof(Func<>))
                 .Method;
@@ -42,9 +41,20 @@ namespace TempSoft.CQRS.Extensions
             }
         }
 
+        internal static Action<TDomain, TArgument> GenerateHandler<TDomain, TArgument>(this MethodInfo method)
+        {
+            return GenerateHandler<TDomain, TArgument>(method, typeof(TArgument));
+        }
+
         internal static Action<TDomain, TArgument> GenerateHandler<TDomain, TArgument>(this MethodInfo method,
             Type objectType)
         {
+            if (!typeof(TArgument).IsAssignableFrom(objectType))
+            {
+                throw new Exception($"Unable to assign value of type {objectType.Name} to {typeof(TArgument).Name}.");
+            }
+
+
             // declaration of action parameters.
             var rootParameter = Expression.Parameter(typeof(TDomain), "root");
             var objectParameter = Expression.Parameter(typeof(TArgument), "o");
@@ -93,9 +103,19 @@ namespace TempSoft.CQRS.Extensions
             return action;
         }
 
+        internal static Func<TDomain, TArgument, CancellationToken, Task> GenerateAsyncHandler<TDomain, TArgument>(this MethodInfo method)
+        {
+            return GenerateAsyncHandler<TDomain, TArgument>(method, typeof(TArgument));
+        }
+
         internal static Func<TDomain, TArgument, CancellationToken, Task> GenerateAsyncHandler<TDomain, TArgument>(
             this MethodInfo method, Type objectType)
         {
+            if (!typeof(TArgument).IsAssignableFrom(objectType))
+            {
+                throw new Exception($"Unable to assign value of type {objectType.Name} to {typeof(TArgument).Name}.");
+            }
+
             // declaration of action parameters.
             var rootParameter = Expression.Parameter(typeof(TDomain), "root");
             var objectParameter = Expression.Parameter(typeof(TArgument), "o");
@@ -160,6 +180,11 @@ namespace TempSoft.CQRS.Extensions
             return action;
         }
 
+        internal static Func<TDomain, TArgument, CancellationToken, Task<TReturn>> GenerateAsyncHandlerWithReturnType<TDomain, TArgument, TReturn>(this MethodInfo method)
+        {
+            return GenerateAsyncHandlerWithReturnType<TDomain, TArgument, TReturn>(method, typeof(TArgument));
+        }
+
         internal static Func<TDomain, TArgument, CancellationToken, Task<TReturn>> GenerateAsyncHandlerWithReturnType<TDomain, TArgument, TReturn>(this MethodInfo method, Type objectType)
         {
             // declaration of action parameters.
@@ -207,7 +232,7 @@ namespace TempSoft.CQRS.Extensions
             // if the method is non async, create an async wrapper.
             if (method.ReturnType == typeof(TReturn))
             {
-                var taskRunMethod = TaskRunMethodWithReturnType.MakeGenericMethod(typeof(IQueryResult));
+                var taskRunMethod = TaskRunMethodWithReturnType.MakeGenericMethod(typeof(TReturn));
 
                 var callRootLambda = Expression.Lambda<Func<TReturn>>(rootCall);
                 rootCall = Expression.Call(taskRunMethod, callRootLambda);
